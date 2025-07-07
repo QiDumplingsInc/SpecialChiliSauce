@@ -68,7 +68,7 @@
 
     /* Hero Section */
     .hero {
-      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('assets/Kay_Special_Chili_Crunch_Avocado_Oil_Feature.png');
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('assets/Chili-Sauce.jpg');
       background-size: cover;
       background-position: center;
       height: 70vh;
@@ -119,6 +119,43 @@
       font-size: 2.5rem;
       margin-bottom: 3rem;
       color: #8B0000;
+    }
+
+    /* Product Gallery */
+    .product-gallery {
+      padding: 3rem 0;
+      background: #fff;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-image {
+      transform: scale(1.05);
     }
 
     /* Brand Story */
@@ -327,6 +364,13 @@
     </div>
   </section>
 
+  <!-- Brand Story Image -->
+  <section class="brand-story-image">
+    <div class="story-image-container">
+      <img src="assets/brand-story-image.png" alt="Kay's Story" class="story-image">
+    </div>
+  </section>
+
   <!-- Brand Story -->
   <section class="section brand-story">
     <div class="container">
@@ -347,16 +391,28 @@
     <div class="container">
       <div class="gallery-grid">
         <div class="gallery-item">
-          <img src="assets/gallery-1.png" alt="Kay's Chili Sauce Collection" class="gallery-image">
+          <img src="assets/merchandise/Kay's Special Chili Crunch Branded Merchandise.png"
+            alt="Kay's Chili Sauce Collection" class="gallery-image">
         </div>
         <div class="gallery-item">
-          <img src="assets/gallery-2.png" alt="Homemade Chili Sauce Process" class="gallery-image">
+          <img src="assets/merchandise/Kay's Special Chili Crunch Full Brand Showcase with White Lid Jars.png"
+            alt="Homemade Chili Sauce Process" class="gallery-image">
         </div>
         <div class="gallery-item">
-          <img src="assets/gallery-3.png" alt="Traditional Chinese Oil Chili" class="gallery-image">
+          <img src="assets/merchandise/Kay's Special Chili Crunch Full Brand Showcase.png"
+            alt="Traditional Chinese Oil Chili" class="gallery-image">
         </div>
         <div class="gallery-item">
-          <img src="assets/gallery-4.png" alt="Kay's Kitchen" class="gallery-image">
+          <img src="assets/merchandise/Kay's Special Chili Sauce Branded Merchandise.png" alt="Kay's Kitchen"
+            class="gallery-image">
+        </div>
+        <div class="gallery-item">
+          <img src="assets/merchandise/Kay's Special Chili Sauce Full Brand Showcase.png" alt="Kay's Kitchen"
+            class="gallery-image">
+        </div>
+        <div class="gallery-item">
+          <img src="assets/merchandise/Kay's Special Chili Sauce Stationery Items.png" alt="Kay's Kitchen"
+            class="gallery-image">
         </div>
       </div>
     </div>
@@ -368,7 +424,7 @@
       <h2 class="section-title">Our Signature Sauces</h2>
       <div class="products-grid">
         <div class="product-card">
-          <div class="product-image"><img src="assets/Avocado_with_RedChili.png" alt="Kay's Original Chili Sauce"
+          <div class="product-image"><img src="assets/Avocado with Red Chili.png" alt="Kay's Original Chili Sauce"
               style="width:100%; height:100%; object-fit:cover; border-radius:5px;"></div>
           <h3 class="product-name">Original</h3>
           <div class="heat-level">🌶️ Mild Heat</div>
@@ -376,7 +432,7 @@
             beginners and everyday use.</p>
         </div>
         <div class="product-card">
-          <div class="product-image"><img src="assets/Avocado_with_RedChili.png" alt="Kay's Original Chili Sauce"
+          <div class="product-image"><img src="assets/Avocado with Red Chili.png" alt="Kay's Original Chili Sauce"
               style="width:100%; height:100%; object-fit:cover; border-radius:5px;"></div>
           <h3 class="product-name">Smoky</h3>
           <div class="heat-level">🌶️🌶️ Medium Heat</div>
@@ -384,7 +440,7 @@
             roasted dishes.</p>
         </div>
         <div class="product-card">
-          <div class="product-image"><img src="assets/Avocado_with_RedChili.png" alt="Kay's Original Chili Sauce"
+          <div class="product-image"><img src="assets/Avocado with Red Chili.png" alt="Kay's Original Chili Sauce"
               style="width:100%; height:100%; object-fit:cover; border-radius:5px;"></div>
           <h3 class="product-name">Extra Hot</h3>
           <div class="heat-level">🌶️🌶️🌶️ High Heat</div>
