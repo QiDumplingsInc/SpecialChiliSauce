@@ -202,7 +202,7 @@
 
     .story-image-container {
       width: 100%;
-      max-width: 1200px;
+      max-width: 100vw;
       margin: 0 auto;
       text-align: center;
       padding: 0 20px;
@@ -244,7 +244,7 @@
       color: #666;
     }
 
-    /* .feedback-grid {
+    .feedback-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
@@ -278,46 +278,6 @@
       font-style: italic;
       color: #666;
       font-size: 0.9rem;
-    } */
-
-
-
-    /* Layout Option 1: Masonry Grid - Shows full images at different heights */
-    .feedback-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    .feedback-item {
-      position: relative;
-      overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
-      background: white;
-    }
-
-    .feedback-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    .feedback-image {
-      width: 100%;
-      height: auto;
-      display: block;
-      object-fit: contain;
-    }
-
-    .feedback-caption {
-      padding: 1rem;
-      text-align: center;
-      font-style: italic;
-      color: #666;
-      font-size: 0.9rem;
-      background: #f9f9f9;
     }
 
     /* Products */
@@ -409,14 +369,6 @@
       background: #f9f9f9;
     }
 
-    .contact-intro {
-      max-width: 800px;
-      margin: 0 auto 3rem;
-      text-align: center;
-      font-size: 1.1rem;
-      color: #666;
-    }
-
     .contact-content {
       max-width: 900px;
       margin: 0 auto;
@@ -431,11 +383,6 @@
       padding: 2rem;
       border-radius: 10px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
-    }
-
-    .contact-item:hover {
-      transform: translateY(-5px);
     }
 
     .contact-item h3 {
@@ -444,16 +391,8 @@
       margin-bottom: 1rem;
     }
 
-    .contact-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      color: #DC143C;
-    }
-
     .qr-code-container {
       margin: 1.5rem 0;
-      display: flex;
-      justify-content: center;
     }
 
     .qr-code {
@@ -470,7 +409,6 @@
       font-size: 1.1rem;
       color: #666;
       margin-top: 1rem;
-      word-wrap: break-word;
     }
 
     .contact-info a {
@@ -501,7 +439,6 @@
       justify-content: center;
       gap: 2rem;
       margin-top: 2rem;
-      flex-wrap: wrap;
     }
 
     .buy-button {
@@ -535,7 +472,6 @@
       justify-content: center;
       align-items: center;
       gap: 2rem;
-      flex-wrap: wrap;
     }
 
     .footer-social a {
@@ -581,10 +517,6 @@
         gap: 1rem;
       }
 
-      .logo {
-        font-size: 1.5rem;
-      }
-
       .buy-buttons {
         flex-direction: column;
         align-items: center;
@@ -601,15 +533,6 @@
 
       .contact-content {
         grid-template-columns: 1fr;
-      }
-
-      .section-title {
-        font-size: 2rem;
-      }
-
-      .social-links {
-        flex-direction: column;
-        gap: 0.5rem;
       }
     }
   </style>
@@ -654,7 +577,6 @@
       }
     });
   </script>
-
   <!-- Language Switcher -->
   <div class="language-switcher">
     <button class="lang-btn active" data-lang="en">EN</button>
@@ -669,12 +591,8 @@
         <div class="logo lang-zh">Kay's 特制辣椒油</div>
         <div class="social-links">
           <a href="https://instagram.com/your-instagram-handle" target="_blank">Instagram</a>
-
-          <a href="https://amazon.com/your-product-link" target="_blank" class="lang-en">SmallRedBook</a>
-          <a href="https://amazon.com/your-product-link" target="_blank" class="lang-zh">小红书</a>
-
-          <!-- <a href="https://amazon.com/your-product-link" target="_blank" class="lang-en">Buy on Amazon</a>
-          <a href="https://amazon.com/your-product-link" target="_blank" class="lang-zh">亚马逊购买</a> -->
+          <a href="https://amazon.com/your-product-link" target="_blank" class="lang-en">Buy on Amazon</a>
+          <a href="https://amazon.com/your-product-link" target="_blank" class="lang-zh">亚马逊购买</a>
         </div>
       </div>
     </div>
@@ -697,7 +615,7 @@
   <!-- Brand Story Image -->
   <section class="brand-story-image">
     <div class="story-image-container">
-      <img src="assets/product/1_jar_with_ingredient1.png" alt="Kay's Story"
+      <img src="assets/merchandise2/Kay's Special Chili Sauce Website Product Image.png" alt="Kay's Story"
         class="story-image">
     </div>
   </section>
@@ -708,15 +626,15 @@
       <h2 class="section-title lang-en">Our Story</h2>
       <h2 class="section-title lang-zh">我们的故事</h2>
       <div class="story-content lang-en">
-        <p>Kay, known fondly as “Kay Jie” among her friends, was born in Xi’an, China. A passionate food lover and spice enthusiast, she began her culinary journey in Shenzhen, where she mastered the art of balancing flavors and heat. Bringing together the essence of both Northern and Southern Chinese chili traditions, Kay created her own signature chili sauce recipe — one that quickly gained admiration from friends and diners alike.</p>
+        <p>Kay, known fondly as "Kay Jie" among her friends, was born in Xi'an, China. A passionate food lover and spice enthusiast, she began her culinary journey in Shenzhen, where she mastered the art of balancing flavors and heat. Bringing together the essence of both Northern and Southern Chinese chili traditions, Kay created her own signature chili sauce recipe — one that quickly gained admiration from friends and diners alike.</p>
         <br>
         <p>In 2013, Kay immigrated to North America, bringing her love of bold flavors across the ocean. Her homemade chili sauce soon became a bridge of friendship — a taste of home that connected people through shared meals and stories.</p>
         <br>
-        <p>During her time running a restaurant in Virginia, Kay’s chili sauce became a sensation. It was so popular that customers often asked for jars to take home, and even years after Kay sold her restaurant during the pandemic, people continued to reach out, hoping to get another taste.</p>
+        <p>During her time running a restaurant in Virginia, Kay's chili sauce became a sensation. It was so popular that customers often asked for jars to take home, and even years after Kay sold her restaurant during the pandemic, people continued to reach out, hoping to get another taste.</p>
         <br>
         <p>To honor that passion and bring authentic heat to those who love spice as much as she does, Kay founded her own food company. Her chili sauce became the first product — and the first premium chili sauce cooked entirely with avocado oil on the market.</p>
         <br>
-        <p>Today, Kay Chili Sauce carries the warmth of friendship, the richness of tradition, and the joy of real flavor — crafted for those who simply can’t live without spice.</p>
+        <p>Today, Kay Chili Sauce carries the warmth of friendship, the richness of tradition, and the joy of real flavor — crafted for those who simply can't live without spice.</p>
       </div>
       <div class="story-content lang-zh">
         <p>Kay，朋友们亲切地称她为"Kay姐"，出生于中国西安。作为一位热爱美食和辣味的狂热爱好者，她在深圳开始了她的烹饪之旅，在那里她掌握了平衡风味和辣度的艺术。融合了中国北方和南方辣椒传统的精髓，Kay创造了自己独特的辣椒酱配方——这一配方很快就赢得了朋友和食客的赞赏。</p>
@@ -737,65 +655,65 @@
     <div class="container">
       <div class="gallery-grid">
         <div class="gallery-item">
-          <img src="assets/product/3_jar_with_labels.png" alt="Homemade Chili Sauce Process" class="gallery-image">
+          <img src="assets/product_sauce/3_jar_with_labels.png"
+            alt="Homemade Chili Sauce Process" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/0_full_merchan_3.4.png" alt="Kay's Chili Sauce Collection" class="gallery-image">
+          <img src="assets/merchandise/0_full_merchan_3.4.png"
+            alt="Kay's Chili Sauce Collection" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/0_full_merchan_3.5.png" alt="Kay's Chili Sauce Collection" class="gallery-image">
+          <img src="assets/merchandise/0_full_merchan_3.5.png"
+            alt="Kay's Chili Sauce Collection" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/0_full_merchan_3.1.png" alt="Traditional Chinese Oil Chili" class="gallery-image">
+          <img src="assets/merchandise/0_full_merchan_3.1.png"
+            alt="Traditional Chinese Oil Chili" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/0_full_merchan_3.2.png" alt="Kay's Kitchen" class="gallery-image">
+          <img src="assets/merchandise/0_full_merchan_3.2.png"
+            alt="Kay's Kitchen" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/postcard2.png" alt="Kay's Kitchen" class="gallery-image">
+          <img src="assets/merchandise/postcard2.png"
+            alt="Kay's Kitchen" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/postcard.png" alt="Kay's Kitchen" class="gallery-image">
+          <img src="assets/merchandise/postcard.png"
+            alt="Kay's Kitchen" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/0_store_5.png" alt="Kay's Kitchen" class="gallery-image">
+          <img src="assets/merchandise/0_store_5.png"
+            alt="Kay's Kitchen" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/apron.png" alt="Kay's Kitchen" class="gallery-image">
+          <img src="assets/merchandise/apron.png"
+            alt="Kay's Kitchen" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/bag.png" alt="Kay's Kitchen" class="gallery-image">
+          <img src="assets/merchandise/bag.png"
+            alt="Kay's Kitchen" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/cup.png" alt="Kay's Kitchen" class="gallery-image">
+          <img src="assets/merchandise/cup.png"
+            alt="Kay's Kitchen" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/hat.png" alt="Kay's Kitchen" class="gallery-image">
+          <img src="assets/merchandise/hat.png"
+            alt="Kay's Kitchen" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/pings.png" alt="Kay's Kitchen" class="gallery-image">
+          <img src="assets/merchandise/pings.png"
+            alt="Kay's Kitchen" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/rug.png" alt="Kay's Kitchen" class="gallery-image">
+          <img src="assets/merchandise/rug.png"
+            alt="Kay's Kitchen" class="gallery-image">
         </div>
-
         <div class="gallery-item">
-          <img src="assets/merchandise/scoop.png" alt="Kay's Kitchen" class="gallery-image">
+          <img src="assets/merchandise/scoop.png"
+            alt="Kay's Kitchen" class="gallery-image">
         </div>
-
       </div>
     </div>
   </section>
@@ -803,31 +721,41 @@
   <!-- Customer Feedback Gallery -->
   <section class="section customer-feedback">
     <div class="container">
-      <h2 class="section-title lang-en">Customer Love & Recipes</h2>
-      <h2 class="section-title lang-zh">客户好评 & 食谱</h2>
+      <h2 class="section-title lang-en">Customer Love</h2>
+      <h2 class="section-title lang-zh">客户好评</h2>
       <p class="feedback-intro lang-en">See how our customers enjoy Kay's Special Chili Oil Sauce with their favorite dishes!</p>
       <p class="feedback-intro lang-zh">看看我们的客户如何用Kay's特制辣椒油搭配他们最喜欢的菜肴！</p>
 
       <div class="feedback-grid">
         <div class="feedback-item">
-          <img src="assets/customer-feedback/customer-feedback1.png" alt="Customer Photo 1" class="feedback-image">
+          <img src="assets/customer-feedback/customer-1.png" alt="Customer Photo 1" class="feedback-image">
           <div class="feedback-caption lang-en">"Perfect with dumplings!"</div>
           <div class="feedback-caption lang-zh">"搭配饺子太完美了！"</div>
         </div>
         <div class="feedback-item">
-          <img src="assets/customer-feedback/customer-feedback2.png" alt="Customer Photo 2" class="feedback-image">
+          <img src="assets/customer-feedback/customer-2.png" alt="Customer Photo 2" class="feedback-image">
           <div class="feedback-caption lang-en">"Best chili oil I've ever had"</div>
           <div class="feedback-caption lang-zh">"我吃过最好的辣椒油"</div>
         </div>
         <div class="feedback-item">
-          <img src="assets/customer-feedback/customer-feedback3.png" alt="Customer Photo 3" class="feedback-image">
+          <img src="assets/customer-feedback/customer-3.png" alt="Customer Photo 3" class="feedback-image">
           <div class="feedback-caption lang-en">"Reminds me of home"</div>
           <div class="feedback-caption lang-zh">"让我想起家的味道"</div>
         </div>
         <div class="feedback-item">
-          <img src="assets/customer-feedback/customer-feedback4.png" alt="Customer Photo 4" class="feedback-image">
+          <img src="assets/customer-feedback/customer-4.png" alt="Customer Photo 4" class="feedback-image">
           <div class="feedback-caption lang-en">"Addicted to this sauce!"</div>
           <div class="feedback-caption lang-zh">"对这个酱上瘾了！"</div>
+        </div>
+        <div class="feedback-item">
+          <img src="assets/customer-feedback/customer-5.png" alt="Customer Photo 5" class="feedback-image">
+          <div class="feedback-caption lang-en">"My new kitchen essential"</div>
+          <div class="feedback-caption lang-zh">"我厨房的新必备品"</div>
+        </div>
+        <div class="feedback-item">
+          <img src="assets/customer-feedback/customer-6.png" alt="Customer Photo 6" class="feedback-image">
+          <div class="feedback-caption lang-en">"Amazing flavor!"</div>
+          <div class="feedback-caption lang-zh">"味道太棒了！"</div>
         </div>
       </div>
     </div>
@@ -847,33 +775,32 @@
       <h2 class="section-title lang-zh">我们的招牌酱料</h2>
       <div class="products-grid">
         <div class="product-card">
-          <div class="product-image">
-            <img src="assets/product/3_jar_with_labels.png"
+          <div class="product-image"><img src="assets/merchandise2/Kay's Special Chili Sauce - Corrected Jar Labels.png"
               alt="Kay's Original Chili Sauce" style="width:100%; height:100%; object-fit:cover; border-radius:5px;">
           </div>
           <h3 class="product-name lang-en">First Flame</h3>
           <h3 class="product-name lang-zh">初焰</h3>
-          <div class="heat-level"> <span class="lang-en">🌶️ Mild Heat</span><span class="lang-zh">🌶️ 微辣</span></div>
+          <div class="heat-level">🌶️ <span class="lang-en">Mild Heat</span><span class="lang-zh">微辣</span></div>
           <p class="product-description lang-en">Our classic recipe with the perfect balance of heat and flavor. Great for beginners and everyday use.</p>
           <p class="product-description lang-zh">我们的经典配方，热度和风味完美平衡。非常适合初学者和日常使用。</p>
         </div>
         <div class="product-card">
-          <div class="product-image"><img src="assets/product/3_jar_with_labels.png"
-              alt="Kay's Smoky Chili Sauce" style="width:100%; height:100%; object-fit:cover; border-radius:5px;">
+          <div class="product-image"><img src="assets/merchandise2/Kay's Special Chili Sauce - Corrected Jar Labels.png"
+              alt="Kay's Original Chili Sauce" style="width:100%; height:100%; object-fit:cover; border-radius:5px;">
           </div>
           <h3 class="product-name lang-en">Flavor Rush</h3>
           <h3 class="product-name lang-zh">香辣奔腾</h3>
-          <div class="heat-level"><span class="lang-en">🌶️🌶️ Medium Heat</span><span class="lang-zh">🌶️🌶️ 中辣</span></div>
+          <div class="heat-level">🌶️🌶️ <span class="lang-en">Medium Heat</span><span class="lang-zh">中辣</span></div>
           <p class="product-description lang-en">Rich smoky flavor with a deeper, more complex taste. Perfect for grilling and roasted dishes.</p>
           <p class="product-description lang-zh">浓郁的烟熏味，口感更深层、更复杂。非常适合烧烤和烘烤菜肴。</p>
         </div>
         <div class="product-card">
-          <div class="product-image"><img src="assets/product/3_jar_with_labels.png"
-              alt="Kay's Extra Hot Chili Sauce" style="width:100%; height:100%; object-fit:cover; border-radius:5px;">
+          <div class="product-image"><img src="assets/merchandise2/Kay's Special Chili Sauce - Corrected Jar Labels.png"
+              alt="Kay's Original Chili Sauce" style="width:100%; height:100%; object-fit:cover; border-radius:5px;">
           </div>
           <h3 class="product-name lang-en">Dragon Burn</h3>
           <h3 class="product-name lang-zh">火龙焚烧</h3>
-          <div class="heat-level"><span class="lang-en">🌶️🌶️🌶️ Extra Hot</span><span class="lang-zh">🌶️🌶️🌶️ 特辣</span></div>
+          <div class="heat-level">🌶️🌶️🌶️ <span class="lang-en">Extra Hot</span><span class="lang-zh">特辣</span></div>
           <p class="product-description lang-en">For those who love intense heat. A fiery blend that packs a serious punch.</p>
           <p class="product-description lang-zh">为热爱强烈辣味的人准备。火辣的混合，带来强劲的冲击。</p>
         </div>
@@ -884,178 +811,5 @@
   <!-- Features -->
   <section class="section features">
     <div class="container">
-      <h2 class="section-title lang-en" style="color: white;">Why Choose Kay's?</h2>
-      <h2 class="section-title lang-zh" style="color: white;">为什么选择Kay's？</h2>
-      <div class="features-grid">
-        <div class="feature">
-          <div class="feature-icon">🥄</div>
-          <h3 class="lang-en">Handcrafted in Small Batches</h3>
-          <h3 class="lang-zh">小批量手工制作</h3>
-          <p class="lang-en">Each bottle is carefully made by hand to ensure consistent quality and flavor.</p>
-          <p class="lang-zh">每瓶都经过精心手工制作，以确保质量和风味的一致性。</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🌿</div>
-          <h3 class="lang-en">All-Natural Ingredients</h3>
-          <h3 class="lang-zh">全天然成分</h3>
-          <p class="lang-en">No artificial preservatives or additives. Just pure, natural ingredients.</p>
-          <p class="lang-zh">无人工防腐剂或添加剂。只有纯天然的成分。</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🏮</div>
-          <h3 class="lang-en">Traditional Chinese Technique</h3>
-          <h3 class="lang-zh">传统中式工艺</h3>
-          <p class="lang-en">Made using authentic oil chili technique passed down through generations.</p>
-          <p class="lang-zh">采用世代相传的正宗油泼辣子工艺制作。</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🍽️</div>
-          <h3 class="lang-en">Perfect for Everything</h3>
-          <h3 class="lang-zh">百搭美味</h3>
-          <p class="lang-en">Great for rice, dipping, cooking, and adding flavor to any dish.</p>
-          <p class="lang-zh">适合拌饭、蘸料、烹饪，为任何菜肴增添风味。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Buy Now -->
-  <section class="section buy-now" id="buy-now">
-    <div class="container">
-      <h2 class="section-title lang-en">Get Your Bottle Today</h2>
-      <h2 class="section-title lang-zh">今天就买一瓶吧</h2>
-      <p class="lang-en">Experience the taste of home with Kay's Special Chili Oil Sauce</p>
-      <p class="lang-zh">体验Kay's特制辣椒油的家的味道</p>
-
-      <!-- Direct Order Options -->
-      <div style="margin-top: 3rem; padding-top: 3rem; border-top: 2px solid #e0e0e0;">
-        <h3 style="text-align: center; color: #8B0000; font-size: 1.3rem; margin-bottom: 1rem;" class="lang-en">Order Directly</h3>
-        <h3 style="text-align: center; color: #8B0000; font-size: 1.3rem; margin-bottom: 1rem;" class="lang-zh">直接订购</h3>
-        <p style="text-align: center; color: #666; margin-bottom: 2rem;" class="lang-en">For personal orders or bulk purchases</p>
-        <p style="text-align: center; color: #666; margin-bottom: 2rem;" class="lang-zh">个人订购或批量采购</p>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; max-width: 800px; margin: 0 auto;">
-
-          <!-- WeChat Order -->
-          <div style="text-align: center; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">💬</div>
-            <h4 style="color: #8B0000; margin-bottom: 1rem; font-size: 1.2rem;" class="lang-en">Order via WeChat</h4>
-            <h4 style="color: #8B0000; margin-bottom: 1rem; font-size: 1.2rem;" class="lang-zh">微信订购</h4>
-            <div style="margin: 1rem 0;">
-              <img src="assets/wechat-qr.png" alt="WeChat QR Code" style="max-width: 150px; width: 100%; height: auto; border: 2px solid #DC143C; border-radius: 8px; padding: 8px;">
-            </div>
-            <p style="font-size: 0.9rem; color: #666;" class="lang-en">Scan to place your order</p>
-            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">扫码下单</p>
-          </div>
-
-          <!-- 小红书 Order -->
-          <div style="text-align: center; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📕</div>
-            <h4 style="color: #8B0000; margin-bottom: 1rem; font-size: 1.2rem;" class="lang-en">Order via SmallRedBook</h4>
-            <h4 style="color: #8B0000; margin-bottom: 1rem; font-size: 1.2rem;" class="lang-zh">小红书订购</h4>
-            <div style="margin: 1.5rem 0;">
-              <a href="https://xhs.com" style="color: #DC143C; text-decoration: none; font-weight: bold; font-size: 1rem;">https://xhs.com</a>
-            </div>
-            <p style="font-size: 0.9rem; color: #666;" class="lang-en">Perfect for catering & events</p>
-            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">适合餐饮和活动</p>
-          </div>
-
-          <!-- Email Order -->
-          <div style="text-align: center; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📧</div>
-            <h4 style="color: #8B0000; margin-bottom: 1rem; font-size: 1.2rem;" class="lang-en">Email for Bulk Orders</h4>
-            <h4 style="color: #8B0000; margin-bottom: 1rem; font-size: 1.2rem;" class="lang-zh">批量订购邮箱</h4>
-            <div style="margin: 1.5rem 0;">
-              <a href="mailto:QiDumplingsINC@gmail.com" style="color: #DC143C; text-decoration: none; font-weight: bold; font-size: 1rem;">QiDumplingsINC@gmail.com</a>
-            </div>
-            <p style="font-size: 0.9rem; color: #666;" class="lang-en">Perfect for catering & events</p>
-            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">适合餐饮和活动</p>
-          </div>
-
-
-
-        </div>
-      </div>
-
-      <!-- Online Purchase Options -->
-      <div style="margin-top: 3rem; padding-top: 3rem; border-top: 2px solid #e0e0e0;">
-        <h3 style="text-align: center; color: #8B0000; font-size: 1.3rem; margin-bottom: 1.5rem;" class="lang-en">Coming Soon</h3>
-        <h3 style="text-align: center; color: #8B0000; font-size: 1.3rem; margin-bottom: 1.5rem;" class="lang-zh">将会支持</h3>
-        <div class="buy-buttons">
-          <a href="https://amazon.com/your-product-link" target="_blank" class="buy-button lang-en">Buy on Amazon</a>
-          <a href="https://amazon.com/your-product-link" target="_blank" class="buy-button lang-zh">亚马逊购买</a>
-          <a href="https://instagram.com/your-instagram-handle" target="_blank" class="buy-button lang-en">Follow on Instagram</a>
-          <a href="https://instagram.com/your-instagram-handle" target="_blank" class="buy-button lang-zh">关注Instagram</a>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section class="section contact-section">
-    <div class="container">
-      <h2 class="section-title lang-en">Get in Touch</h2>
-      <h2 class="section-title lang-zh">联系我们</h2>
-      <p class="contact-intro lang-en">Have questions or interested in bulk orders for catering? We'd love to hear from you!</p>
-      <p class="contact-intro lang-zh">有问题或对餐饮批量订购感兴趣？我们很乐意听到您的声音！</p>
-
-      <div class="contact-content">
-
-        <div class="contact-item">
-          <div class="contact-icon">💬</div>
-          <h3 class="lang-en">WeChat</h3>
-          <h3 class="lang-zh">微信</h3>
-          <div class="contact-info">
-            <img src="assets/wechat-qr.png" alt="WeChat QR Code" style="max-width: 150px; width: 100%; height: auto; border: 2px solid #DC143C; border-radius: 8px; padding: 8px;">
-          </div>
-          <p class="contact-note lang-en">For bulk orders, catering inquiries, or general questions</p>
-          <p class="contact-note lang-zh">用于批量订购、餐饮咨询或一般问题</p>
-        </div>
-
-        <div class="contact-item">
-          <div class="contact-icon">📕</div>
-          <h3 class="lang-en">SmallRedBook</h3>
-          <h3 class="lang-zh">小红书</h3>
-          <div class="contact-info">
-            <img src="assets/wechat-qr.png" alt="WeChat QR Code" style="max-width: 150px; width: 100%; height: auto; border: 2px solid #DC143C; border-radius: 8px; padding: 8px;">
-          </div>
-          <p class="contact-note lang-en">For bulk orders, catering inquiries, or general questions</p>
-          <p class="contact-note lang-zh">用于批量订购、餐饮咨询或一般问题</p>
-        </div>
-
-        <div class="contact-item">
-          <div class="contact-icon">📧</div>
-          <h3 class="lang-en">Email</h3>
-          <h3 class="lang-zh">电子邮件</h3>
-          <div class="contact-info">
-            <a href="mailto:QiDumplingsINC@gmail.com">QiDumplingsINC@gmail.com</a>
-          </div>
-          <p class="contact-note lang-en">For bulk orders, catering inquiries, or general questions</p>
-          <p class="contact-note lang-zh">用于批量订购、餐饮咨询或一般问题</p>
-        </div>
-
-
-      </div>
-
-
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <p class="lang-en">&copy; 2024 Kay's Special Chili Oil Sauce. All rights reserved.</p>
-        <p class="lang-zh">&copy; 2024 Kay's特制辣椒油。版权所有。</p>
-        <div class="footer-social">
-          <a href="https://instagram.com/your-instagram-handle" target="_blank">Instagram</a>
-          <a href="https://amazon.com/your-product-link" target="_blank" class="lang-en">Amazon</a>
-          <a href="https://amazon.com/your-product-link" target="_blank" class="lang-zh">亚马逊</a>
-        </div>
-      </div>
-    </div>
-  </footer>
-</body>
-
-</html>
+      <h2 class="section-title lang-en">Why Choose Kay's?</h2>
+      <h2 class="section-title lang-zh">为什
