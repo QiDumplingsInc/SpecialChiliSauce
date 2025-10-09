@@ -1,0 +1,35 @@
+#!/bin/sh
+exclude: "(output|llm-benchmark-eval-dataset|src/data_preperation/cwe_mapper)/.*"
+
+repos:
+  # must be initialized via pre-commit install
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files # Prevent giant files from being committed
+      - id: check-docstring-first # Checks a common error of defining a docstring after code.
+      - id: check-json
+        exclude: "tests/"
+      - id: check-merge-conflict
+      - id: check-xml
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: detect-private-key # Detects the presence of private keys
+      - id: end-of-file-fixer # Fix the empty EOF
+      - id: trailing-whitespace # Fix the redundant whitespace
+      - id: pretty-format-json
+        args:
+          - --autofix
+          - --indent=4
+          - --no-sort-keys
+        exclude: "tests/"
+
+  # Check for typos
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        args:
+          - --ignore-words=allow.txt
