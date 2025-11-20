@@ -4,179 +4,389 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kay's Special Chili Oil Sauce - Taste of Home, Just the Right Heat</title>
-  <meta name="description"
-    content="Handcrafted chili sauce made with traditional Chinese oil chili technique. Natural ingredients, no preservatives. Available in Original, Smoky, and Extra Hot.">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- Primary Meta Tags -->
+  <title>Kay's Special Chili Oil Sauce - Handcrafted Artisan Chili Sauce | Taste of Home</title>
+  <meta name="title" content="Kay's Special Chili Oil Sauce - Handcrafted Artisan Chili Sauce">
+  <meta name="description" content="Handcrafted chili sauce made with traditional Chinese oil chili technique. Natural ingredients, no preservatives. Made with premium avocado oil. Available in Original, Smoky, and Extra Hot.">
+  <meta name="keywords" content="chili sauce, chili oil, handcrafted sauce, Chinese chili oil, artisan sauce, avocado oil, Kay's sauce">
+  <meta name="author" content="Kay's Special Chili Oil Sauce">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yourdomain.com/">
+  <meta property="og:title" content="Kay's Special Chili Oil Sauce - Taste of Home">
+  <meta property="og:description" content="Handcrafted chili sauce made with traditional Chinese technique. Natural ingredients, premium avocado oil.">
+  <meta property="og:image" content="assets/Chili-Sauce.jpg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://yourdomain.com/">
+  <meta property="twitter:title" content="Kay's Special Chili Oil Sauce">
+  <meta property="twitter:description" content="Handcrafted chili sauce made with traditional Chinese technique.">
+  <meta property="twitter:image" content="assets/Chili-Sauce.jpg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/logo/Kay's Special Chili Sauce Label.png">
+
   <style>
+    /* ========================================
+       CSS CUSTOM PROPERTIES (VARIABLES)
+       ======================================== */
+    :root {
+      /* Color Palette */
+      --color-primary: #8B0000;
+      --color-primary-light: #DC143C;
+      --color-primary-dark: #5C0000;
+      --color-secondary: #FF6B35;
+      --color-text: #333;
+      --color-text-light: #666;
+      --color-text-lighter: #999;
+      --color-white: #ffffff;
+      --color-bg-light: #f9f9f9;
+      --color-bg-lighter: #f0f0f0;
+
+      /* Spacing */
+      --spacing-xs: 0.5rem;
+      --spacing-sm: 1rem;
+      --spacing-md: 2rem;
+      --spacing-lg: 3rem;
+      --spacing-xl: 4rem;
+
+      /* Typography */
+      --font-family-primary: 'Georgia', serif;
+      --font-size-base: 1rem;
+      --font-size-sm: 0.9rem;
+      --font-size-lg: 1.1rem;
+      --font-size-xl: 1.2rem;
+      --font-size-2xl: 1.5rem;
+      --font-size-3xl: 2rem;
+      --font-size-4xl: 2.5rem;
+      --font-size-5xl: 3.5rem;
+      --line-height-base: 1.6;
+      --line-height-relaxed: 1.8;
+
+      /* Effects */
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 8px 25px rgba(0, 0, 0, 0.15);
+      --shadow-button: 0 4px 15px rgba(220, 20, 60, 0.3);
+      --shadow-button-hover: 0 6px 20px rgba(220, 20, 60, 0.4);
+
+      /* Transitions */
+      --transition-fast: 0.2s ease;
+      --transition-base: 0.3s ease;
+      --transition-slow: 0.5s ease;
+
+      /* Border Radius */
+      --radius-sm: 5px;
+      --radius-md: 10px;
+      --radius-lg: 25px;
+
+      /* Layout */
+      --container-max-width: 1200px;
+      --container-padding: 20px;
+    }
+
+    /* ========================================
+       RESET & BASE STYLES
+       ======================================== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: 'Georgia', serif;
-      line-height: 1.6;
-      color: #333;
-      background: #fff;
+      font-family: var(--font-family-primary);
+      line-height: var(--line-height-base);
+      color: var(--color-text);
+      background: var(--color-white);
+      overflow-x: hidden;
     }
 
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      transition: var(--transition-base);
+    }
+
+    /* ========================================
+       UTILITY CLASSES
+       ======================================== */
     .container {
-      max-width: 1200px;
+      max-width: var(--container-max-width);
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 var(--container-padding);
     }
 
-    /* Language Switcher */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========================================
+       SCROLL TO TOP BUTTON
+       ======================================== */
+    .scroll-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: var(--color-primary-light);
+      color: var(--color-white);
+      border: none;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition-base);
+      z-index: 1000;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scroll-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .scroll-to-top:hover {
+      background: var(--color-primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* ========================================
+       LANGUAGE SWITCHER
+       ======================================== */
     .language-switcher {
       position: fixed;
       top: 80px;
       right: 20px;
       z-index: 1000;
-      background: white;
-      border-radius: 25px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
       overflow: hidden;
     }
 
     .language-switcher button {
       background: transparent;
       border: none;
-      padding: 0.8rem 1.2rem;
+      padding: var(--spacing-xs) var(--spacing-sm);
       cursor: pointer;
-      font-size: 1rem;
+      font-size: var(--font-size-base);
       font-weight: bold;
-      transition: all 0.3s ease;
-      color: #8B0000;
+      transition: var(--transition-base);
+      color: var(--color-primary);
     }
 
     .language-switcher button:hover {
-      background: #f0f0f0;
+      background: var(--color-bg-lighter);
     }
 
     .language-switcher button.active {
-      background: #DC143C;
-      color: white;
+      background: var(--color-primary-light);
+      color: var(--color-white);
     }
 
-    /* Header */
+    /* ========================================
+       HEADER
+       ======================================== */
     header {
-      background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
-      color: white;
-      padding: 1rem 0;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      position: relative;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+      color: var(--color-white);
+      padding: var(--spacing-sm) 0;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      transition: var(--transition-base);
+    }
+
+    header.scrolled {
+      padding: 0.5rem 0;
+      box-shadow: var(--shadow-lg);
     }
 
     .header-content {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: var(--spacing-md);
     }
 
     .logo {
-      font-size: 2rem;
+      font-size: var(--font-size-3xl);
       font-weight: bold;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      transition: var(--transition-base);
     }
 
     .social-links {
       display: flex;
-      gap: 1rem;
+      gap: var(--spacing-sm);
+      flex-wrap: wrap;
     }
 
     .social-links a {
-      color: white;
+      color: var(--color-white);
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      border: 2px solid white;
-      border-radius: 5px;
-      transition: all 0.3s ease;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border: 2px solid var(--color-white);
+      border-radius: var(--radius-sm);
+      transition: var(--transition-base);
+      font-weight: 500;
     }
 
     .social-links a:hover {
-      background: white;
-      color: #8B0000;
+      background: var(--color-white);
+      color: var(--color-primary);
+      transform: translateY(-2px);
     }
 
-    /* Hero Section */
+    /* ========================================
+       HERO SECTION
+       ======================================== */
     .hero {
       background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('assets/Chili-Sauce.jpg');
       background-size: cover;
       background-position: center;
-      height: 70vh;
+      background-attachment: fixed;
+      min-height: 70vh;
       display: flex;
       align-items: center;
-      color: white;
+      color: var(--color-white);
       text-align: center;
+      position: relative;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      animation: heroFadeIn 1s ease-out;
+    }
+
+    @keyframes heroFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .hero-content h1 {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
+      font-size: var(--font-size-5xl);
+      margin-bottom: var(--spacing-sm);
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     }
 
     .tagline {
-      font-size: 1.5rem;
-      margin-bottom: 2rem;
+      font-size: var(--font-size-2xl);
+      margin-bottom: var(--spacing-md);
       font-style: italic;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     }
 
     .cta-button {
       display: inline-block;
-      background: #DC143C;
-      color: white;
-      padding: 1rem 2rem;
+      background: var(--color-primary-light);
+      color: var(--color-white);
+      padding: var(--spacing-sm) var(--spacing-md);
       text-decoration: none;
-      border-radius: 5px;
-      font-size: 1.2rem;
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-xl);
       font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
+      transition: var(--transition-base);
+      box-shadow: var(--shadow-button);
+      cursor: pointer;
     }
 
     .cta-button:hover {
-      background: #8B0000;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+      background: var(--color-primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-button-hover);
     }
 
-    /* Sections */
+    /* ========================================
+       SECTIONS
+       ======================================== */
     .section {
-      padding: 4rem 0;
+      padding: var(--spacing-xl) 0;
     }
 
     .section-title {
       text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 3rem;
-      color: #8B0000;
+      font-size: var(--font-size-4xl);
+      margin-bottom: var(--spacing-lg);
+      color: var(--color-primary);
+      position: relative;
+      padding-bottom: var(--spacing-sm);
     }
 
-    /* Product Gallery */
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: var(--color-primary-light);
+      border-radius: 2px;
+    }
+
+    /* ========================================
+       PRODUCT GALLERY
+       ======================================== */
     .product-gallery {
-      padding: 3rem 0;
-      background: #fff;
+      padding: var(--spacing-lg) 0;
+      background: var(--color-white);
     }
 
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1rem;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-sm);
     }
 
     .gallery-item {
       position: relative;
       overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-base);
+      cursor: pointer;
     }
 
     .gallery-item:hover {
-      transform: translateY(-5px);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
     }
 
     .gallery-image {
@@ -184,17 +394,19 @@
       height: 250px;
       object-fit: cover;
       display: block;
-      transition: transform 0.3s ease;
+      transition: var(--transition-slow);
     }
 
     .gallery-item:hover .gallery-image {
-      transform: scale(1.05);
+      transform: scale(1.1);
     }
 
-    /* Brand Story Image */
+    /* ========================================
+       BRAND STORY IMAGE
+       ======================================== */
     .brand-story-image {
-      padding: 2rem 0;
-      background: #fff;
+      padding: var(--spacing-md) 0;
+      background: var(--color-white);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -202,10 +414,10 @@
 
     .story-image-container {
       width: 100%;
-      max-width: 1200px;
+      max-width: var(--container-max-width);
       margin: 0 auto;
       text-align: center;
-      padding: 0 20px;
+      padding: 0 var(--container-padding);
     }
 
     .story-image {
@@ -218,90 +430,59 @@
       margin: 0 auto;
     }
 
-    /* Brand Story */
+    /* ========================================
+       BRAND STORY
+       ======================================== */
     .brand-story {
-      background: #f9f9f9;
+      background: var(--color-bg-light);
     }
 
     .story-content {
       max-width: 800px;
       margin: 0 auto;
       text-align: center;
-      font-size: 1.1rem;
-      line-height: 1.8;
+      font-size: var(--font-size-lg);
+      line-height: var(--line-height-relaxed);
     }
 
-    /* Customer Feedback Gallery */
+    .story-content p {
+      margin-bottom: var(--spacing-sm);
+    }
+
+    /* ========================================
+       CUSTOMER FEEDBACK GALLERY
+       ======================================== */
     .customer-feedback {
-      background: #fff;
+      background: var(--color-white);
     }
 
     .feedback-intro {
       max-width: 800px;
-      margin: 0 auto 3rem;
+      margin: 0 auto var(--spacing-lg);
       text-align: center;
-      font-size: 1.1rem;
-      color: #666;
+      font-size: var(--font-size-lg);
+      color: var(--color-text-light);
     }
 
-    /* .feedback-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    .feedback-item {
-      position: relative;
-      overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
-      background: white;
-    }
-
-    .feedback-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    .feedback-image {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .feedback-caption {
-      padding: 1rem;
-      text-align: center;
-      font-style: italic;
-      color: #666;
-      font-size: 0.9rem;
-    } */
-
-
-
-    /* Layout Option 1: Masonry Grid - Shows full images at different heights */
     .feedback-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
     }
 
     .feedback-item {
       position: relative;
       overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
-      background: white;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-base);
+      background: var(--color-white);
     }
 
     .feedback-item:hover {
       transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      box-shadow: var(--shadow-xl);
     }
 
     .feedback-image {
@@ -312,109 +493,225 @@
     }
 
     .feedback-caption {
-      padding: 1rem;
+      padding: var(--spacing-sm);
       text-align: center;
       font-style: italic;
-      color: #666;
-      font-size: 0.9rem;
-      background: #f9f9f9;
+      color: var(--color-text-light);
+      font-size: var(--font-size-sm);
+      background: var(--color-bg-light);
     }
 
-    /* Products */
+    /* ========================================
+       PRODUCTS
+       ======================================== */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
     }
 
     .product-card {
-      background: white;
-      border-radius: 10px;
-      padding: 2rem;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
+      background: var(--color-white);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-base);
       text-align: center;
     }
 
     .product-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
     }
 
     .product-image {
       width: 100%;
       height: 200px;
-      background: #f0f0f0;
-      border-radius: 5px;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #999;
-      font-size: 1.1rem;
+      background: var(--color-bg-lighter);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--spacing-sm);
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
     }
 
     .product-name {
-      font-size: 1.3rem;
+      font-size: var(--font-size-xl);
       font-weight: bold;
-      margin-bottom: 0.5rem;
-      color: #8B0000;
+      margin-bottom: var(--spacing-xs);
+      color: var(--color-primary);
     }
 
     .product-description {
-      color: #666;
-      margin-bottom: 1rem;
+      color: var(--color-text-light);
+      margin-bottom: var(--spacing-sm);
+      line-height: var(--line-height-relaxed);
     }
 
     .heat-level {
       display: inline-block;
-      background: #DC143C;
-      color: white;
+      background: var(--color-primary-light);
+      color: var(--color-white);
       padding: 0.3rem 0.8rem;
       border-radius: 20px;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
+      font-size: var(--font-size-sm);
+      margin-bottom: var(--spacing-sm);
+      font-weight: 500;
     }
 
-    /* Features */
-    .features {
-      background: #8B0000;
+    .product-sizes {
+      margin-top: var(--spacing-md);
+      padding-top: var(--spacing-md);
+      border-top: 2px solid var(--color-bg-lighter);
+    }
+
+    .sizes-title {
+      font-size: var(--font-size-base);
+      font-weight: bold;
+      color: var(--color-text);
+      margin-bottom: var(--spacing-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .size-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+      margin-top: var(--spacing-sm);
+    }
+
+    .size-option {
+      background: var(--color-bg-light);
+      border: 2px solid var(--color-bg-lighter);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-sm);
+      transition: var(--transition-base);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .size-option:hover {
+      border-color: var(--color-primary-light);
+      background: white;
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .size-label {
+      font-size: var(--font-size-sm);
+      font-weight: bold;
+      color: var(--color-text);
+      display: block;
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+    }
+
+    .size-price {
+      font-size: var(--font-size-xl);
+      font-weight: bold;
+      color: var(--color-primary);
+      display: block;
+    }
+
+    .size-price-currency {
+      font-size: var(--font-size-base);
+    }
+
+    .size-per-oz {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-lighter);
+      display: block;
+      margin-top: 0.2rem;
+      font-style: italic;
+    }
+
+    /* Popular badge for middle size */
+    .size-option.popular {
+      border-color: var(--color-primary-light);
+      background: #fff5f5;
+    }
+
+    .size-option.popular::before {
+      content: '⭐ POPULAR';
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: var(--color-primary-light);
       color: white;
+      font-size: 0.65rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0 var(--radius-sm) 0 var(--radius-sm);
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    body.chinese .size-option.popular::before {
+      content: '⭐ 热销';
+    }
+
+    /* ========================================
+       FEATURES
+       ======================================== */
+    .features {
+      background: var(--color-primary);
+      color: var(--color-white);
     }
 
     .features-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
     }
 
     .feature {
       text-align: center;
-      padding: 1.5rem;
+      padding: var(--spacing-md);
+      transition: var(--transition-base);
+      border-radius: var(--radius-md);
+    }
+
+    .feature:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-5px);
     }
 
     .feature-icon {
       font-size: 3rem;
-      margin-bottom: 1rem;
+      margin-bottom: var(--spacing-sm);
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
     }
 
     .feature h3 {
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
+      margin-bottom: var(--spacing-sm);
+      font-size: var(--font-size-xl);
     }
 
-    /* Contact Section */
+    .feature p {
+      line-height: var(--line-height-relaxed);
+    }
+
+    /* ========================================
+       CONTACT SECTION
+       ======================================== */
     .contact-section {
-      background: #f9f9f9;
+      background: var(--color-bg-light);
     }
 
     .contact-intro {
       max-width: 800px;
-      margin: 0 auto 3rem;
+      margin: 0 auto var(--spacing-lg);
       text-align: center;
-      font-size: 1.1rem;
-      color: #666;
+      font-size: var(--font-size-lg);
+      color: var(--color-text-light);
     }
 
     .contact-content {
@@ -422,59 +719,55 @@
       margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 3rem;
+      gap: var(--spacing-lg);
     }
 
     .contact-item {
       text-align: center;
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
+      background: var(--color-white);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-base);
     }
 
     .contact-item:hover {
       transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
     }
 
     .contact-item h3 {
-      color: #8B0000;
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
+      color: var(--color-primary);
+      font-size: var(--font-size-2xl);
+      margin-bottom: var(--spacing-sm);
     }
 
     .contact-icon {
       font-size: 3rem;
-      margin-bottom: 1rem;
-      color: #DC143C;
-    }
-
-    .qr-code-container {
-      margin: 1.5rem 0;
-      display: flex;
-      justify-content: center;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-primary-light);
     }
 
     .qr-code {
-      max-width: 200px;
+      max-width: 150px;
       width: 100%;
       height: auto;
-      border: 3px solid #DC143C;
-      border-radius: 10px;
-      padding: 10px;
-      background: white;
+      border: 2px solid var(--color-primary-light);
+      border-radius: var(--radius-md);
+      padding: 8px;
+      background: var(--color-white);
+      margin: var(--spacing-sm) auto;
     }
 
     .contact-info {
-      font-size: 1.1rem;
-      color: #666;
-      margin-top: 1rem;
+      font-size: var(--font-size-lg);
+      color: var(--color-text-light);
+      margin-top: var(--spacing-sm);
       word-wrap: break-word;
     }
 
     .contact-info a {
-      color: #DC143C;
+      color: var(--color-primary-light);
       text-decoration: none;
       font-weight: bold;
     }
@@ -484,72 +777,134 @@
     }
 
     .contact-note {
-      font-size: 0.9rem;
-      color: #999;
-      margin-top: 1rem;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-lighter);
+      margin-top: var(--spacing-sm);
       font-style: italic;
     }
 
-    /* Buy Now Section */
+    /* ========================================
+       BUY NOW SECTION
+       ======================================== */
     .buy-now {
-      background: #fff;
+      background: var(--color-white);
       text-align: center;
+    }
+
+    .buy-section-divider {
+      margin-top: var(--spacing-lg);
+      padding-top: var(--spacing-lg);
+      border-top: 2px solid #e0e0e0;
+    }
+
+    .buy-section-title {
+      text-align: center;
+      color: var(--color-primary);
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .buy-section-subtitle {
+      text-align: center;
+      color: var(--color-text-light);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .buy-options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-md);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .buy-option-card {
+      text-align: center;
+      background: var(--color-white);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-base);
+    }
+
+    .buy-option-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .buy-option-icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .buy-option-card h4 {
+      color: var(--color-primary);
+      margin-bottom: var(--spacing-sm);
+      font-size: var(--font-size-xl);
     }
 
     .buy-buttons {
       display: flex;
       justify-content: center;
-      gap: 2rem;
-      margin-top: 2rem;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
       flex-wrap: wrap;
     }
 
     .buy-button {
       display: inline-block;
-      background: #FF6B35;
-      color: white;
-      padding: 1rem 2rem;
+      background: var(--color-secondary);
+      color: var(--color-white);
+      padding: var(--spacing-sm) var(--spacing-md);
       text-decoration: none;
-      border-radius: 5px;
-      font-size: 1.1rem;
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-lg);
       font-weight: bold;
-      transition: all 0.3s ease;
+      transition: var(--transition-base);
       min-width: 200px;
+      box-shadow: var(--shadow-md);
     }
 
     .buy-button:hover {
       background: #E55A2B;
       transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
     }
 
-    /* Footer */
+    /* ========================================
+       FOOTER
+       ======================================== */
     footer {
       background: #333;
-      color: white;
+      color: var(--color-white);
       text-align: center;
-      padding: 2rem 0;
+      padding: var(--spacing-md) 0;
     }
 
     .footer-content {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 2rem;
+      gap: var(--spacing-md);
       flex-wrap: wrap;
     }
 
     .footer-social a {
-      color: white;
+      color: var(--color-white);
       text-decoration: none;
-      margin: 0 1rem;
-      font-size: 1.1rem;
+      margin: 0 var(--spacing-sm);
+      font-size: var(--font-size-lg);
+      transition: var(--transition-base);
     }
 
     .footer-social a:hover {
-      color: #DC143C;
+      color: var(--color-primary-light);
+      transform: translateY(-2px);
     }
 
-    /* Language Hidden Classes */
+    /* ========================================
+       LANGUAGE HIDDEN CLASSES
+       ======================================== */
     .lang-en {
       display: block;
     }
@@ -566,58 +921,768 @@
       display: block;
     }
 
-    /* Responsive */
+    /* ========================================
+       RESPONSIVE DESIGN
+       ======================================== */
     @media (max-width: 768px) {
+      /* Typography */
       .hero-content h1 {
-        font-size: 2.5rem;
+        font-size: var(--font-size-4xl);
       }
 
       .tagline {
-        font-size: 1.2rem;
+        font-size: var(--font-size-xl);
       }
 
+      .section-title {
+        font-size: var(--font-size-3xl);
+      }
+
+      /* Header */
       .header-content {
         flex-direction: column;
-        gap: 1rem;
+        gap: var(--spacing-sm);
       }
 
       .logo {
-        font-size: 1.5rem;
+        font-size: var(--font-size-2xl);
       }
 
-      .buy-buttons {
+      .social-links {
         flex-direction: column;
-        align-items: center;
+        gap: var(--spacing-xs);
+        width: 100%;
       }
 
-      .footer-content {
-        flex-direction: column;
+      .social-links a {
+        width: 100%;
+        text-align: center;
       }
 
+      /* Language Switcher */
       .language-switcher {
         top: 10px;
         right: 10px;
+      }
+
+      /* Scroll to Top Button */
+      .scroll-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+      }
+
+      /* Hero Section */
+      .hero {
+        background-attachment: scroll;
+        min-height: 60vh;
+      }
+
+      /* Grids */
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .feedback-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
       }
 
       .contact-content {
         grid-template-columns: 1fr;
       }
 
-      .section-title {
-        font-size: 2rem;
+      .buy-options-grid {
+        grid-template-columns: 1fr;
       }
 
-      .social-links {
+      /* Product size options - stack vertically on mobile */
+      .size-options {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+      }
+
+      /* Buttons */
+      .buy-buttons {
         flex-direction: column;
-        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .buy-button {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      /* Footer */
+      .footer-content {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-content h1 {
+        font-size: var(--font-size-3xl);
+      }
+
+      .section-title {
+        font-size: var(--font-size-3xl);
+      }
+
+      .gallery-image {
+        height: 200px;
+      }
+    }
+
+    /* ========================================
+       PRINT STYLES
+       ======================================== */
+    @media print {
+      .language-switcher,
+      .scroll-to-top,
+      .social-links,
+      .buy-now,
+      footer {
+        display: none;
+      }
+    }
+
+    /* ========================================
+       ACCESSIBILITY
+       ======================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Focus styles for keyboard navigation */
+    a:focus,
+    button:focus {
+      outline: 3px solid var(--color-primary-light);
+      outline-offset: 2px;
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      :root {
+        --color-text: #000;
+        --color-white: #fff;
       }
     }
   </style>
 </head>
 
 <body>
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FoodEstablishment",
+    "name": "Kay's Special Chili Oil Sauce",
+    "description": "Handcrafted chili sauce made with traditional Chinese oil chili technique",
+    "image": "assets/Chili-Sauce.jpg",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "US"
+    },
+    "servesCuisine": "Chinese",
+    "priceRange": "$$"
+  }
+  </script>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
+    ↑
+  </button>
+
+  <!-- Language Switcher -->
+  <div class="language-switcher" role="navigation" aria-label="Language switcher">
+    <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-label="切换到中文">中文</button>
+  </div>
+
+  <!-- Header -->
+  <header role="banner">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo lang-en">Kay's Special Chili Oil Sauce</div>
+        <div class="logo lang-zh">Kay's 特制辣椒油</div>
+        <nav class="social-links" role="navigation" aria-label="Social media links">
+          <a href="https://instagram.com/your-instagram-handle" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://amazon.com/your-product-link" target="_blank" rel="noopener noreferrer" class="lang-en">Rednote</a>
+          <a href="https://amazon.com/your-product-link" target="_blank" rel="noopener noreferrer" class="lang-zh">小红书</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" role="banner">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="lang-en">Kay's Special Chili Oil Sauce</h1>
+        <h1 class="lang-zh">Kay's 特制辣椒油</h1>
+        <p class="tagline lang-en">Taste of Home, Just the Right Heat</p>
+        <p class="tagline lang-zh">家的味道，辣得刚刚好</p>
+        <a href="#buy-now" class="cta-button lang-en">Shop Now</a>
+        <a href="#buy-now" class="cta-button lang-zh">立即购买</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Brand Story Image -->
+  <section class="brand-story-image">
+    <div class="story-image-container">
+      <img src="assets/product/photo/chili_sauce_v1_2.JPG"
+           alt="Kay's Special Chili Oil with fresh ingredients"
+           class="story-image fade-in"
+           loading="lazy">
+    </div>
+  </section>
+
+  <!-- Brand Story -->
+  <section class="section brand-story" id="story">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in">Our Story</h2>
+      <h2 class="section-title lang-zh fade-in">我们的故事</h2>
+      <div class="story-content lang-en fade-in">
+        <p>Kay, known fondly as "Kay Jie" among her friends, was born in Xi'an, China. A passionate food lover and spice enthusiast, she began her culinary journey in Shenzhen, where she mastered the art of balancing flavors and heat. Bringing together the essence of both Northern and Southern Chinese chili traditions, Kay created her own signature chili sauce recipe — one that quickly gained admiration from friends and diners alike.</p>
+        <br>
+        <p>In 2013, Kay immigrated to North America, bringing her love of bold flavors across the ocean. Her homemade chili sauce soon became a bridge of friendship — a taste of home that connected people through shared meals and stories.</p>
+        <br>
+        <p>During her time running a restaurant in Virginia, Kay's chili sauce became a sensation. It was so popular that customers often asked for jars to take home, and even years after Kay sold her restaurant during the pandemic, people continued to reach out, hoping to get another taste.</p>
+        <br>
+        <p>To honor that passion and bring authentic heat to those who love spice as much as she does, Kay founded her own food company. Her chili sauce became the first product — and the first premium chili sauce cooked entirely with avocado oil on the market.</p>
+        <br>
+        <p>Today, Kay Chili Sauce carries the warmth of friendship, the richness of tradition, and the joy of real flavor — crafted for those who simply can't live without spice.</p>
+      </div>
+      <div class="story-content lang-zh fade-in">
+        <p>Kay，朋友们亲切地称她为"Kay姐"，出生于中国西安。作为一位热爱美食和辣味的狂热爱好者，她在深圳开始了她的烹饪之旅，在那里她掌握了平衡风味和辣度的艺术。融合了中国北方和南方辣椒传统的精髓，Kay创造了自己独特的辣椒酱配方——这一配方很快就赢得了朋友和食客的赞赏。</p>
+        <br>
+        <p>2013年，Kay移民到北美，将她对浓郁风味的热爱带到了大洋彼岸。她的自制辣椒酱很快成为了友谊的桥梁——一种通过共享的餐食和故事连接人们的家的味道。</p>
+        <br>
+        <p>在弗吉尼亚州经营餐厅期间，Kay的辣椒酱引起了轰动。它如此受欢迎，以至于顾客经常要求带罐子回家。即使在疫情期间Kay卖掉餐厅多年后，人们仍然不断联系，希望再次品尝到那个味道。</p>
+        <br>
+        <p>为了向这份热情致敬，并为像她一样热爱辣味的人们带来正宗的辣味，Kay创立了自己的食品公司。她的辣椒酱成为了第一款产品——也是市场上第一款完全使用鳄梨油烹制的高级辣椒酱。</p>
+        <br>
+        <p>今天，Kay辣椒酱承载着友谊的温暖、传统的丰富和真实风味的快乐——专为那些离不开辣味的人们精心制作。</p>
+      </div>
+    </div> 
+
+      <img src="assets/product/3_jar_with_ingredient3.png"
+           alt="Kay's Special Chili Oil with fresh ingredients"
+           class="story-image fade-in"
+           loading="lazy">
+
+  </section>
+
+  <!-- Product Gallery -->
+  <section class="section product-gallery" id="gallery">
+    <div class="container">
+      <div class="gallery-grid">  
+ 
+        <div class="gallery-item fade-in">
+          <img src="assets/product/1_jar_with_ingredient3.jpg"
+               alt="Kay's Chili Sauce collection with labels"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+ 
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/0_full_merchan_3.4.png"
+               alt="Kay's Chili Sauce merchandise display"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/0_full_merchan_3.5.png"
+               alt="Kay's Chili Sauce product line"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/0_full_merchan_3.1.png"
+               alt="Traditional Chinese oil chili preparation"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/0_full_merchan_3.2.png"
+               alt="Kay's kitchen and cooking process"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/postcard2.png"
+               alt="Kay's Chili Sauce branded postcard"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/postcard.png"
+               alt="Kay's Chili Sauce promotional postcard"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/0_store_5.png"
+               alt="Kay's Chili Sauce store display"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/apron.png"
+               alt="Kay's Chili Sauce branded apron"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/bag.png"
+               alt="Kay's Chili Sauce tote bag"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/cup.png"
+               alt="Kay's Chili Sauce branded cup"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/hat.png"
+               alt="Kay's Chili Sauce branded hat"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/pings.png"
+               alt="Kay's Chili Sauce pins collection"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/rug.png"
+               alt="Kay's Chili Sauce branded rug"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/scoop.png"
+               alt="Kay's Chili Sauce branded scoop"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Customer Feedback Gallery -->
+  <section class="section customer-feedback" id="feedback">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in">Customer Love & Recipes</h2>
+      <h2 class="section-title lang-zh fade-in">客户好评 & 食谱</h2>
+      <p class="feedback-intro lang-en fade-in">See how our customers enjoy Kay's Special Chili Oil Sauce with their favorite dishes!</p>
+      <p class="feedback-intro lang-zh fade-in">看看我们的客户如何用Kay's特制辣椒油搭配他们最喜欢的菜肴！</p>
+
+      <div class="feedback-grid">
+        <div class="feedback-item fade-in">
+          <img src="assets/customer-feedback/customer-feedback1.png"
+               alt="Customer enjoying Kay's Chili Sauce with dumplings"
+               class="feedback-image"
+               loading="lazy">
+          <div class="feedback-caption lang-en">"Perfect with dumplings!"</div>
+          <div class="feedback-caption lang-zh">"搭配饺子太完美了！"</div>
+        </div>
+        <div class="feedback-item fade-in">
+          <img src="assets/customer-feedback/customer-feedback2.png"
+               alt="Customer testimonial for Kay's Chili Sauce"
+               class="feedback-image"
+               loading="lazy">
+          <div class="feedback-caption lang-en">"Best chili oil I've ever had"</div>
+          <div class="feedback-caption lang-zh">"我吃过最好的辣椒油"</div>
+        </div>
+        <div class="feedback-item fade-in">
+          <img src="assets/customer-feedback/customer-feedback3.png"
+               alt="Customer review of Kay's Chili Sauce"
+               class="feedback-image"
+               loading="lazy">
+          <div class="feedback-caption lang-en">"Reminds me of home"</div>
+          <div class="feedback-caption lang-zh">"让我想起家的味道"</div>
+        </div>
+        <div class="feedback-item fade-in">
+          <img src="assets/customer-feedback/customer-feedback4.png"
+               alt="Happy customer with Kay's Chili Sauce"
+               class="feedback-image"
+               loading="lazy">
+          <div class="feedback-caption lang-en">"Addicted to this sauce!"</div>
+          <div class="feedback-caption lang-zh">"对这个酱上瘾了！"</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Brand Story Image -->
+  <section class="brand-story-image">
+    <div class="story-image-container">
+      <img src="assets/logo/Kay's Special Chili Sauce Label.png"
+           alt="Kay's Special Chili Sauce official label design"
+           class="story-image fade-in"
+           loading="lazy">
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section class="section" id="products">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in">Our Signature Sauces</h2>
+      <h2 class="section-title lang-zh fade-in">我们的招牌酱料</h2>
+      <div class="products-grid">
+        <div class="product-card fade-in">
+          <div class="product-image">
+            <img src="assets/product/3_jar_with_ingredient3.png"
+              alt="Kay's Original First Flame Chili Sauce">
+          </div>
+          <h3 class="product-name lang-en">First Flame</h3>
+          <h3 class="product-name lang-zh">初焰</h3>
+          <div class="heat-level"> <span class="lang-en">🌶️ Mild Heat</span><span class="lang-zh">🌶️ 微辣</span></div>
+          <p class="product-description lang-en">Our classic recipe with the perfect balance of heat and flavor. Great for beginners and everyday use.</p>
+          <p class="product-description lang-zh">我们的经典配方，热度和风味完美平衡。非常适合初学者和日常使用。</p>
+
+          <div class="product-sizes">
+            <div class="sizes-title lang-en">Available Sizes</div>
+            <div class="sizes-title lang-zh">可选规格</div>
+
+            <div class="size-options">
+              <div class="size-option">
+                <span class="size-label lang-en">8 oz</span>
+                <span class="size-label lang-zh">8盎司</span>
+                <span class="size-price lang-en">$8<span class="size-price-currency">.99</span></span>
+                <span class="size-price lang-zh">$8</span>
+                <span class="size-per-oz lang-en">$1.00/oz</span>
+                <span class="size-per-oz lang-zh">¥11/盎司</span>
+              </div>
+
+              <div class="size-option popular">
+                <span class="size-label lang-en">16 oz</span>
+                <span class="size-label lang-zh">16盎司</span>
+                <span class="size-price lang-en">$15<span class="size-price-currency">.99</span></span>
+                <span class="size-price lang-zh">$15</span>
+                <span class="size-per-oz lang-en">$0.935/oz</span>
+                <span class="size-per-oz lang-zh">¥9.88/盎司</span>
+              </div>
+
+              <div class="size-option">
+                <span class="size-label lang-en">32 oz</span>
+                <span class="size-label lang-zh">32盎司</span>
+                <span class="size-price lang-en">$28<span class="size-price-currency">.99</span></span>
+                <span class="size-price lang-zh">$28</span>
+                <span class="size-per-oz lang-en">$0.875/oz</span>
+                <span class="size-per-oz lang-zh">¥8.69/盎司</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="product-card fade-in">
+          <div class="product-image">
+            <img src="assets/product/3_jar_with_ingredient3.png"
+              alt="Kay's Smoky Flavor Rush Chili Sauce">
+          </div>
+          <h3 class="product-name lang-en">Flavor Rush</h3>
+          <h3 class="product-name lang-zh">香辣奔腾</h3>
+          <div class="heat-level"><span class="lang-en">🌶️🌶️ Medium Heat</span><span class="lang-zh">🌶️🌶️ 中辣</span></div>
+          <p class="product-description lang-en">Rich smoky flavor with a deeper, more complex taste. Perfect for grilling and roasted dishes.</p>
+          <p class="product-description lang-zh">浓郁的烟熏味，口感更深层、更复杂。非常适合烧烤和烘烤菜肴。</p>
+
+          <div class="product-sizes">
+            <div class="sizes-title lang-en">Available Sizes</div>
+            <div class="sizes-title lang-zh">可选规格</div>
+            <div class="size-options">
+              <div class="size-option">
+                <span class="size-label lang-en">8 oz</span>
+                <span class="size-label lang-zh">8盎司</span>
+                <span class="size-price lang-en">$8<span class="size-price-currency">.99</span></span>
+                <span class="size-price lang-zh">$8</span>
+                <span class="size-per-oz lang-en">$1.00/oz</span>
+                <span class="size-per-oz lang-zh">¥11/盎司</span>
+              </div>
+
+              <div class="size-option popular">
+                <span class="size-label lang-en">16 oz</span>
+                <span class="size-label lang-zh">16盎司</span>
+                <span class="size-price lang-en">$15<span class="size-price-currency">.99</span></span>
+                <span class="size-price lang-zh">$15</span>
+                <span class="size-per-oz lang-en">$0.935/oz</span>
+                <span class="size-per-oz lang-zh">¥9.88/盎司</span>
+              </div>
+
+              <div class="size-option">
+                <span class="size-label lang-en">32 oz</span>
+                <span class="size-label lang-zh">32盎司</span>
+                <span class="size-price lang-en">$28<span class="size-price-currency">.99</span></span>
+                <span class="size-price lang-zh">$28</span>
+                <span class="size-per-oz lang-en">$0.875/oz</span>
+                <span class="size-per-oz lang-zh">¥8.69/盎司</span>
+              </div>
+            </div>
+          </div>
+          
+
+        </div>
+        <div class="product-card fade-in">
+          <div class="product-image">
+            <img src="assets/product/3_jar_with_ingredient3.png"
+              alt="Kay's Extra Hot Dragon Burn Chili Sauce">
+          </div>
+          <h3 class="product-name lang-en">Dragon Burn</h3>
+          <h3 class="product-name lang-zh">火龙焚烧</h3>
+          <div class="heat-level"><span class="lang-en">🌶️🌶️🌶️ Extra Hot</span><span class="lang-zh">🌶️🌶️🌶️ 特辣</span></div>
+          <p class="product-description lang-en">For those who love intense heat and spicy. A fiery blend that packs a serious punch.</p>
+          <p class="product-description lang-zh">为热爱强烈辣味的人准备。火辣的混合，带来强劲的冲击。</p>
+
+          <div class="product-sizes">
+            <div class="sizes-title lang-en">Available Sizes</div>
+            <div class="sizes-title lang-zh">可选规格</div>
+
+            <div class="size-options">
+              <div class="size-option">
+                <span class="size-label lang-en">8 oz</span>
+                <span class="size-label lang-zh">8盎司</span>
+                <span class="size-price lang-en">$8<span class="size-price-currency">.99</span></span>
+                <span class="size-price lang-zh">$8</span>
+                <span class="size-per-oz lang-en">$1.00/oz</span>
+                <span class="size-per-oz lang-zh">¥11/盎司</span>
+              </div>
+
+              <div class="size-option popular">
+                <span class="size-label lang-en">16 oz</span>
+                <span class="size-label lang-zh">16盎司</span>
+                <span class="size-price lang-en">$15<span class="size-price-currency">.99</span></span>
+                <span class="size-price lang-zh">$15</span>
+                <span class="size-per-oz lang-en">$0.935/oz</span>
+                <span class="size-per-oz lang-zh">¥9.88/盎司</span>
+              </div>
+
+              <div class="size-option">
+                <span class="size-label lang-en">32 oz</span>
+                <span class="size-label lang-zh">32盎司</span>
+                <span class="size-price lang-en">$28<span class="size-price-currency">.99</span></span>
+                <span class="size-price lang-zh">$28</span>
+                <span class="size-per-oz lang-en">$0.875/oz</span>
+                <span class="size-per-oz lang-zh">¥8.69/盎司</span>
+              </div>
+            </div>
+          </div>
+           
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section features" id="features">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in" style="color: white;">Why Choose Kay's?</h2>
+      <h2 class="section-title lang-zh fade-in" style="color: white;">为什么选择Kay's？</h2>
+      <div class="features-grid">
+        <div class="feature fade-in">
+          <div class="feature-icon">🥄</div>
+          <h3 class="lang-en">Handcrafted in Small Batches</h3>
+          <h3 class="lang-zh">小批量手工制作</h3>
+          <p class="lang-en">Each bottle is carefully made by hand to ensure consistent quality and flavor.</p>
+          <p class="lang-zh">每瓶都经过精心手工制作，以确保质量和风味的一致性。</p>
+        </div>
+        <div class="feature fade-in">
+          <div class="feature-icon">🌿</div>
+          <h3 class="lang-en">All-Natural Ingredients</h3>
+          <h3 class="lang-zh">全天然成分</h3>
+          <p class="lang-en">No artificial preservatives or additives. Just pure, natural ingredients.</p>
+          <p class="lang-zh">无人工防腐剂或添加剂。只有纯天然的成分。</p>
+        </div>
+        <div class="feature fade-in">
+          <div class="feature-icon">🏮</div>
+          <h3 class="lang-en">Traditional Chinese Technique</h3>
+          <h3 class="lang-zh">传统中式工艺</h3>
+          <p class="lang-en">Made using authentic oil chili technique passed down through generations.</p>
+          <p class="lang-zh">采用世代相传的正宗油泼辣子工艺制作。</p>
+        </div>
+        <div class="feature fade-in">
+          <div class="feature-icon">🍽️</div>
+          <h3 class="lang-en">Perfect for Everything</h3>
+          <h3 class="lang-zh">百搭美味</h3>
+          <p class="lang-en">Great for rice, dipping, cooking, and adding flavor to any dish.</p>
+          <p class="lang-zh">适合拌饭、蘸料、烹饪，为任何菜肴增添风味。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Buy Now -->
+  <section class="section buy-now" id="buy-now">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in">Get Your Bottle Today</h2>
+      <h2 class="section-title lang-zh fade-in">今天就买一瓶吧</h2>
+      <p class="lang-en fade-in">Experience the taste of home with Kay's Special Chili Oil Sauce</p>
+      <p class="lang-zh fade-in">体验Kay's特制辣椒油的家的味道</p>
+
+      <!-- Direct Order Options -->
+      <div class="buy-section-divider fade-in">
+        <h3 class="buy-section-title lang-en">Order Directly</h3>
+        <h3 class="buy-section-title lang-zh">直接订购</h3>
+        <p class="buy-section-subtitle lang-en">For personal orders or bulk purchases</p>
+        <p class="buy-section-subtitle lang-zh">个人订购或批量采购</p>
+
+        <div class="buy-options-grid">
+          <!-- WeChat Order -->
+          <div class="buy-option-card">
+            <div class="buy-option-icon">💬</div>
+            <h4 class="lang-en">Order via WeChat</h4>
+            <h4 class="lang-zh">微信订购</h4>
+            <div>
+              <img src="assets/contact/qr-wechat.jpg"
+                   alt="WeChat QR Code for ordering"
+                   class="qr-code"
+                   loading="lazy"
+                   onerror="this.style.display='none'">
+            </div>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-en">Scan to place your order</p>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">扫码下单</p>
+          </div>
+
+          <!-- 小红书 Order -->
+          <div class="buy-option-card">
+            <div class="buy-option-icon">📕</div>
+            <h4 class="lang-en">Order via Rednote</h4>
+            <h4 class="lang-zh">小红书订购</h4>
+            <div>
+              <img src="assets/contact/qr-xhs.jpg"
+                   alt="Rednote QR Code for ordering"
+                   class="qr-code"
+                   loading="lazy">
+            </div>
+            <div style="margin: 1rem 0;">
+              <a href="http://xhslink.com/m/41QoyH8K49O" target="_blank" rel="noopener noreferrer">Contact via Rednote</a>
+            </div>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-en">Perfect for catering & events</p>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">适合餐饮和活动</p>
+          </div>
+
+          <!-- Email Order -->
+          <div class="buy-option-card">
+            <div class="buy-option-icon">📧</div>
+            <h4 class="lang-en">Email for Bulk Orders</h4>
+            <h4 class="lang-zh">批量订购邮箱</h4>
+            <div style="margin: 2rem 0;">
+              <a href="mailto:QiDumplingsINC@gmail.com">QiDumplingsINC@gmail.com</a>
+            </div>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-en">Perfect for catering & events</p>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">适合餐饮和活动</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Online Purchase Options -->
+      <div class="buy-section-divider fade-in">
+        <h3 class="buy-section-title lang-en">Coming Soon</h3>
+        <h3 class="buy-section-title lang-zh">将会支持</h3>
+        <div class="buy-buttons">
+          <a href="https://amazon.com/your-product-link" target="_blank" rel="noopener noreferrer" class="buy-button lang-en">Buy on Amazon</a>
+          <a href="https://amazon.com/your-product-link" target="_blank" rel="noopener noreferrer" class="buy-button lang-zh">亚马逊购买</a>
+          <a href="https://instagram.com/your-instagram-handle" target="_blank" rel="noopener noreferrer" class="buy-button lang-en">Follow on Instagram</a>
+          <a href="https://instagram.com/your-instagram-handle" target="_blank" rel="noopener noreferrer" class="buy-button lang-zh">关注Instagram</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="section contact-section" id="contact">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in">Get in Touch</h2>
+      <h2 class="section-title lang-zh fade-in">联系我们</h2>
+      <p class="contact-intro lang-en fade-in">Have questions or interested in bulk orders for catering? We'd love to hear from you!</p>
+      <p class="contact-intro lang-zh fade-in">有问题或对餐饮批量订购感兴趣？我们很乐意听到您的声音！</p>
+
+      <div class="contact-content">
+        <div class="contact-item fade-in">
+          <div class="contact-icon">💬</div>
+          <h3 class="lang-en">WeChat</h3>
+          <h3 class="lang-zh">微信</h3>
+          <div class="contact-info">
+            <img src="assets/contact/qr-wechat.jpg"
+                 alt="WeChat QR Code for contact"
+                 class="qr-code"
+                 loading="lazy"
+                 onerror="this.style.display='none'">
+          </div>
+          <p class="contact-note lang-en">For bulk orders, catering inquiries, or general questions</p>
+          <p class="contact-note lang-zh">用于批量订购、餐饮咨询或一般问题</p>
+        </div>
+
+        <div class="contact-item fade-in">
+          <div class="contact-icon">📕</div>
+          <h3 class="lang-en">Rednote</h3>
+          <h3 class="lang-zh">小红书</h3>
+          <div class="contact-info">
+            <img src="assets/contact/qr-xhs.jpg"
+                 alt="Rednote QR Code for contact"
+                 class="qr-code"
+                 loading="lazy">
+          </div>
+          <div class="contact-info">
+            <a href="http://xhslink.com/m/41QoyH8K49O" target="_blank" rel="noopener noreferrer">Contact via Rednote</a>
+          </div>
+          <p class="contact-note lang-en">For bulk orders, catering inquiries, or general questions</p>
+          <p class="contact-note lang-zh">用于批量订购、餐饮咨询或一般问题</p>
+        </div>
+
+        <div class="contact-item fade-in">
+          <div class="contact-icon">📧</div>
+          <h3 class="lang-en">Email</h3>
+          <h3 class="lang-zh">电子邮件</h3>
+          <div class="contact-info">
+            <a href="mailto:QiDumplingsINC@gmail.com">QiDumplingsINC@gmail.com</a>
+          </div>
+          <p class="contact-note lang-en">For bulk orders, catering inquiries, or general questions</p>
+          <p class="contact-note lang-zh">用于批量订购、餐饮咨询或一般问题</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <p class="lang-en">&copy; 2024 Kay's Special Chili Oil Sauce. All rights reserved.</p>
+        <p class="lang-zh">&copy; 2024 Kay's特制辣椒油。版权所有。</p>
+        <nav class="footer-social" role="navigation" aria-label="Footer social media links">
+          <a href="https://instagram.com/your-instagram-handle" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://amazon.com/your-product-link" target="_blank" rel="noopener noreferrer" class="lang-en">Amazon</a>
+          <a href="https://amazon.com/your-product-link" target="_blank" rel="noopener noreferrer" class="lang-zh">亚马逊</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
   <script>
-    // Language Switcher JavaScript
+    // ==========================================
+    // LANGUAGE SWITCHER
+    // ==========================================
     document.addEventListener('DOMContentLoaded', function() {
       const langButtons = document.querySelectorAll('.lang-btn');
       const body = document.body;
@@ -653,415 +1718,106 @@
         }
       }
     });
+
+    // ==========================================
+    // SCROLL TO TOP BUTTON
+    // ==========================================
+    const scrollToTopBtn = document.getElementById('scrollToTop');
+    const header = document.querySelector('header');
+
+    window.addEventListener('scroll', function() {
+      // Show/hide scroll to top button
+      if (window.pageYOffset > 300) {
+        scrollToTopBtn.classList.add('visible');
+      } else {
+        scrollToTopBtn.classList.remove('visible');
+      }
+
+      // Add shadow to header when scrolled
+      if (window.pageYOffset > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    scrollToTopBtn.addEventListener('click', function() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+
+    // ==========================================
+    // INTERSECTION OBSERVER FOR FADE-IN ANIMATIONS
+    // ==========================================
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Optionally unobserve after animation
+          // observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    // Observe all fade-in elements
+    document.querySelectorAll('.fade-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    // ==========================================
+    // SMOOTH SCROLL FOR ANCHOR LINKS
+    // ==========================================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+
+        // Don't prevent default for empty hash
+        if (href === '#') return;
+
+        e.preventDefault();
+        const target = document.querySelector(href);
+
+        if (target) {
+          const headerHeight = header.offsetHeight;
+          const targetPosition = target.offsetTop - headerHeight;
+
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // ==========================================
+    // LAZY LOADING FALLBACK (for older browsers)
+    // ==========================================
+    if ('loading' in HTMLImageElement.prototype === false) {
+      // Lazy loading not supported, load all images immediately
+      document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+        img.src = img.src;
+      });
+    }
+
+    // ==========================================
+    // PERFORMANCE: Log page load time (optional)
+    // ==========================================
+    window.addEventListener('load', function() {
+      if (window.performance) {
+        const perfData = window.performance.timing;
+        const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+        console.log('Page load time:', pageLoadTime + 'ms');
+      }
+    });
   </script>
-
-  <!-- Language Switcher -->
-  <div class="language-switcher">
-    <button class="lang-btn active" data-lang="en">EN</button>
-    <button class="lang-btn" data-lang="zh">中文</button>
-  </div>
-
-  <!-- Header -->
-  <header>
-    <div class="container">
-      <div class="header-content">
-        <div class="logo lang-en">Kay's Special Chili Oil Sauce</div>
-        <div class="logo lang-zh">Kay's 特制辣椒油</div>
-        <div class="social-links">
-          <a href="https://instagram.com/your-instagram-handle" target="_blank">Instagram</a>
-
-          <a href="https://amazon.com/your-product-link" target="_blank" class="lang-en">SmallRedBook</a>
-          <a href="https://amazon.com/your-product-link" target="_blank" class="lang-zh">小红书</a>
-
-          <!-- <a href="https://amazon.com/your-product-link" target="_blank" class="lang-en">Buy on Amazon</a>
-          <a href="https://amazon.com/your-product-link" target="_blank" class="lang-zh">亚马逊购买</a> -->
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-content">
-        <h1 class="lang-en">Kay's Special Chili Oil Sauce</h1>
-        <h1 class="lang-zh">Kay's 特制辣椒油</h1>
-        <p class="tagline lang-en">Taste of Home, Just the Right Heat</p>
-        <p class="tagline lang-zh">家的味道，辣得刚刚好</p>
-        <a href="#buy-now" class="cta-button lang-en">Shop Now</a>
-        <a href="#buy-now" class="cta-button lang-zh">立即购买</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Brand Story Image -->
-  <section class="brand-story-image">
-    <div class="story-image-container">
-      <img src="assets/product/1_jar_with_ingredient1.png" alt="Kay's Story"
-        class="story-image">
-    </div>
-  </section>
-
-  <!-- Brand Story -->
-  <section class="section brand-story">
-    <div class="container">
-      <h2 class="section-title lang-en">Our Story</h2>
-      <h2 class="section-title lang-zh">我们的故事</h2>
-      <div class="story-content lang-en">
-        <p>Kay, known fondly as “Kay Jie” among her friends, was born in Xi’an, China. A passionate food lover and spice enthusiast, she began her culinary journey in Shenzhen, where she mastered the art of balancing flavors and heat. Bringing together the essence of both Northern and Southern Chinese chili traditions, Kay created her own signature chili sauce recipe — one that quickly gained admiration from friends and diners alike.</p>
-        <br>
-        <p>In 2013, Kay immigrated to North America, bringing her love of bold flavors across the ocean. Her homemade chili sauce soon became a bridge of friendship — a taste of home that connected people through shared meals and stories.</p>
-        <br>
-        <p>During her time running a restaurant in Virginia, Kay’s chili sauce became a sensation. It was so popular that customers often asked for jars to take home, and even years after Kay sold her restaurant during the pandemic, people continued to reach out, hoping to get another taste.</p>
-        <br>
-        <p>To honor that passion and bring authentic heat to those who love spice as much as she does, Kay founded her own food company. Her chili sauce became the first product — and the first premium chili sauce cooked entirely with avocado oil on the market.</p>
-        <br>
-        <p>Today, Kay Chili Sauce carries the warmth of friendship, the richness of tradition, and the joy of real flavor — crafted for those who simply can’t live without spice.</p>
-      </div>
-      <div class="story-content lang-zh">
-        <p>Kay，朋友们亲切地称她为"Kay姐"，出生于中国西安。作为一位热爱美食和辣味的狂热爱好者，她在深圳开始了她的烹饪之旅，在那里她掌握了平衡风味和辣度的艺术。融合了中国北方和南方辣椒传统的精髓，Kay创造了自己独特的辣椒酱配方——这一配方很快就赢得了朋友和食客的赞赏。</p>
-        <br>
-        <p>2013年，Kay移民到北美，将她对浓郁风味的热爱带到了大洋彼岸。她的自制辣椒酱很快成为了友谊的桥梁——一种通过共享的餐食和故事连接人们的家的味道。</p>
-        <br>
-        <p>在弗吉尼亚州经营餐厅期间，Kay的辣椒酱引起了轰动。它如此受欢迎，以至于顾客经常要求带罐子回家。即使在疫情期间Kay卖掉餐厅多年后，人们仍然不断联系，希望再次品尝到那个味道。</p>
-        <br>
-        <p>为了向这份热情致敬，并为像她一样热爱辣味的人们带来正宗的辣味，Kay创立了自己的食品公司。她的辣椒酱成为了第一款产品——也是市场上第一款完全使用鳄梨油烹制的高级辣椒酱。</p>
-        <br>
-        <p>今天，Kay辣椒酱承载着友谊的温暖、传统的丰富和真实风味的快乐——专为那些离不开辣味的人们精心制作。</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Product Gallery -->
-  <section class="section product-gallery">
-    <div class="container">
-      <div class="gallery-grid">
-        <div class="gallery-item">
-          <img src="assets/product/3_jar_with_labels.png" alt="Homemade Chili Sauce Process" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/0_full_merchan_3.4.png" alt="Kay's Chili Sauce Collection" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/0_full_merchan_3.5.png" alt="Kay's Chili Sauce Collection" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/0_full_merchan_3.1.png" alt="Traditional Chinese Oil Chili" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/0_full_merchan_3.2.png" alt="Kay's Kitchen" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/postcard2.png" alt="Kay's Kitchen" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/postcard.png" alt="Kay's Kitchen" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/0_store_5.png" alt="Kay's Kitchen" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/apron.png" alt="Kay's Kitchen" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/bag.png" alt="Kay's Kitchen" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/cup.png" alt="Kay's Kitchen" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/hat.png" alt="Kay's Kitchen" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/pings.png" alt="Kay's Kitchen" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/rug.png" alt="Kay's Kitchen" class="gallery-image">
-        </div>
-
-        <div class="gallery-item">
-          <img src="assets/merchandise/scoop.png" alt="Kay's Kitchen" class="gallery-image">
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- Customer Feedback Gallery -->
-  <section class="section customer-feedback">
-    <div class="container">
-      <h2 class="section-title lang-en">Customer Love & Recipes</h2>
-      <h2 class="section-title lang-zh">客户好评 & 食谱</h2>
-      <p class="feedback-intro lang-en">See how our customers enjoy Kay's Special Chili Oil Sauce with their favorite dishes!</p>
-      <p class="feedback-intro lang-zh">看看我们的客户如何用Kay's特制辣椒油搭配他们最喜欢的菜肴！</p>
-
-      <div class="feedback-grid">
-        <div class="feedback-item">
-          <img src="assets/customer-feedback/customer-feedback1.png" alt="Customer Photo 1" class="feedback-image">
-          <div class="feedback-caption lang-en">"Perfect with dumplings!"</div>
-          <div class="feedback-caption lang-zh">"搭配饺子太完美了！"</div>
-        </div>
-        <div class="feedback-item">
-          <img src="assets/customer-feedback/customer-feedback2.png" alt="Customer Photo 2" class="feedback-image">
-          <div class="feedback-caption lang-en">"Best chili oil I've ever had"</div>
-          <div class="feedback-caption lang-zh">"我吃过最好的辣椒油"</div>
-        </div>
-        <div class="feedback-item">
-          <img src="assets/customer-feedback/customer-feedback3.png" alt="Customer Photo 3" class="feedback-image">
-          <div class="feedback-caption lang-en">"Reminds me of home"</div>
-          <div class="feedback-caption lang-zh">"让我想起家的味道"</div>
-        </div>
-        <div class="feedback-item">
-          <img src="assets/customer-feedback/customer-feedback4.png" alt="Customer Photo 4" class="feedback-image">
-          <div class="feedback-caption lang-en">"Addicted to this sauce!"</div>
-          <div class="feedback-caption lang-zh">"对这个酱上瘾了！"</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Brand Story Image -->
-  <section class="brand-story-image">
-    <div class="story-image-container">
-      <img src="assets/logo/Kay's Special Chili Sauce Label.png" alt="Kay's Story" class="story-image">
-    </div>
-  </section>
-
-  <!-- Products -->
-  <section class="section">
-    <div class="container">
-      <h2 class="section-title lang-en">Our Signature Sauces</h2>
-      <h2 class="section-title lang-zh">我们的招牌酱料</h2>
-      <div class="products-grid">
-        <div class="product-card">
-          <div class="product-image">
-            <img src="assets/product/3_jar_with_labels.png"
-              alt="Kay's Original Chili Sauce" style="width:100%; height:100%; object-fit:cover; border-radius:5px;">
-          </div>
-          <h3 class="product-name lang-en">First Flame</h3>
-          <h3 class="product-name lang-zh">初焰</h3>
-          <div class="heat-level"> <span class="lang-en">🌶️ Mild Heat</span><span class="lang-zh">🌶️ 微辣</span></div>
-          <p class="product-description lang-en">Our classic recipe with the perfect balance of heat and flavor. Great for beginners and everyday use.</p>
-          <p class="product-description lang-zh">我们的经典配方，热度和风味完美平衡。非常适合初学者和日常使用。</p>
-        </div>
-        <div class="product-card">
-          <div class="product-image"><img src="assets/product/3_jar_with_labels.png"
-              alt="Kay's Smoky Chili Sauce" style="width:100%; height:100%; object-fit:cover; border-radius:5px;">
-          </div>
-          <h3 class="product-name lang-en">Flavor Rush</h3>
-          <h3 class="product-name lang-zh">香辣奔腾</h3>
-          <div class="heat-level"><span class="lang-en">🌶️🌶️ Medium Heat</span><span class="lang-zh">🌶️🌶️ 中辣</span></div>
-          <p class="product-description lang-en">Rich smoky flavor with a deeper, more complex taste. Perfect for grilling and roasted dishes.</p>
-          <p class="product-description lang-zh">浓郁的烟熏味，口感更深层、更复杂。非常适合烧烤和烘烤菜肴。</p>
-        </div>
-        <div class="product-card">
-          <div class="product-image"><img src="assets/product/3_jar_with_labels.png"
-              alt="Kay's Extra Hot Chili Sauce" style="width:100%; height:100%; object-fit:cover; border-radius:5px;">
-          </div>
-          <h3 class="product-name lang-en">Dragon Burn</h3>
-          <h3 class="product-name lang-zh">火龙焚烧</h3>
-          <div class="heat-level"><span class="lang-en">🌶️🌶️🌶️ Extra Hot</span><span class="lang-zh">🌶️🌶️🌶️ 特辣</span></div>
-          <p class="product-description lang-en">For those who love intense heat. A fiery blend that packs a serious punch.</p>
-          <p class="product-description lang-zh">为热爱强烈辣味的人准备。火辣的混合，带来强劲的冲击。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features -->
-  <section class="section features">
-    <div class="container">
-      <h2 class="section-title lang-en" style="color: white;">Why Choose Kay's?</h2>
-      <h2 class="section-title lang-zh" style="color: white;">为什么选择Kay's？</h2>
-      <div class="features-grid">
-        <div class="feature">
-          <div class="feature-icon">🥄</div>
-          <h3 class="lang-en">Handcrafted in Small Batches</h3>
-          <h3 class="lang-zh">小批量手工制作</h3>
-          <p class="lang-en">Each bottle is carefully made by hand to ensure consistent quality and flavor.</p>
-          <p class="lang-zh">每瓶都经过精心手工制作，以确保质量和风味的一致性。</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🌿</div>
-          <h3 class="lang-en">All-Natural Ingredients</h3>
-          <h3 class="lang-zh">全天然成分</h3>
-          <p class="lang-en">No artificial preservatives or additives. Just pure, natural ingredients.</p>
-          <p class="lang-zh">无人工防腐剂或添加剂。只有纯天然的成分。</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🏮</div>
-          <h3 class="lang-en">Traditional Chinese Technique</h3>
-          <h3 class="lang-zh">传统中式工艺</h3>
-          <p class="lang-en">Made using authentic oil chili technique passed down through generations.</p>
-          <p class="lang-zh">采用世代相传的正宗油泼辣子工艺制作。</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🍽️</div>
-          <h3 class="lang-en">Perfect for Everything</h3>
-          <h3 class="lang-zh">百搭美味</h3>
-          <p class="lang-en">Great for rice, dipping, cooking, and adding flavor to any dish.</p>
-          <p class="lang-zh">适合拌饭、蘸料、烹饪，为任何菜肴增添风味。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Buy Now -->
-  <section class="section buy-now" id="buy-now">
-    <div class="container">
-      <h2 class="section-title lang-en">Get Your Bottle Today</h2>
-      <h2 class="section-title lang-zh">今天就买一瓶吧</h2>
-      <p class="lang-en">Experience the taste of home with Kay's Special Chili Oil Sauce</p>
-      <p class="lang-zh">体验Kay's特制辣椒油的家的味道</p>
-
-      <!-- Direct Order Options -->
-      <div style="margin-top: 3rem; padding-top: 3rem; border-top: 2px solid #e0e0e0;">
-        <h3 style="text-align: center; color: #8B0000; font-size: 1.3rem; margin-bottom: 1rem;" class="lang-en">Order Directly</h3>
-        <h3 style="text-align: center; color: #8B0000; font-size: 1.3rem; margin-bottom: 1rem;" class="lang-zh">直接订购</h3>
-        <p style="text-align: center; color: #666; margin-bottom: 2rem;" class="lang-en">For personal orders or bulk purchases</p>
-        <p style="text-align: center; color: #666; margin-bottom: 2rem;" class="lang-zh">个人订购或批量采购</p>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; max-width: 800px; margin: 0 auto;">
-
-          <!-- WeChat Order -->
-          <div style="text-align: center; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">💬</div>
-            <h4 style="color: #8B0000; margin-bottom: 1rem; font-size: 1.2rem;" class="lang-en">Order via WeChat</h4>
-            <h4 style="color: #8B0000; margin-bottom: 1rem; font-size: 1.2rem;" class="lang-zh">微信订购</h4>
-            <div style="margin: 1rem 0;">
-              <img src="assets/wechat-qr.png" alt="WeChat QR Code" style="max-width: 150px; width: 100%; height: auto; border: 2px solid #DC143C; border-radius: 8px; padding: 8px;">
-            </div>
-            <p style="font-size: 0.9rem; color: #666;" class="lang-en">Scan to place your order</p>
-            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">扫码下单</p>
-          </div>
-
-          <!-- 小红书 Order -->
-          <div style="text-align: center; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📕</div>
-            <h4 style="color: #8B0000; margin-bottom: 1rem; font-size: 1.2rem;" class="lang-en">Order via SmallRedBook</h4>
-            <h4 style="color: #8B0000; margin-bottom: 1rem; font-size: 1.2rem;" class="lang-zh">小红书订购</h4>
-            <div style="margin: 1.5rem 0;">
-              <img src="assets/contact/qr_xhs.jpg" alt="WeChat QR Code" style="max-width: 150px; width: 100%; height: auto; border: 2px solid #DC143C; border-radius: 8px; padding: 8px;"> 
-            </div>
-            <div style="margin: 1.5rem 0;">
-              <a href="http://xhslink.com/m/41QoyH8K49O" style="color: #DC143C; text-decoration: none; font-weight: bold; font-size: 1rem;">Contact via SmallRedBook</a>
-            </div>
-            <p style="font-size: 0.9rem; color: #666;" class="lang-en">Perfect for catering & events</p>
-            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">适合餐饮和活动</p>
-          </div>
-
-          <!-- Email Order -->
-          <div style="text-align: center; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📧</div>
-            <h4 style="color: #8B0000; margin-bottom: 1rem; font-size: 1.2rem;" class="lang-en">Email for Bulk Orders</h4>
-            <h4 style="color: #8B0000; margin-bottom: 1rem; font-size: 1.2rem;" class="lang-zh">批量订购邮箱</h4>
-            <div style="margin: 1.5rem 0;">
-              <a href="mailto:QiDumplingsINC@gmail.com" style="color: #DC143C; text-decoration: none; font-weight: bold; font-size: 1rem;">QiDumplingsINC@gmail.com</a>
-            </div>
-            <p style="font-size: 0.9rem; color: #666;" class="lang-en">Perfect for catering & events</p>
-            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">适合餐饮和活动</p>
-          </div>
-
-
-
-        </div>
-      </div>
-
-      <!-- Online Purchase Options -->
-      <div style="margin-top: 3rem; padding-top: 3rem; border-top: 2px solid #e0e0e0;">
-        <h3 style="text-align: center; color: #8B0000; font-size: 1.3rem; margin-bottom: 1.5rem;" class="lang-en">Coming Soon</h3>
-        <h3 style="text-align: center; color: #8B0000; font-size: 1.3rem; margin-bottom: 1.5rem;" class="lang-zh">将会支持</h3>
-        <div class="buy-buttons">
-          <a href="https://amazon.com/your-product-link" target="_blank" class="buy-button lang-en">Buy on Amazon</a>
-          <a href="https://amazon.com/your-product-link" target="_blank" class="buy-button lang-zh">亚马逊购买</a>
-          <a href="https://instagram.com/your-instagram-handle" target="_blank" class="buy-button lang-en">Follow on Instagram</a>
-          <a href="https://instagram.com/your-instagram-handle" target="_blank" class="buy-button lang-zh">关注Instagram</a>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section class="section contact-section">
-    <div class="container">
-      <h2 class="section-title lang-en">Get in Touch</h2>
-      <h2 class="section-title lang-zh">联系我们</h2>
-      <p class="contact-intro lang-en">Have questions or interested in bulk orders for catering? We'd love to hear from you!</p>
-      <p class="contact-intro lang-zh">有问题或对餐饮批量订购感兴趣？我们很乐意听到您的声音！</p>
-
-      <div class="contact-content">
-
-        <div class="contact-item">
-          <div class="contact-icon">💬</div>
-          <h3 class="lang-en">WeChat</h3>
-          <h3 class="lang-zh">微信</h3>
-          <div class="contact-info">
-            <img src="assets/wechat-qr.png" alt="WeChat QR Code" style="max-width: 150px; width: 100%; height: auto; border: 2px solid #DC143C; border-radius: 8px; padding: 8px;">
-          </div>
-          <p class="contact-note lang-en">For bulk orders, catering inquiries, or general questions</p>
-          <p class="contact-note lang-zh">用于批量订购、餐饮咨询或一般问题</p>
-        </div>
-
-        <div class="contact-item">
-          <div class="contact-icon">📕</div>
-          <h3 class="lang-en">SmallRedBook</h3>
-          <h3 class="lang-zh">小红书</h3>
-          <div class="contact-info">
-            <img src="assets/contact/qr_xhs.jpg" alt="WeChat QR Code" style="max-width: 150px; width: 100%; height: auto; border: 2px solid #DC143C; border-radius: 8px; padding: 8px;">
-          </div>
-          <div class="contact-info">
-            <a href="http://xhslink.com/m/41QoyH8K49O" style="color: #DC143C; text-decoration: none; font-weight: bold; font-size: 1rem;">Contact via SmallRedBook</a>
-          </div>
-          <p class="contact-note lang-en">For bulk orders, catering inquiries, or general questions</p>
-          <p class="contact-note lang-zh">用于批量订购、餐饮咨询或一般问题</p>
-        </div>
-
-        <div class="contact-item">
-          <div class="contact-icon">📧</div>
-          <h3 class="lang-en">Email</h3>
-          <h3 class="lang-zh">电子邮件</h3>
-          <div class="contact-info">
-            <a href="mailto:QiDumplingsINC@gmail.com">QiDumplingsINC@gmail.com</a>
-          </div>
-          <p class="contact-note lang-en">For bulk orders, catering inquiries, or general questions</p>
-          <p class="contact-note lang-zh">用于批量订购、餐饮咨询或一般问题</p>
-        </div>
-
-
-      </div>
-
-
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <p class="lang-en">&copy; 2024 Kay's Special Chili Oil Sauce. All rights reserved.</p>
-        <p class="lang-zh">&copy; 2024 Kay's特制辣椒油。版权所有。</p>
-        <div class="footer-social">
-          <a href="https://instagram.com/your-instagram-handle" target="_blank">Instagram</a>
-          <a href="https://amazon.com/your-product-link" target="_blank" class="lang-en">Amazon</a>
-          <a href="https://amazon.com/your-product-link" target="_blank" class="lang-zh">亚马逊</a>
-        </div>
-      </div>
-    </div>
-  </footer>
 </body>
 
 </html>
