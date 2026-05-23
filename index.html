@@ -15,20 +15,20 @@
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://yourdomain.com/">
+  <meta property="og:url" content="https://qidumplingsinc.github.io/SpecialChiliSauce/">
   <meta property="og:title" content="Kay's Special Chili Oil Sauce - Taste of Home">
   <meta property="og:description" content="Handcrafted chili sauce made with traditional Chinese technique. Natural ingredients, premium avocado oil.">
-  <meta property="og:image" content="assets/Chili-Sauce.jpg">
+  <meta property="og:image" content="https://qidumplingsinc.github.io/SpecialChiliSauce/assets/Chili-Sauce.jpg">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://yourdomain.com/">
+  <meta property="twitter:url" content="https://qidumplingsinc.github.io/SpecialChiliSauce/">
   <meta property="twitter:title" content="Kay's Special Chili Oil Sauce">
   <meta property="twitter:description" content="Handcrafted chili sauce made with traditional Chinese technique.">
-  <meta property="twitter:image" content="assets/Chili-Sauce.jpg">
+  <meta property="twitter:image" content="https://qidumplingsinc.github.io/SpecialChiliSauce/assets/Chili-Sauce.jpg">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="assets/logo/Kay's Special Chili Sauce Label.png">
+  <link rel="icon" type="image/png" href="assets/logo/favicon.png">
 
   <style>
     /* ========================================
@@ -171,6 +171,34 @@
       visibility: visible;
     }
 
+    .order-shortcut {
+      position: fixed;
+      bottom: 90px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: var(--color-primary-light);
+      color: var(--color-white);
+      border: none;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      cursor: pointer;
+      opacity: 1;
+      visibility: visible;
+      transition: var(--transition-base);
+      z-index: 1000;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .order-shortcut:hover {
+      background: var(--color-primary);
+      transform: translateY(-3px);
+    }
+
     .scroll-to-top:hover {
       background: var(--color-primary);
       transform: translateY(-3px);
@@ -260,10 +288,88 @@
       font-weight: 500;
     }
 
-    .social-links a:hover {
+    .social-links a:hover,
+    .social-links button:hover {
       background: var(--color-white);
       color: var(--color-primary);
       transform: translateY(-2px);
+    }
+
+    .social-links button {
+      color: var(--color-white);
+      background: transparent;
+      border: 2px solid var(--color-white);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-family: var(--font-family-primary);
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    /* ========================================
+       QR CODE MODAL
+       ======================================== */
+    .qr-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-modal-overlay.active {
+      display: flex;
+    }
+
+    .qr-modal {
+      background: var(--color-white);
+      border-radius: var(--radius-md);
+      padding: 2rem 2rem 1.5rem;
+      text-align: center;
+      position: relative;
+      box-shadow: var(--shadow-xl);
+      width: 260px;
+    }
+
+    .qr-modal-close {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.75rem;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      color: var(--color-text-lighter);
+      padding: 0.2rem 0.4rem;
+    }
+
+    .qr-modal-close:hover {
+      color: var(--color-primary);
+    }
+
+    .qr-modal-title {
+      font-size: var(--font-size-xl);
+      font-weight: bold;
+      color: var(--color-primary);
+      margin-bottom: 1rem;
+    }
+
+    .qr-modal img {
+      width: 180px;
+      height: 180px;
+      object-fit: contain;
+      border-radius: var(--radius-sm);
+    }
+
+    .qr-modal-subtitle {
+      margin-top: 0.75rem;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
     }
 
     /* ========================================
@@ -571,6 +677,30 @@
       border-top: 2px solid var(--color-bg-lighter);
     }
 
+    .product-order-btn {
+      display: block;
+      width: 100%;
+      margin-top: var(--spacing-sm);
+      padding: 0.6rem var(--spacing-sm);
+      background: var(--color-primary-light);
+      color: var(--color-white);
+      border: none;
+      border-radius: var(--radius-lg);
+      font-size: var(--font-size-base);
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: var(--transition-base);
+      box-shadow: var(--shadow-button);
+    }
+
+    .product-order-btn:hover {
+      background: var(--color-primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-button-hover);
+    }
+
     .sizes-title {
       font-size: var(--font-size-base);
       font-weight: bold;
@@ -715,10 +845,8 @@
     }
 
     .contact-content {
-      max-width: 900px;
-      margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: var(--spacing-lg);
     }
 
@@ -812,10 +940,8 @@
 
     .buy-options-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: var(--spacing-md);
-      max-width: 800px;
-      margin: 0 auto;
     }
 
     .buy-option-card {
@@ -848,7 +974,11 @@
       justify-content: center;
       gap: var(--spacing-md);
       margin-top: var(--spacing-md);
-      flex-wrap: wrap;
+    }
+
+    .buy-buttons .buy-button {
+      flex: 1;
+      min-width: 0;
     }
 
     .buy-button {
@@ -869,6 +999,14 @@
       background: #E55A2B;
       transform: translateY(-2px);
       box-shadow: var(--shadow-lg);
+    }
+
+    .buy-button.disabled {
+      background: #ccc;
+      color: #888;
+      cursor: not-allowed;
+      box-shadow: none;
+      pointer-events: none;
     }
 
     /* ========================================
@@ -949,12 +1087,14 @@
       }
 
       .social-links {
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: var(--spacing-xs);
         width: 100%;
       }
 
-      .social-links a {
+      .social-links a,
+      .social-links button {
         width: 100%;
         text-align: center;
       }
@@ -973,6 +1113,13 @@
         height: 45px;
       }
 
+      .order-shortcut {
+        bottom: 75px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+      }
+
       /* Hero Section */
       .hero {
         background-attachment: scroll;
@@ -985,7 +1132,8 @@
       }
 
       .products-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
       }
 
       .feedback-grid {
@@ -993,15 +1141,20 @@
       }
 
       .features-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .contact-content {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .buy-options-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      /* Product cards compact for 2-per-row mobile layout */
+      .product-card {
+        padding: var(--spacing-sm);
       }
 
       /* Product size options - stack vertically on mobile */
@@ -1039,6 +1192,19 @@
       .gallery-image {
         height: 200px;
       }
+
+      .product-card .product-name {
+        font-size: var(--font-size-base);
+      }
+
+      .product-card .product-description {
+        font-size: var(--font-size-sm);
+      }
+
+      .heat-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.6rem;
+      }
     }
 
     /* ========================================
@@ -1047,6 +1213,7 @@
     @media print {
       .language-switcher,
       .scroll-to-top,
+      .order-shortcut,
       .social-links,
       .buy-now,
       footer {
@@ -1105,8 +1272,23 @@
 
   <!-- Scroll to Top Button -->
   <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
-    ↑
+    &#8593;
   </button>
+
+  <!-- Order Shortcut Button -->
+  <a href="#buy-now" class="order-shortcut" aria-label="Go to Order Directly">
+    &#128722;
+  </a>
+
+  <!-- QR Code Modal -->
+  <div class="qr-modal-overlay" id="qrModalOverlay" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
+    <div class="qr-modal">
+      <button class="qr-modal-close" id="qrModalClose" aria-label="Close">&#x2715;</button>
+      <div class="qr-modal-title" id="qrModalTitle"></div>
+      <img id="qrModalImg" src="" alt="QR Code" width="180" height="180">
+      <div class="qr-modal-subtitle" id="qrModalSubtitle"></div>
+    </div>
+  </div>
 
   <!-- Language Switcher -->
   <div class="language-switcher" role="navigation" aria-label="Language switcher">
@@ -1121,9 +1303,14 @@
         <div class="logo lang-en">Kay's Special Chili Oil Sauce</div>
         <div class="logo lang-zh">Kay's 特制辣椒油</div>
         <nav class="social-links" role="navigation" aria-label="Social media links">
+          <button class="social-btn" data-qr="wechat" aria-label="WeChat QR Code">
+            <span class="lang-en">WeChat</span><span class="lang-zh">微信</span>
+          </button>
+          <button class="social-btn" data-qr="xhs" aria-label="Xiaohongshu QR Code">
+            <span class="lang-en">Rednote</span><span class="lang-zh">小红书</span>
+          </button>
           <a href="https://instagram.com/your-instagram-handle" target="_blank" rel="noopener noreferrer">Instagram</a>
-          <a href="https://amazon.com/your-product-link" target="_blank" rel="noopener noreferrer" class="lang-en">Rednote</a>
-          <a href="https://amazon.com/your-product-link" target="_blank" rel="noopener noreferrer" class="lang-zh">小红书</a>
+          <a href="https://www.facebook.com/share/1EFRRZNRMs/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">Facebook</a>
         </nav>
       </div>
     </div>
@@ -1370,30 +1557,32 @@
                 <span class="size-label lang-en">8 oz</span>
                 <span class="size-label lang-zh">8盎司</span>
                 <span class="size-price lang-en">$8<span class="size-price-currency">.99</span></span>
-                <span class="size-price lang-zh">$8</span>
+                <span class="size-price lang-zh">$8<span class="size-price-currency">.99</span></span>
                 <span class="size-per-oz lang-en">$1.00/oz</span>
-                <span class="size-per-oz lang-zh">¥11/盎司</span>
+                <span class="size-per-oz lang-zh">$1.00/oz</span>
               </div>
 
               <div class="size-option popular">
                 <span class="size-label lang-en">16 oz</span>
                 <span class="size-label lang-zh">16盎司</span>
                 <span class="size-price lang-en">$15<span class="size-price-currency">.99</span></span>
-                <span class="size-price lang-zh">$15</span>
+                <span class="size-price lang-zh">$15<span class="size-price-currency">.99</span></span>
                 <span class="size-per-oz lang-en">$0.935/oz</span>
-                <span class="size-per-oz lang-zh">¥9.88/盎司</span>
+                <span class="size-per-oz lang-zh">$0.935/oz</span>
               </div>
 
               <div class="size-option">
                 <span class="size-label lang-en">32 oz</span>
                 <span class="size-label lang-zh">32盎司</span>
                 <span class="size-price lang-en">$28<span class="size-price-currency">.99</span></span>
-                <span class="size-price lang-zh">$28</span>
+                <span class="size-price lang-zh">$28<span class="size-price-currency">.99</span></span>
                 <span class="size-per-oz lang-en">$0.875/oz</span>
-                <span class="size-per-oz lang-zh">¥8.69/盎司</span>
+                <span class="size-per-oz lang-zh">$0.875/oz</span>
               </div>
             </div>
           </div>
+          <a href="#buy-now" class="product-order-btn lang-en">Order Now</a>
+          <a href="#buy-now" class="product-order-btn lang-zh">立即订购</a>
 
         </div>
         <div class="product-card fade-in">
@@ -1415,31 +1604,32 @@
                 <span class="size-label lang-en">8 oz</span>
                 <span class="size-label lang-zh">8盎司</span>
                 <span class="size-price lang-en">$8<span class="size-price-currency">.99</span></span>
-                <span class="size-price lang-zh">$8</span>
+                <span class="size-price lang-zh">$8<span class="size-price-currency">.99</span></span>
                 <span class="size-per-oz lang-en">$1.00/oz</span>
-                <span class="size-per-oz lang-zh">¥11/盎司</span>
+                <span class="size-per-oz lang-zh">$1.00/oz</span>
               </div>
 
               <div class="size-option popular">
                 <span class="size-label lang-en">16 oz</span>
                 <span class="size-label lang-zh">16盎司</span>
                 <span class="size-price lang-en">$15<span class="size-price-currency">.99</span></span>
-                <span class="size-price lang-zh">$15</span>
+                <span class="size-price lang-zh">$15<span class="size-price-currency">.99</span></span>
                 <span class="size-per-oz lang-en">$0.935/oz</span>
-                <span class="size-per-oz lang-zh">¥9.88/盎司</span>
+                <span class="size-per-oz lang-zh">$0.935/oz</span>
               </div>
 
               <div class="size-option">
                 <span class="size-label lang-en">32 oz</span>
                 <span class="size-label lang-zh">32盎司</span>
                 <span class="size-price lang-en">$28<span class="size-price-currency">.99</span></span>
-                <span class="size-price lang-zh">$28</span>
+                <span class="size-price lang-zh">$28<span class="size-price-currency">.99</span></span>
                 <span class="size-per-oz lang-en">$0.875/oz</span>
-                <span class="size-per-oz lang-zh">¥8.69/盎司</span>
+                <span class="size-per-oz lang-zh">$0.875/oz</span>
               </div>
             </div>
           </div>
-          
+          <a href="#buy-now" class="product-order-btn lang-en">Order Now</a>
+          <a href="#buy-now" class="product-order-btn lang-zh">立即订购</a>
 
         </div>
         <div class="product-card fade-in">
@@ -1462,31 +1652,33 @@
                 <span class="size-label lang-en">8 oz</span>
                 <span class="size-label lang-zh">8盎司</span>
                 <span class="size-price lang-en">$8<span class="size-price-currency">.99</span></span>
-                <span class="size-price lang-zh">$8</span>
+                <span class="size-price lang-zh">$8<span class="size-price-currency">.99</span></span>
                 <span class="size-per-oz lang-en">$1.00/oz</span>
-                <span class="size-per-oz lang-zh">¥11/盎司</span>
+                <span class="size-per-oz lang-zh">$1.00/oz</span>
               </div>
 
               <div class="size-option popular">
                 <span class="size-label lang-en">16 oz</span>
                 <span class="size-label lang-zh">16盎司</span>
                 <span class="size-price lang-en">$15<span class="size-price-currency">.99</span></span>
-                <span class="size-price lang-zh">$15</span>
+                <span class="size-price lang-zh">$15<span class="size-price-currency">.99</span></span>
                 <span class="size-per-oz lang-en">$0.935/oz</span>
-                <span class="size-per-oz lang-zh">¥9.88/盎司</span>
+                <span class="size-per-oz lang-zh">$0.935/oz</span>
               </div>
 
               <div class="size-option">
                 <span class="size-label lang-en">32 oz</span>
                 <span class="size-label lang-zh">32盎司</span>
                 <span class="size-price lang-en">$28<span class="size-price-currency">.99</span></span>
-                <span class="size-price lang-zh">$28</span>
+                <span class="size-price lang-zh">$28<span class="size-price-currency">.99</span></span>
                 <span class="size-per-oz lang-en">$0.875/oz</span>
-                <span class="size-per-oz lang-zh">¥8.69/盎司</span>
+                <span class="size-per-oz lang-zh">$0.875/oz</span>
               </div>
             </div>
           </div>
-           
+          <a href="#buy-now" class="product-order-btn lang-en">Order Now</a>
+          <a href="#buy-now" class="product-order-btn lang-zh">立即订购</a>
+
         </div>
       </div>
     </div>
@@ -1591,6 +1783,18 @@
             <p style="font-size: 0.9rem; color: #666;" class="lang-en">Perfect for catering & events</p>
             <p style="font-size: 0.9rem; color: #666;" class="lang-zh">适合餐饮和活动</p>
           </div>
+
+          <!-- Phone Order -->
+          <div class="buy-option-card">
+            <div class="buy-option-icon">&#128222;</div>
+            <h4 class="lang-en">Phone Order</h4>
+            <h4 class="lang-zh">电话订购</h4>
+            <div style="margin: 2rem 0;">
+              <a href="tel:+17033458016">(703) 345-8016</a>
+            </div>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-en">Call or text to place your order</p>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">致电或发短信下单</p>
+          </div>
         </div>
       </div>
 
@@ -1599,10 +1803,10 @@
         <h3 class="buy-section-title lang-en">Coming Soon</h3>
         <h3 class="buy-section-title lang-zh">将会支持</h3>
         <div class="buy-buttons">
-          <a href="https://amazon.com/your-product-link" target="_blank" rel="noopener noreferrer" class="buy-button lang-en">Buy on Amazon</a>
-          <a href="https://amazon.com/your-product-link" target="_blank" rel="noopener noreferrer" class="buy-button lang-zh">亚马逊购买</a>
-          <a href="https://instagram.com/your-instagram-handle" target="_blank" rel="noopener noreferrer" class="buy-button lang-en">Follow on Instagram</a>
-          <a href="https://instagram.com/your-instagram-handle" target="_blank" rel="noopener noreferrer" class="buy-button lang-zh">关注Instagram</a>
+          <span class="buy-button disabled lang-en">Buy on Amazon (Coming Soon)</span>
+          <span class="buy-button disabled lang-zh">亚马逊购买（即将上线）</span>
+          <span class="buy-button disabled lang-en">Follow on Instagram (Coming Soon)</span>
+          <span class="buy-button disabled lang-zh">关注Instagram（即将上线）</span>
         </div>
       </div>
     </div>
@@ -1659,6 +1863,17 @@
           <p class="contact-note lang-en">For bulk orders, catering inquiries, or general questions</p>
           <p class="contact-note lang-zh">用于批量订购、餐饮咨询或一般问题</p>
         </div>
+
+        <div class="contact-item fade-in">
+          <div class="contact-icon">&#128222;</div>
+          <h3 class="lang-en">Phone</h3>
+          <h3 class="lang-zh">电话</h3>
+          <div class="contact-info">
+            <a href="tel:+17033458016">(703) 345-8016</a>
+          </div>
+          <p class="contact-note lang-en">Call or text to place your order</p>
+          <p class="contact-note lang-zh">致电或发短信下单</p>
+        </div>
       </div>
     </div>
   </section>
@@ -1667,8 +1882,8 @@
   <footer role="contentinfo">
     <div class="container">
       <div class="footer-content">
-        <p class="lang-en">&copy; 2024 Kay's Special Chili Oil Sauce. All rights reserved.</p>
-        <p class="lang-zh">&copy; 2024 Kay's特制辣椒油。版权所有。</p>
+        <p class="lang-en">&copy; 2024&ndash;<span id="copyright-year"></span> Kay's Special Chili Oil Sauce. All rights reserved.</p>
+        <p class="lang-zh">&copy; 2024&ndash;<span id="copyright-year-zh"></span> Kay's特制辣椒油。版权所有。</p>
         <nav class="footer-social" role="navigation" aria-label="Footer social media links">
           <a href="https://instagram.com/your-instagram-handle" target="_blank" rel="noopener noreferrer">Instagram</a>
           <a href="https://amazon.com/your-product-link" target="_blank" rel="noopener noreferrer" class="lang-en">Amazon</a>
@@ -1680,6 +1895,14 @@
 
   <!-- JavaScript -->
   <script>
+    // ==========================================
+    // COPYRIGHT YEAR
+    // ==========================================
+    const currentYear = new Date().getFullYear();
+    document.querySelectorAll('#copyright-year, #copyright-year-zh').forEach(el => {
+      el.textContent = currentYear;
+    });
+
     // ==========================================
     // LANGUAGE SWITCHER
     // ==========================================
@@ -1709,6 +1932,9 @@
         if (activeButton) {
           activeButton.classList.add('active');
         }
+
+        // Update html lang attribute for accessibility
+        document.documentElement.setAttribute('lang', lang === 'zh' ? 'zh' : 'en');
 
         // Toggle body class for language
         if (lang === 'zh') {
@@ -1806,6 +2032,63 @@
         img.src = img.src;
       });
     }
+
+    // ==========================================
+    // QR CODE MODAL
+    // ==========================================
+    const qrData = {
+      wechat: {
+        titleEn: 'WeChat',
+        titleZh: '微信',
+        img: 'assets/contact/qr-wechat.jpg',
+        subtitleEn: 'Scan to add on WeChat',
+        subtitleZh: '扫码添加微信'
+      },
+      xhs: {
+        titleEn: 'Rednote',
+        titleZh: '小红书',
+        img: 'assets/contact/qr-xhs.jpg',
+        subtitleEn: 'Scan to follow on Rednote',
+        subtitleZh: '扫码关注小红书'
+      }
+    };
+
+    const qrOverlay = document.getElementById('qrModalOverlay');
+    const qrModalTitle = document.getElementById('qrModalTitle');
+    const qrModalImg = document.getElementById('qrModalImg');
+    const qrModalSubtitle = document.getElementById('qrModalSubtitle');
+
+    function openQrModal(key) {
+      const data = qrData[key];
+      const isZh = document.body.classList.contains('chinese');
+      qrModalTitle.textContent = isZh ? data.titleZh : data.titleEn;
+      qrModalImg.src = data.img;
+      qrModalImg.alt = (isZh ? data.titleZh : data.titleEn) + ' QR Code';
+      qrModalSubtitle.textContent = isZh ? data.subtitleZh : data.subtitleEn;
+      qrOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeQrModal() {
+      qrOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('[data-qr]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        openQrModal(this.dataset.qr);
+      });
+    });
+
+    document.getElementById('qrModalClose').addEventListener('click', closeQrModal);
+
+    qrOverlay.addEventListener('click', function(e) {
+      if (e.target === qrOverlay) closeQrModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeQrModal();
+    });
 
     // ==========================================
     // PERFORMANCE: Log page load time (optional)
