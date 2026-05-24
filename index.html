@@ -857,6 +857,8 @@
       border-radius: var(--radius-md);
       box-shadow: var(--shadow-lg);
       transition: var(--transition-base);
+      min-width: 0;
+      overflow: hidden;
     }
 
     .contact-item:hover {
@@ -898,6 +900,8 @@
       color: var(--color-primary-light);
       text-decoration: none;
       font-weight: bold;
+      word-break: break-all;
+      overflow-wrap: break-word;
     }
 
     .contact-info a:hover {
@@ -951,6 +955,8 @@
       border-radius: var(--radius-md);
       box-shadow: var(--shadow-lg);
       transition: var(--transition-base);
+      min-width: 0;
+      overflow: hidden;
     }
 
     .buy-option-card:hover {
@@ -1146,10 +1152,22 @@
 
       .contact-content {
         grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
       }
 
       .buy-options-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+      }
+
+      .contact-item,
+      .buy-option-card {
+        padding: var(--spacing-xs);
+      }
+
+      .contact-item h3,
+      .buy-option-card h4 {
+        font-size: var(--font-size-sm);
       }
 
       /* Product cards compact for 2-per-row mobile layout */
