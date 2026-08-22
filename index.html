@@ -44,8 +44,8 @@
       --color-text-light: #666;
       --color-text-lighter: #999;
       --color-white: #ffffff;
-      --color-bg-light: #f9f9f9;
-      --color-bg-lighter: #f0f0f0;
+      --color-bg-light: #FDF6E9;
+      --color-bg-lighter: #F5ECD9;
 
       /* Spacing */
       --spacing-xs: 0.5rem;
@@ -56,6 +56,7 @@
 
       /* Typography */
       --font-family-primary: 'Georgia', serif;
+      --font-family-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       --font-size-base: 1rem;
       --font-size-sm: 0.9rem;
       --font-size-lg: 1.1rem;
@@ -107,8 +108,29 @@
       font-family: var(--font-family-primary);
       line-height: var(--line-height-base);
       color: var(--color-text);
-      background: var(--color-white);
+      background: var(--color-bg-light);
       overflow-x: hidden;
+    }
+
+    /* UI elements (buttons, prices, nav, badges) use a clean sans-serif
+       for a more modern feel and better legibility at small mobile sizes */
+    .cta-button,
+    .buy-button,
+    .product-order-btn,
+    .scroll-to-top,
+    .order-shortcut,
+    .language-switcher button,
+    .social-links a,
+    .social-links button,
+    .heat-level,
+    .size-label,
+    .size-price,
+    .size-per-oz,
+    .sizes-title,
+    .qr-modal-title,
+    .qr-modal-subtitle,
+    nav {
+      font-family: var(--font-family-ui);
     }
 
     img {
@@ -276,6 +298,7 @@
       display: flex;
       gap: var(--spacing-sm);
       flex-wrap: wrap;
+      font-family: var(--font-family-ui);
     }
 
     .social-links a {
@@ -301,7 +324,7 @@
       border: 2px solid var(--color-white);
       border-radius: var(--radius-sm);
       padding: var(--spacing-xs) var(--spacing-sm);
-      font-family: var(--font-family-primary);
+      font-family: var(--font-family-ui);
       font-size: var(--font-size-base);
       font-weight: 500;
       cursor: pointer;
@@ -599,12 +622,31 @@
     }
 
     .feedback-caption {
-      padding: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-sm) 0;
       text-align: center;
       font-style: italic;
       color: var(--color-text-light);
       font-size: var(--font-size-sm);
       background: var(--color-bg-light);
+    }
+
+    .feedback-rating {
+      text-align: center;
+      color: var(--color-primary);
+      font-size: 1.1rem;
+      letter-spacing: 0.15rem;
+      background: var(--color-bg-light);
+      padding-top: var(--spacing-sm);
+    }
+
+    .feedback-attribution {
+      text-align: center;
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--color-text);
+      background: var(--color-bg-light);
+      padding: 0.2rem var(--spacing-sm) var(--spacing-sm);
     }
 
     /* ========================================
@@ -1105,10 +1147,13 @@
         text-align: center;
       }
 
-      /* Language Switcher */
+      /* Language Switcher: positioned absolutely within the header
+         (its nearest positioned ancestor) so it can never render as
+         a separate row above the header or overlap the logo. */
       .language-switcher {
-        top: 10px;
-        right: 10px;
+        position: absolute;
+        top: 8px;
+        right: 8px;
       }
 
       /* Scroll to Top Button */
@@ -1138,7 +1183,7 @@
       }
 
       .products-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
         gap: var(--spacing-sm);
       }
 
@@ -1170,7 +1215,6 @@
         font-size: var(--font-size-sm);
       }
 
-      /* Product cards compact for 2-per-row mobile layout */
       .product-card {
         padding: var(--spacing-sm);
       }
@@ -1290,12 +1334,12 @@
 
   <!-- Scroll to Top Button -->
   <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
-    &#8593;
+    <span aria-hidden="true">&#8593;</span>
   </button>
 
   <!-- Order Shortcut Button -->
   <a href="#buy-now" class="order-shortcut" aria-label="Go to Order Directly">
-    &#128722;
+    <span aria-hidden="true">&#128722;</span>
   </a>
 
   <!-- QR Code Modal -->
@@ -1308,14 +1352,14 @@
     </div>
   </div>
 
-  <!-- Language Switcher -->
-  <div class="language-switcher" role="navigation" aria-label="Language switcher">
-    <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
-    <button class="lang-btn" data-lang="zh" aria-label="切换到中文">中文</button>
-  </div>
-
   <!-- Header -->
   <header role="banner">
+    <!-- Language Switcher: nested inside header so mobile positioning
+         is relative to the header box, never above/overlapping it -->
+    <div class="language-switcher" role="navigation" aria-label="Language switcher">
+      <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+      <button class="lang-btn" data-lang="zh" aria-label="切换到中文">中文</button>
+    </div>
     <div class="container">
       <div class="header-content">
         <div class="logo lang-en">Kay's Special Chili Oil Sauce</div>
@@ -1341,7 +1385,7 @@
         <h1 class="lang-en">Kay's Special Chili Oil Sauce</h1>
         <h1 class="lang-zh">Kay's 特制辣椒油</h1>
         <p class="tagline lang-en">Taste of Home, Just the Right Heat</p>
-        <p class="tagline lang-zh">家的味道，辣得刚刚好</p>
+        <p class="tagline lang-zh">家乡的味道，恰到好处的火辣</p>
         <a href="#buy-now" class="cta-button lang-en">Shop Now</a>
         <a href="#buy-now" class="cta-button lang-zh">立即购买</a>
       </div>
@@ -1375,17 +1419,15 @@
         <p>Today, Kay Chili Sauce carries the warmth of friendship, the richness of tradition, and the joy of real flavor — crafted for those who simply can't live without spice.</p>
       </div>
       <div class="story-content lang-zh fade-in">
-        <p>Kay，朋友们亲切地称她为"Kay姐"，出生于中国西安。作为一位热爱美食和辣味的狂热爱好者，她在深圳开始了她的烹饪之旅，在那里她掌握了平衡风味和辣度的艺术。融合了中国北方和南方辣椒传统的精髓，Kay创造了自己独特的辣椒酱配方——这一配方很快就赢得了朋友和食客的赞赏。</p>
+        <p>Kay（朋友们亲切地称她为"Kay姐"）出生于中国西安，成名于深圳。她不仅是一位美食探索家，还是位热情的画家，同时也是大华府地区活跃的中国京剧演员。她的画室是色彩的天堂，她对大自然的热爱以及对世界各地美食的独到见解，直接启发了她的私人菜单。她用艺术家的视角看待美食，将视觉审美、传统文化与深厚风味天衣无缝地融为一体。</p>
         <br>
-        <p>2013年，Kay移民到北美，将她对浓郁风味的热爱带到了大洋彼岸。她的自制辣椒酱很快成为了友谊的桥梁——一种通过共享的餐食和故事连接人们的家的味道。</p>
+        <p>2013年，Kay将她的招牌辣椒酱配方带到了北美。在弗吉尼亚州经营风靡一时的餐厅期间，她的自制辣椒酱成了当时的爆款，食客们甚至经常要求打包整罐带回家。即使在疫情期间餐厅关闭多年后，忠实的顾客们依然不断联系她，只为能再次尝到那一口让人魂牵梦绕的味道。</p>
         <br>
-        <p>在弗吉尼亚州经营餐厅期间，Kay的辣椒酱引起了轰动。它如此受欢迎，以至于顾客经常要求带罐子回家。即使在疫情期间Kay卖掉餐厅多年后，人们仍然不断联系，希望再次品尝到那个味道。</p>
+        <p>为了回应这份执着的期盼，Kay创立了自己的食品公司。Kay's Special Chili Oil Sauce 作为她的明星旗舰产品，是市面上第一款完全使用 100% 牛油果油和新鲜原料烹制的顶级辣椒酱。</p>
         <br>
-        <p>为了向这份热情致敬，并为像她一样热爱辣味的人们带来正宗的辣味，Kay创立了自己的食品公司。她的辣椒酱成为了第一款产品——也是市场上第一款完全使用鳄梨油烹制的高级辣椒酱。</p>
-        <br>
-        <p>今天，Kay辣椒酱承载着友谊的温暖、传统的丰富和真实风味的快乐——专为那些离不开辣味的人们精心制作。</p>
+        <p>Kay 将中国辣椒传统的浓郁精髓与她独特的艺术灵魂注入其中，为所有真正无辣不欢的人，带去友情的温度、文化的厚度以及最纯正的家乡味道。</p>
       </div>
-    </div> 
+    </div>
 
       <img src="assets/product/3_jar_with_ingredient3.png"
            alt="Kay's Special Chili Oil with fresh ingredients"
@@ -1495,6 +1537,10 @@
   </section>
 
   <!-- Customer Feedback Gallery -->
+  <!-- PLACEHOLDER CONTENT: reviewer names/locations below are fabricated for
+       layout purposes (per design-review PII discussion). Replace with real,
+       permission-obtained customer names/locations and actual review text
+       before this goes live. -->
   <section class="section customer-feedback" id="feedback">
     <div class="container">
       <h2 class="section-title lang-en fade-in">Customer Love & Recipes</h2>
@@ -1508,32 +1554,48 @@
                alt="Customer enjoying Kay's Chili Sauce with dumplings"
                class="feedback-image"
                loading="lazy">
+          <div class="feedback-rating lang-en" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-zh" role="img" aria-label="5星好评">★★★★★</div>
           <div class="feedback-caption lang-en">"Perfect with dumplings!"</div>
           <div class="feedback-caption lang-zh">"搭配饺子太完美了！"</div>
+          <div class="feedback-attribution lang-en">&mdash; Sarah, Arlington, VA</div>
+          <div class="feedback-attribution lang-zh">&mdash; Sarah，弗吉尼亚州阿灵顿</div>
         </div>
         <div class="feedback-item fade-in">
           <img src="assets/customer-feedback/customer-feedback2.png"
                alt="Customer testimonial for Kay's Chili Sauce"
                class="feedback-image"
                loading="lazy">
+          <div class="feedback-rating lang-en" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-zh" role="img" aria-label="5星好评">★★★★★</div>
           <div class="feedback-caption lang-en">"Best chili oil I've ever had"</div>
           <div class="feedback-caption lang-zh">"我吃过最好的辣椒油"</div>
+          <div class="feedback-attribution lang-en">&mdash; Michael, Richmond, VA</div>
+          <div class="feedback-attribution lang-zh">&mdash; Michael，弗吉尼亚州里士满</div>
         </div>
         <div class="feedback-item fade-in">
           <img src="assets/customer-feedback/customer-feedback3.png"
                alt="Customer review of Kay's Chili Sauce"
                class="feedback-image"
                loading="lazy">
+          <div class="feedback-rating lang-en" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-zh" role="img" aria-label="5星好评">★★★★★</div>
           <div class="feedback-caption lang-en">"Reminds me of home"</div>
           <div class="feedback-caption lang-zh">"让我想起家的味道"</div>
+          <div class="feedback-attribution lang-en">&mdash; Linda, Seattle, WA</div>
+          <div class="feedback-attribution lang-zh">&mdash; Linda，西雅图</div>
         </div>
         <div class="feedback-item fade-in">
           <img src="assets/customer-feedback/customer-feedback4.png"
                alt="Happy customer with Kay's Chili Sauce"
                class="feedback-image"
                loading="lazy">
+          <div class="feedback-rating lang-en" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-zh" role="img" aria-label="5星好评">★★★★★</div>
           <div class="feedback-caption lang-en">"Addicted to this sauce!"</div>
           <div class="feedback-caption lang-zh">"对这个酱上瘾了！"</div>
+          <div class="feedback-attribution lang-en">&mdash; James, Fairfax, VA</div>
+          <div class="feedback-attribution lang-zh">&mdash; James，弗吉尼亚州费尔法克斯</div>
         </div>
       </div>
     </div>
@@ -1562,7 +1624,7 @@
           </div>
           <h3 class="product-name lang-en">First Flame</h3>
           <h3 class="product-name lang-zh">初焰</h3>
-          <div class="heat-level"> <span class="lang-en">🌶️ Mild Heat</span><span class="lang-zh">🌶️ 微辣</span></div>
+          <div class="heat-level"> <span class="lang-en"><span aria-hidden="true">🌶️</span> Mild Heat</span><span class="lang-zh"><span aria-hidden="true">🌶️</span> 微辣</span></div>
           <p class="product-description lang-en">Our classic recipe with the perfect balance of heat and flavor. Great for beginners and everyday use.</p>
           <p class="product-description lang-zh">我们的经典配方，热度和风味完美平衡。非常适合初学者和日常使用。</p>
 
@@ -1610,7 +1672,7 @@
           </div>
           <h3 class="product-name lang-en">Flavor Rush</h3>
           <h3 class="product-name lang-zh">香辣奔腾</h3>
-          <div class="heat-level"><span class="lang-en">🌶️🌶️ Medium Heat</span><span class="lang-zh">🌶️🌶️ 中辣</span></div>
+          <div class="heat-level"><span class="lang-en"><span aria-hidden="true">🌶️🌶️</span> Medium Heat</span><span class="lang-zh"><span aria-hidden="true">🌶️🌶️</span> 中辣</span></div>
           <p class="product-description lang-en">Rich smoky flavor with a deeper, more complex taste. Perfect for grilling and roasted dishes.</p>
           <p class="product-description lang-zh">浓郁的烟熏味，口感更深层、更复杂。非常适合烧烤和烘烤菜肴。</p>
 
@@ -1657,7 +1719,7 @@
           </div>
           <h3 class="product-name lang-en">Dragon Burn</h3>
           <h3 class="product-name lang-zh">火龙焚烧</h3>
-          <div class="heat-level"><span class="lang-en">🌶️🌶️🌶️ Extra Hot</span><span class="lang-zh">🌶️🌶️🌶️ 特辣</span></div>
+          <div class="heat-level"><span class="lang-en"><span aria-hidden="true">🌶️🌶️🌶️</span> Extra Hot</span><span class="lang-zh"><span aria-hidden="true">🌶️🌶️🌶️</span> 特辣</span></div>
           <p class="product-description lang-en">For those who love intense heat and spicy. A fiery blend that packs a serious punch.</p>
           <p class="product-description lang-zh">为热爱强烈辣味的人准备。火辣的混合，带来强劲的冲击。</p>
 
@@ -1709,28 +1771,28 @@
       <h2 class="section-title lang-zh fade-in" style="color: white;">为什么选择Kay's？</h2>
       <div class="features-grid">
         <div class="feature fade-in">
-          <div class="feature-icon">🥄</div>
+          <div class="feature-icon" aria-hidden="true">🥄</div>
           <h3 class="lang-en">Handcrafted in Small Batches</h3>
           <h3 class="lang-zh">小批量手工制作</h3>
           <p class="lang-en">Each bottle is carefully made by hand to ensure consistent quality and flavor.</p>
           <p class="lang-zh">每瓶都经过精心手工制作，以确保质量和风味的一致性。</p>
         </div>
         <div class="feature fade-in">
-          <div class="feature-icon">🌿</div>
+          <div class="feature-icon" aria-hidden="true">🌿</div>
           <h3 class="lang-en">All-Natural Ingredients</h3>
           <h3 class="lang-zh">全天然成分</h3>
           <p class="lang-en">No artificial preservatives or additives. Just pure, natural ingredients.</p>
           <p class="lang-zh">无人工防腐剂或添加剂。只有纯天然的成分。</p>
         </div>
         <div class="feature fade-in">
-          <div class="feature-icon">🏮</div>
+          <div class="feature-icon" aria-hidden="true">🏮</div>
           <h3 class="lang-en">Traditional Chinese Technique</h3>
           <h3 class="lang-zh">传统中式工艺</h3>
           <p class="lang-en">Made using authentic oil chili technique passed down through generations.</p>
           <p class="lang-zh">采用世代相传的正宗油泼辣子工艺制作。</p>
         </div>
         <div class="feature fade-in">
-          <div class="feature-icon">🍽️</div>
+          <div class="feature-icon" aria-hidden="true">🍽️</div>
           <h3 class="lang-en">Perfect for Everything</h3>
           <h3 class="lang-zh">百搭美味</h3>
           <p class="lang-en">Great for rice, dipping, cooking, and adding flavor to any dish.</p>
@@ -1758,7 +1820,7 @@
         <div class="buy-options-grid">
           <!-- WeChat Order -->
           <div class="buy-option-card">
-            <div class="buy-option-icon">💬</div>
+            <div class="buy-option-icon" aria-hidden="true">💬</div>
             <h4 class="lang-en">Order via WeChat</h4>
             <h4 class="lang-zh">微信订购</h4>
             <div>
@@ -1774,7 +1836,7 @@
 
           <!-- 小红书 Order -->
           <div class="buy-option-card">
-            <div class="buy-option-icon">📕</div>
+            <div class="buy-option-icon" aria-hidden="true">📕</div>
             <h4 class="lang-en">Order via Rednote</h4>
             <h4 class="lang-zh">小红书订购</h4>
             <div>
@@ -1792,7 +1854,7 @@
 
           <!-- Email Order -->
           <div class="buy-option-card">
-            <div class="buy-option-icon">📧</div>
+            <div class="buy-option-icon" aria-hidden="true">📧</div>
             <h4 class="lang-en">Email for Bulk Orders</h4>
             <h4 class="lang-zh">批量订购邮箱</h4>
             <div style="margin: 2rem 0;">
@@ -1804,7 +1866,7 @@
 
           <!-- Phone Order -->
           <div class="buy-option-card">
-            <div class="buy-option-icon">&#128222;</div>
+            <div class="buy-option-icon" aria-hidden="true">&#128222;</div>
             <h4 class="lang-en">Phone Order</h4>
             <h4 class="lang-zh">电话订购</h4>
             <div style="margin: 2rem 0;">
@@ -1840,7 +1902,7 @@
 
       <div class="contact-content">
         <div class="contact-item fade-in">
-          <div class="contact-icon">💬</div>
+          <div class="contact-icon" aria-hidden="true">💬</div>
           <h3 class="lang-en">WeChat</h3>
           <h3 class="lang-zh">微信</h3>
           <div class="contact-info">
@@ -1855,7 +1917,7 @@
         </div>
 
         <div class="contact-item fade-in">
-          <div class="contact-icon">📕</div>
+          <div class="contact-icon" aria-hidden="true">📕</div>
           <h3 class="lang-en">Rednote</h3>
           <h3 class="lang-zh">小红书</h3>
           <div class="contact-info">
@@ -1872,7 +1934,7 @@
         </div>
 
         <div class="contact-item fade-in">
-          <div class="contact-icon">📧</div>
+          <div class="contact-icon" aria-hidden="true">📧</div>
           <h3 class="lang-en">Email</h3>
           <h3 class="lang-zh">电子邮件</h3>
           <div class="contact-info">
@@ -1883,7 +1945,7 @@
         </div>
 
         <div class="contact-item fade-in">
-          <div class="contact-icon">&#128222;</div>
+          <div class="contact-icon" aria-hidden="true">&#128222;</div>
           <h3 class="lang-en">Phone</h3>
           <h3 class="lang-zh">电话</h3>
           <div class="contact-info">
