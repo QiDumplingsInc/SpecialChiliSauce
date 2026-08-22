@@ -1058,6 +1058,93 @@
     }
 
     /* ========================================
+       NEWSLETTER SIGNUP SECTION
+       ======================================== */
+    .newsletter-section {
+      background: var(--color-white);
+      text-align: center;
+    }
+
+    .newsletter-intro {
+      max-width: 600px;
+      margin: 0 auto var(--spacing-md);
+      color: var(--color-text-light);
+      font-size: var(--font-size-lg);
+    }
+
+    .newsletter-form {
+      max-width: 560px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      justify-content: center;
+      font-family: var(--font-family-ui);
+    }
+
+    .newsletter-honeypot {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .newsletter-field {
+      flex: 1 1 180px;
+      padding: 0.7rem var(--spacing-sm);
+      border: 2px solid var(--color-bg-lighter);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-base);
+      color: var(--color-text);
+    }
+
+    .newsletter-field:focus {
+      outline: none;
+      border-color: var(--color-primary-light);
+    }
+
+    .newsletter-submit {
+      flex: 1 1 140px;
+      padding: 0.7rem var(--spacing-sm);
+      background: var(--color-primary-light);
+      color: var(--color-white);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-base);
+      font-weight: bold;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .newsletter-submit:hover {
+      background: var(--color-primary);
+      transform: translateY(-2px);
+    }
+
+    .newsletter-submit:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .newsletter-status {
+      max-width: 560px;
+      margin: var(--spacing-sm) auto 0;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
+      font-style: italic;
+      display: none;
+    }
+
+    .newsletter-status.visible {
+      display: block;
+    }
+
+    /* ========================================
        FOOTER
        ======================================== */
     footer {
@@ -1958,6 +2045,28 @@
     </div>
   </section>
 
+  <!-- Newsletter Signup -->
+  <section class="section newsletter-section" id="newsletter">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in">Stay in the Loop</h2>
+      <h2 class="section-title lang-zh fade-in">订阅我们的消息</h2>
+      <p class="newsletter-intro lang-en fade-in">Get updates on new flavors, restocks, and special offers.</p>
+      <p class="newsletter-intro lang-zh fade-in">获取新口味、补货和特别优惠的最新消息。</p>
+
+      <form class="newsletter-form fade-in" id="newsletterForm">
+        <input type="text" class="newsletter-honeypot" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="text" class="newsletter-field" id="newsletterName" name="name" data-placeholder-en="First Name" data-placeholder-zh="姓名" placeholder="First Name" aria-label="First Name" maxlength="100" required>
+        <input type="email" class="newsletter-field" id="newsletterEmail" name="email" data-placeholder-en="Email Address" data-placeholder-zh="电子邮箱" placeholder="Email Address" aria-label="Email Address" maxlength="100" required>
+        <button type="submit" class="newsletter-submit lang-en">Subscribe</button>
+        <button type="submit" class="newsletter-submit lang-zh">订阅</button>
+      </form>
+      <p class="newsletter-status" id="newsletterStatusEn" role="status" aria-live="polite">Thanks for subscribing! We'll keep you posted.</p>
+      <p class="newsletter-status" id="newsletterStatusZh" role="status" aria-live="polite">感谢您的订阅！我们会随时通知您最新消息。</p>
+      <p class="newsletter-status" id="newsletterErrorEn" role="status" aria-live="polite">Something went wrong &mdash; please try again, or reach out via WeChat, email, or phone above.</p>
+      <p class="newsletter-status" id="newsletterErrorZh" role="status" aria-live="polite">提交时出现问题，请重试，或通过上方的微信、邮箱或电话联系我们。</p>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer role="contentinfo">
     <div class="container">
@@ -2022,6 +2131,13 @@
         } else {
           body.classList.remove('chinese');
         }
+
+        // Update newsletter field placeholders/labels for the active language
+        document.querySelectorAll('.newsletter-field').forEach(field => {
+          const text = lang === 'zh' ? field.dataset.placeholderZh : field.dataset.placeholderEn;
+          field.placeholder = text;
+          field.setAttribute('aria-label', text);
+        });
       }
     });
 
@@ -2168,6 +2284,56 @@
 
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeQrModal();
+    });
+
+    // ==========================================
+    // NEWSLETTER SIGNUP
+    // Posts to a Google Apps Script Web App that appends each signup to a
+    // Google Sheet. mode: 'no-cors' means the response is opaque — the
+    // .then() branch fires for any server response, not just success.
+    // ==========================================
+    const NEWSLETTER_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwxhYrrxZZp43HZn_SY79ZXwXfee-HNYwGzxmiR0uIvgU7tKMSi3IiiRV1WGrTLwdiicQ/exec';
+    const newsletterForm = document.getElementById('newsletterForm');
+    const newsletterStatusEn = document.getElementById('newsletterStatusEn');
+    const newsletterStatusZh = document.getElementById('newsletterStatusZh');
+    const newsletterErrorEn = document.getElementById('newsletterErrorEn');
+    const newsletterErrorZh = document.getElementById('newsletterErrorZh');
+    const newsletterAllStatus = [newsletterStatusEn, newsletterStatusZh, newsletterErrorEn, newsletterErrorZh];
+    const newsletterSubmitButtons = newsletterForm.querySelectorAll('.newsletter-submit');
+
+    function showNewsletterMessage(el) {
+      newsletterAllStatus.forEach(msg => msg.classList.remove('visible'));
+      el.classList.add('visible');
+    }
+
+    newsletterForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const isZh = document.body.classList.contains('chinese');
+
+      // Honeypot: if this hidden field got filled in, it was a bot — drop
+      // the submission silently instead of sending it or showing an error.
+      if (newsletterForm.elements['_gotcha'].value) {
+        newsletterForm.reset();
+        return;
+      }
+
+      newsletterSubmitButtons.forEach(btn => btn.disabled = true);
+
+      fetch(NEWSLETTER_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: new URLSearchParams(new FormData(newsletterForm))
+      })
+        .then(function() {
+          showNewsletterMessage(isZh ? newsletterStatusZh : newsletterStatusEn);
+          newsletterForm.reset();
+        })
+        .catch(function() {
+          showNewsletterMessage(isZh ? newsletterErrorZh : newsletterErrorEn);
+        })
+        .finally(function() {
+          newsletterSubmitButtons.forEach(btn => btn.disabled = false);
+        });
     });
 
     // ==========================================
