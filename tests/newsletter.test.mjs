@@ -19,8 +19,9 @@ function fillAndSubmit(dom, { name, email, honeypot = '' } = {}) {
   form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
 }
 
-test('newsletter form renders the expected fields', async () => {
+test('newsletter form renders the expected fields', async (t) => {
   const dom = await loadPage();
+  t.after(() => dom.window.close());
   const { document } = dom.window;
   assert.ok(document.getElementById('newsletterName'));
   assert.ok(document.getElementById('newsletterEmail'));
@@ -28,8 +29,9 @@ test('newsletter form renders the expected fields', async () => {
   assert.equal(document.querySelectorAll('.newsletter-submit').length, 2);
 });
 
-test('honeypot filled in: submission is dropped without calling fetch', async () => {
+test('honeypot filled in: submission is dropped without calling fetch', async (t) => {
   const dom = await loadPage();
+  t.after(() => dom.window.close());
   let fetchCalled = false;
   dom.window.fetch = () => {
     fetchCalled = true;
@@ -41,8 +43,9 @@ test('honeypot filled in: submission is dropped without calling fetch', async ()
   assert.equal(fetchCalled, false);
 });
 
-test('valid submission posts name and email, then shows the English thank-you message', async () => {
+test('valid submission posts name and email, then shows the English thank-you message', async (t) => {
   const dom = await loadPage();
+  t.after(() => dom.window.close());
   const { document } = dom.window;
   let capturedBody;
   dom.window.fetch = (url, opts) => {
@@ -55,15 +58,15 @@ test('valid submission posts name and email, then shows the English thank-you me
   assert.match(capturedBody, /name=Jane/);
   assert.match(capturedBody, /email=jane%40example\.com/);
 
-  // Flush the mocked promise chain's .then()/.finally().
   await flushPromises();
 
   assert.ok(document.getElementById('newsletterStatusEn').classList.contains('visible'));
   assert.ok(!document.getElementById('newsletterStatusZh').classList.contains('visible'));
 });
 
-test('valid submission in Chinese mode shows the Chinese thank-you message', async () => {
+test('valid submission in Chinese mode shows the Chinese thank-you message', async (t) => {
   const dom = await loadPage();
+  t.after(() => dom.window.close());
   const { document, Event } = dom.window;
   dom.window.fetch = () => Promise.resolve({});
 
@@ -78,14 +81,19 @@ test('valid submission in Chinese mode shows the Chinese thank-you message', asy
   assert.ok(!document.getElementById('newsletterStatusEn').classList.contains('visible'));
 });
 
-test('submit buttons are disabled while the request is in flight, then re-enabled', async () => {
+test('submit buttons are disabled while the request is in flight, then re-enabled', async (t) => {
   const dom = await loadPage();
+  t.after(() => dom.window.close());
   const { document } = dom.window;
   let resolveFetch;
   dom.window.fetch = () => new Promise((resolve) => { resolveFetch = resolve; });
 
   fillAndSubmit(dom, { name: 'Slow', email: 'slow@example.com' });
 
+  // This assertion runs synchronously right after dispatching 'submit',
+  // relying on the real submit handler disabling the buttons *before*
+  // calling fetch() (see index.html's NEWSLETTER SIGNUP block) rather
+  // than in a .then() callback — otherwise this would race the mock.
   const buttons = [...document.querySelectorAll('.newsletter-submit')];
   assert.ok(buttons.every((btn) => btn.disabled));
 
@@ -95,8 +103,9 @@ test('submit buttons are disabled while the request is in flight, then re-enable
   assert.ok(buttons.every((btn) => !btn.disabled));
 });
 
-test('fetch rejection shows the error message and re-enables the buttons', async () => {
+test('fetch rejection shows the error message and re-enables the buttons', async (t) => {
   const dom = await loadPage();
+  t.after(() => dom.window.close());
   const { document } = dom.window;
   dom.window.fetch = () => Promise.reject(new Error('network down'));
 
