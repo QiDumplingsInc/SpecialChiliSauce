@@ -44,8 +44,8 @@
       --color-text-light: #666;
       --color-text-lighter: #999;
       --color-white: #ffffff;
-      --color-bg-light: #f9f9f9;
-      --color-bg-lighter: #f0f0f0;
+      --color-bg-light: #FDF6E9;
+      --color-bg-lighter: #F5ECD9;
 
       /* Spacing */
       --spacing-xs: 0.5rem;
@@ -56,6 +56,7 @@
 
       /* Typography */
       --font-family-primary: 'Georgia', serif;
+      --font-family-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       --font-size-base: 1rem;
       --font-size-sm: 0.9rem;
       --font-size-lg: 1.1rem;
@@ -107,8 +108,29 @@
       font-family: var(--font-family-primary);
       line-height: var(--line-height-base);
       color: var(--color-text);
-      background: var(--color-white);
+      background: var(--color-bg-light);
       overflow-x: hidden;
+    }
+
+    /* UI elements (buttons, prices, nav, badges) use a clean sans-serif
+       for a more modern feel and better legibility at small mobile sizes */
+    .cta-button,
+    .buy-button,
+    .product-order-btn,
+    .scroll-to-top,
+    .order-shortcut,
+    .language-switcher button,
+    .social-links a,
+    .social-links button,
+    .heat-level,
+    .size-label,
+    .size-price,
+    .size-per-oz,
+    .sizes-title,
+    .qr-modal-title,
+    .qr-modal-subtitle,
+    nav {
+      font-family: var(--font-family-ui);
     }
 
     img {
@@ -276,6 +298,7 @@
       display: flex;
       gap: var(--spacing-sm);
       flex-wrap: wrap;
+      font-family: var(--font-family-ui);
     }
 
     .social-links a {
@@ -301,7 +324,7 @@
       border: 2px solid var(--color-white);
       border-radius: var(--radius-sm);
       padding: var(--spacing-xs) var(--spacing-sm);
-      font-family: var(--font-family-primary);
+      font-family: var(--font-family-ui);
       font-size: var(--font-size-base);
       font-weight: 500;
       cursor: pointer;
@@ -599,12 +622,31 @@
     }
 
     .feedback-caption {
-      padding: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-sm) 0;
       text-align: center;
       font-style: italic;
       color: var(--color-text-light);
       font-size: var(--font-size-sm);
       background: var(--color-bg-light);
+    }
+
+    .feedback-rating {
+      text-align: center;
+      color: var(--color-secondary);
+      font-size: 1.1rem;
+      letter-spacing: 0.15rem;
+      background: var(--color-bg-light);
+      padding-top: var(--spacing-sm);
+    }
+
+    .feedback-attribution {
+      text-align: center;
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--color-text);
+      background: var(--color-bg-light);
+      padding: 0.2rem var(--spacing-sm) var(--spacing-sm);
     }
 
     /* ========================================
@@ -1105,10 +1147,15 @@
         text-align: center;
       }
 
-      /* Language Switcher */
+      /* Language Switcher: on mobile, take it out of fixed/floating
+         positioning entirely so it can never overlap the sticky header
+         logo — render it in normal document flow instead. */
       .language-switcher {
-        top: 10px;
-        right: 10px;
+        position: static;
+        display: flex;
+        justify-content: flex-end;
+        margin: 0.5rem 0.5rem 0 auto;
+        width: fit-content;
       }
 
       /* Scroll to Top Button */
@@ -1138,7 +1185,7 @@
       }
 
       .products-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
         gap: var(--spacing-sm);
       }
 
@@ -1170,7 +1217,6 @@
         font-size: var(--font-size-sm);
       }
 
-      /* Product cards compact for 2-per-row mobile layout */
       .product-card {
         padding: var(--spacing-sm);
       }
@@ -1290,12 +1336,12 @@
 
   <!-- Scroll to Top Button -->
   <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
-    &#8593;
+    <span aria-hidden="true">&#8593;</span>
   </button>
 
   <!-- Order Shortcut Button -->
   <a href="#buy-now" class="order-shortcut" aria-label="Go to Order Directly">
-    &#128722;
+    <span aria-hidden="true">&#128722;</span>
   </a>
 
   <!-- QR Code Modal -->
@@ -1385,7 +1431,7 @@
         <br>
         <p>今天，Kay辣椒酱承载着友谊的温暖、传统的丰富和真实风味的快乐——专为那些离不开辣味的人们精心制作。</p>
       </div>
-    </div> 
+    </div>
 
       <img src="assets/product/3_jar_with_ingredient3.png"
            alt="Kay's Special Chili Oil with fresh ingredients"
@@ -1495,6 +1541,10 @@
   </section>
 
   <!-- Customer Feedback Gallery -->
+  <!-- PLACEHOLDER CONTENT: reviewer names/locations below are fabricated for
+       layout purposes (per design-review PII discussion). Replace with real,
+       permission-obtained customer names/locations and actual review text
+       before this goes live. -->
   <section class="section customer-feedback" id="feedback">
     <div class="container">
       <h2 class="section-title lang-en fade-in">Customer Love & Recipes</h2>
@@ -1508,32 +1558,44 @@
                alt="Customer enjoying Kay's Chili Sauce with dumplings"
                class="feedback-image"
                loading="lazy">
+          <div class="feedback-rating" aria-label="5 out of 5 stars">★★★★★</div>
           <div class="feedback-caption lang-en">"Perfect with dumplings!"</div>
           <div class="feedback-caption lang-zh">"搭配饺子太完美了！"</div>
+          <div class="feedback-attribution lang-en">&mdash; Sarah, Arlington, VA</div>
+          <div class="feedback-attribution lang-zh">&mdash; Sarah，弗吉尼亚州阿灵顿</div>
         </div>
         <div class="feedback-item fade-in">
           <img src="assets/customer-feedback/customer-feedback2.png"
                alt="Customer testimonial for Kay's Chili Sauce"
                class="feedback-image"
                loading="lazy">
+          <div class="feedback-rating" aria-label="5 out of 5 stars">★★★★★</div>
           <div class="feedback-caption lang-en">"Best chili oil I've ever had"</div>
           <div class="feedback-caption lang-zh">"我吃过最好的辣椒油"</div>
+          <div class="feedback-attribution lang-en">&mdash; Michael, Richmond, VA</div>
+          <div class="feedback-attribution lang-zh">&mdash; Michael，弗吉尼亚州里士满</div>
         </div>
         <div class="feedback-item fade-in">
           <img src="assets/customer-feedback/customer-feedback3.png"
                alt="Customer review of Kay's Chili Sauce"
                class="feedback-image"
                loading="lazy">
+          <div class="feedback-rating" aria-label="5 out of 5 stars">★★★★★</div>
           <div class="feedback-caption lang-en">"Reminds me of home"</div>
           <div class="feedback-caption lang-zh">"让我想起家的味道"</div>
+          <div class="feedback-attribution lang-en">&mdash; Linda, Seattle, WA</div>
+          <div class="feedback-attribution lang-zh">&mdash; Linda，西雅图</div>
         </div>
         <div class="feedback-item fade-in">
           <img src="assets/customer-feedback/customer-feedback4.png"
                alt="Happy customer with Kay's Chili Sauce"
                class="feedback-image"
                loading="lazy">
+          <div class="feedback-rating" aria-label="5 out of 5 stars">★★★★★</div>
           <div class="feedback-caption lang-en">"Addicted to this sauce!"</div>
           <div class="feedback-caption lang-zh">"对这个酱上瘾了！"</div>
+          <div class="feedback-attribution lang-en">&mdash; James, Fairfax, VA</div>
+          <div class="feedback-attribution lang-zh">&mdash; James，弗吉尼亚州费尔法克斯</div>
         </div>
       </div>
     </div>
@@ -1709,28 +1771,28 @@
       <h2 class="section-title lang-zh fade-in" style="color: white;">为什么选择Kay's？</h2>
       <div class="features-grid">
         <div class="feature fade-in">
-          <div class="feature-icon">🥄</div>
+          <div class="feature-icon" aria-hidden="true">🥄</div>
           <h3 class="lang-en">Handcrafted in Small Batches</h3>
           <h3 class="lang-zh">小批量手工制作</h3>
           <p class="lang-en">Each bottle is carefully made by hand to ensure consistent quality and flavor.</p>
           <p class="lang-zh">每瓶都经过精心手工制作，以确保质量和风味的一致性。</p>
         </div>
         <div class="feature fade-in">
-          <div class="feature-icon">🌿</div>
+          <div class="feature-icon" aria-hidden="true">🌿</div>
           <h3 class="lang-en">All-Natural Ingredients</h3>
           <h3 class="lang-zh">全天然成分</h3>
           <p class="lang-en">No artificial preservatives or additives. Just pure, natural ingredients.</p>
           <p class="lang-zh">无人工防腐剂或添加剂。只有纯天然的成分。</p>
         </div>
         <div class="feature fade-in">
-          <div class="feature-icon">🏮</div>
+          <div class="feature-icon" aria-hidden="true">🏮</div>
           <h3 class="lang-en">Traditional Chinese Technique</h3>
           <h3 class="lang-zh">传统中式工艺</h3>
           <p class="lang-en">Made using authentic oil chili technique passed down through generations.</p>
           <p class="lang-zh">采用世代相传的正宗油泼辣子工艺制作。</p>
         </div>
         <div class="feature fade-in">
-          <div class="feature-icon">🍽️</div>
+          <div class="feature-icon" aria-hidden="true">🍽️</div>
           <h3 class="lang-en">Perfect for Everything</h3>
           <h3 class="lang-zh">百搭美味</h3>
           <p class="lang-en">Great for rice, dipping, cooking, and adding flavor to any dish.</p>
@@ -1758,7 +1820,7 @@
         <div class="buy-options-grid">
           <!-- WeChat Order -->
           <div class="buy-option-card">
-            <div class="buy-option-icon">💬</div>
+            <div class="buy-option-icon" aria-hidden="true">💬</div>
             <h4 class="lang-en">Order via WeChat</h4>
             <h4 class="lang-zh">微信订购</h4>
             <div>
@@ -1774,7 +1836,7 @@
 
           <!-- 小红书 Order -->
           <div class="buy-option-card">
-            <div class="buy-option-icon">📕</div>
+            <div class="buy-option-icon" aria-hidden="true">📕</div>
             <h4 class="lang-en">Order via Rednote</h4>
             <h4 class="lang-zh">小红书订购</h4>
             <div>
@@ -1792,7 +1854,7 @@
 
           <!-- Email Order -->
           <div class="buy-option-card">
-            <div class="buy-option-icon">📧</div>
+            <div class="buy-option-icon" aria-hidden="true">📧</div>
             <h4 class="lang-en">Email for Bulk Orders</h4>
             <h4 class="lang-zh">批量订购邮箱</h4>
             <div style="margin: 2rem 0;">
@@ -1804,7 +1866,7 @@
 
           <!-- Phone Order -->
           <div class="buy-option-card">
-            <div class="buy-option-icon">&#128222;</div>
+            <div class="buy-option-icon" aria-hidden="true">&#128222;</div>
             <h4 class="lang-en">Phone Order</h4>
             <h4 class="lang-zh">电话订购</h4>
             <div style="margin: 2rem 0;">
@@ -1840,7 +1902,7 @@
 
       <div class="contact-content">
         <div class="contact-item fade-in">
-          <div class="contact-icon">💬</div>
+          <div class="contact-icon" aria-hidden="true">💬</div>
           <h3 class="lang-en">WeChat</h3>
           <h3 class="lang-zh">微信</h3>
           <div class="contact-info">
@@ -1855,7 +1917,7 @@
         </div>
 
         <div class="contact-item fade-in">
-          <div class="contact-icon">📕</div>
+          <div class="contact-icon" aria-hidden="true">📕</div>
           <h3 class="lang-en">Rednote</h3>
           <h3 class="lang-zh">小红书</h3>
           <div class="contact-info">
@@ -1872,7 +1934,7 @@
         </div>
 
         <div class="contact-item fade-in">
-          <div class="contact-icon">📧</div>
+          <div class="contact-icon" aria-hidden="true">📧</div>
           <h3 class="lang-en">Email</h3>
           <h3 class="lang-zh">电子邮件</h3>
           <div class="contact-info">
@@ -1883,7 +1945,7 @@
         </div>
 
         <div class="contact-item fade-in">
-          <div class="contact-icon">&#128222;</div>
+          <div class="contact-icon" aria-hidden="true">&#128222;</div>
           <h3 class="lang-en">Phone</h3>
           <h3 class="lang-zh">电话</h3>
           <div class="contact-info">
