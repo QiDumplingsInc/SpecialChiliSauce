@@ -632,7 +632,7 @@
 
     .feedback-rating {
       text-align: center;
-      color: var(--color-secondary);
+      color: var(--color-primary);
       font-size: 1.1rem;
       letter-spacing: 0.15rem;
       background: var(--color-bg-light);
@@ -1147,15 +1147,13 @@
         text-align: center;
       }
 
-      /* Language Switcher: on mobile, take it out of fixed/floating
-         positioning entirely so it can never overlap the sticky header
-         logo — render it in normal document flow instead. */
+      /* Language Switcher: positioned absolutely within the header
+         (its nearest positioned ancestor) so it can never render as
+         a separate row above the header or overlap the logo. */
       .language-switcher {
-        position: static;
-        display: flex;
-        justify-content: flex-end;
-        margin: 0.5rem 0.5rem 0 auto;
-        width: fit-content;
+        position: absolute;
+        top: 8px;
+        right: 8px;
       }
 
       /* Scroll to Top Button */
@@ -1354,14 +1352,14 @@
     </div>
   </div>
 
-  <!-- Language Switcher -->
-  <div class="language-switcher" role="navigation" aria-label="Language switcher">
-    <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
-    <button class="lang-btn" data-lang="zh" aria-label="切换到中文">中文</button>
-  </div>
-
   <!-- Header -->
   <header role="banner">
+    <!-- Language Switcher: nested inside header so mobile positioning
+         is relative to the header box, never above/overlapping it -->
+    <div class="language-switcher" role="navigation" aria-label="Language switcher">
+      <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+      <button class="lang-btn" data-lang="zh" aria-label="切换到中文">中文</button>
+    </div>
     <div class="container">
       <div class="header-content">
         <div class="logo lang-en">Kay's Special Chili Oil Sauce</div>
@@ -1556,7 +1554,8 @@
                alt="Customer enjoying Kay's Chili Sauce with dumplings"
                class="feedback-image"
                loading="lazy">
-          <div class="feedback-rating" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-en" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-zh" role="img" aria-label="5星好评">★★★★★</div>
           <div class="feedback-caption lang-en">"Perfect with dumplings!"</div>
           <div class="feedback-caption lang-zh">"搭配饺子太完美了！"</div>
           <div class="feedback-attribution lang-en">&mdash; Sarah, Arlington, VA</div>
@@ -1567,7 +1566,8 @@
                alt="Customer testimonial for Kay's Chili Sauce"
                class="feedback-image"
                loading="lazy">
-          <div class="feedback-rating" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-en" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-zh" role="img" aria-label="5星好评">★★★★★</div>
           <div class="feedback-caption lang-en">"Best chili oil I've ever had"</div>
           <div class="feedback-caption lang-zh">"我吃过最好的辣椒油"</div>
           <div class="feedback-attribution lang-en">&mdash; Michael, Richmond, VA</div>
@@ -1578,7 +1578,8 @@
                alt="Customer review of Kay's Chili Sauce"
                class="feedback-image"
                loading="lazy">
-          <div class="feedback-rating" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-en" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-zh" role="img" aria-label="5星好评">★★★★★</div>
           <div class="feedback-caption lang-en">"Reminds me of home"</div>
           <div class="feedback-caption lang-zh">"让我想起家的味道"</div>
           <div class="feedback-attribution lang-en">&mdash; Linda, Seattle, WA</div>
@@ -1589,7 +1590,8 @@
                alt="Happy customer with Kay's Chili Sauce"
                class="feedback-image"
                loading="lazy">
-          <div class="feedback-rating" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-en" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-zh" role="img" aria-label="5星好评">★★★★★</div>
           <div class="feedback-caption lang-en">"Addicted to this sauce!"</div>
           <div class="feedback-caption lang-zh">"对这个酱上瘾了！"</div>
           <div class="feedback-attribution lang-en">&mdash; James, Fairfax, VA</div>
@@ -1622,7 +1624,7 @@
           </div>
           <h3 class="product-name lang-en">First Flame</h3>
           <h3 class="product-name lang-zh">初焰</h3>
-          <div class="heat-level"> <span class="lang-en">🌶️ Mild Heat</span><span class="lang-zh">🌶️ 微辣</span></div>
+          <div class="heat-level"> <span class="lang-en"><span aria-hidden="true">🌶️</span> Mild Heat</span><span class="lang-zh"><span aria-hidden="true">🌶️</span> 微辣</span></div>
           <p class="product-description lang-en">Our classic recipe with the perfect balance of heat and flavor. Great for beginners and everyday use.</p>
           <p class="product-description lang-zh">我们的经典配方，热度和风味完美平衡。非常适合初学者和日常使用。</p>
 
@@ -1670,7 +1672,7 @@
           </div>
           <h3 class="product-name lang-en">Flavor Rush</h3>
           <h3 class="product-name lang-zh">香辣奔腾</h3>
-          <div class="heat-level"><span class="lang-en">🌶️🌶️ Medium Heat</span><span class="lang-zh">🌶️🌶️ 中辣</span></div>
+          <div class="heat-level"><span class="lang-en"><span aria-hidden="true">🌶️🌶️</span> Medium Heat</span><span class="lang-zh"><span aria-hidden="true">🌶️🌶️</span> 中辣</span></div>
           <p class="product-description lang-en">Rich smoky flavor with a deeper, more complex taste. Perfect for grilling and roasted dishes.</p>
           <p class="product-description lang-zh">浓郁的烟熏味，口感更深层、更复杂。非常适合烧烤和烘烤菜肴。</p>
 
@@ -1717,7 +1719,7 @@
           </div>
           <h3 class="product-name lang-en">Dragon Burn</h3>
           <h3 class="product-name lang-zh">火龙焚烧</h3>
-          <div class="heat-level"><span class="lang-en">🌶️🌶️🌶️ Extra Hot</span><span class="lang-zh">🌶️🌶️🌶️ 特辣</span></div>
+          <div class="heat-level"><span class="lang-en"><span aria-hidden="true">🌶️🌶️🌶️</span> Extra Hot</span><span class="lang-zh"><span aria-hidden="true">🌶️🌶️🌶️</span> 特辣</span></div>
           <p class="product-description lang-en">For those who love intense heat and spicy. A fiery blend that packs a serious punch.</p>
           <p class="product-description lang-zh">为热爱强烈辣味的人准备。火辣的混合，带来强劲的冲击。</p>
 
