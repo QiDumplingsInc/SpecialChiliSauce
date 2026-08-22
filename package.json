@@ -1,0 +1,12 @@
+{
+  "name": "special-chili-sauce-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Static site for Kay's Special Chili Oil Sauce",
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "jsdom": "^30.0.1"
+  }
+}

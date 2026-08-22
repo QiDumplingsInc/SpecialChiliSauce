@@ -2055,8 +2055,8 @@
 
       <form class="newsletter-form fade-in" id="newsletterForm">
         <input type="text" class="newsletter-honeypot" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <input type="text" class="newsletter-field" id="newsletterName" name="name" data-placeholder-en="First Name" data-placeholder-zh="姓名" placeholder="First Name" aria-label="First Name" required>
-        <input type="email" class="newsletter-field" id="newsletterEmail" name="email" data-placeholder-en="Email Address" data-placeholder-zh="电子邮箱" placeholder="Email Address" aria-label="Email Address" required>
+        <input type="text" class="newsletter-field" id="newsletterName" name="name" data-placeholder-en="First Name" data-placeholder-zh="姓名" placeholder="First Name" aria-label="First Name" maxlength="100" required>
+        <input type="email" class="newsletter-field" id="newsletterEmail" name="email" data-placeholder-en="Email Address" data-placeholder-zh="电子邮箱" placeholder="Email Address" aria-label="Email Address" maxlength="100" required>
         <button type="submit" class="newsletter-submit lang-en">Subscribe</button>
         <button type="submit" class="newsletter-submit lang-zh">订阅</button>
       </form>
@@ -2292,7 +2292,7 @@
     // Google Sheet. mode: 'no-cors' means the response is opaque — the
     // .then() branch fires for any server response, not just success.
     // ==========================================
-    const NEWSLETTER_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz2nJ5ZStYecH8MCPM0YK5rrraPcPSeEZeO44fp4tm1tq2xpKdEEju_s4mYK4YyMWaTqQ/exec';
+    const NEWSLETTER_ENDPOINT = 'https://script.google.com/macros/s/AKfycbx6OQTdcweynZcX9zcPjwctZ3tPkBQyTvWxyuMN2_22vHTCk0v4_Zgur8LFXfIgNr4R4Q/exec';
     const newsletterForm = document.getElementById('newsletterForm');
     const newsletterStatusEn = document.getElementById('newsletterStatusEn');
     const newsletterStatusZh = document.getElementById('newsletterStatusZh');
