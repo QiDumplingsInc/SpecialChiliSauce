@@ -88,20 +88,26 @@ a {
 /* ========================================
    LANGUAGE HIDDEN CLASSES
    ======================================== */
+/* !important is deliberate here: this has broken three separate times
+   (home.html, gallery.html, category pages) because a component class
+   sharing the same element (e.g. .cta-button, .category-back,
+   .medium-card-label) sets its own `display` and wins the cascade tie
+   purely based on declaration order. Language visibility must always
+   win regardless of what other class is on the element. */
 .lang-en {
-  display: block;
+  display: block !important;
 }
 
 .lang-zh {
-  display: none;
+  display: none !important;
 }
 
 body.chinese .lang-en {
-  display: none;
+  display: none !important;
 }
 
 body.chinese .lang-zh {
-  display: block;
+  display: block !important;
 }
 
 /* ========================================

@@ -12,6 +12,189 @@
   <link rel="icon" type="image/png" href="assets/logo/favicon.png">
   <link rel="stylesheet" href="assets/css/site.css">
   <link rel="stylesheet" href="assets/css/gallery.css">
+
+  <style>
+    /* PLACEHOLDER hero banner — swap the background for a real photo
+       of Kay's work once available. */
+    .gallery-fullscreen-hero {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: var(--color-bg-lighter);
+      border: 2px dashed var(--color-text-lighter);
+      color: var(--color-text-light);
+    }
+
+    .gallery-fullscreen-hero .hero-inner h1 {
+      font-size: var(--font-size-4xl);
+      color: var(--color-text);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    /* Alternating full-width image/text panels */
+    .about-panel-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-xl) 0;
+    }
+
+    .about-panel-row.reversed .about-panel-image {
+      order: 2;
+    }
+
+    .about-panel-image {
+      aspect-ratio: 3 / 2;
+      background: var(--color-bg-lighter);
+      border: 2px dashed var(--color-text-lighter);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-lighter);
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+      text-align: center;
+      padding: var(--spacing-md);
+    }
+
+    .about-panel-text h2 {
+      font-size: var(--font-size-2xl);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .about-panel-text p {
+      color: var(--color-text-light);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .about-panel-text a {
+      font-family: var(--font-family-ui);
+      font-weight: bold;
+      font-size: var(--font-size-sm);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 700px) {
+      .about-panel-row,
+      .about-panel-row.reversed {
+        grid-template-columns: 1fr;
+      }
+
+      .about-panel-row.reversed .about-panel-image {
+        order: 0;
+      }
+    }
+
+    /* Video feature placeholder */
+    .video-feature {
+      padding: var(--spacing-xl) 0;
+      text-align: center;
+      background: var(--color-bg-light);
+    }
+
+    .video-feature h2 {
+      font-family: var(--font-family-ui);
+      letter-spacing: 1px;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .video-placeholder {
+      max-width: 640px;
+      aspect-ratio: 16 / 9;
+      margin: 0 auto;
+      background: var(--color-bg-lighter);
+      border: 2px dashed var(--color-text-lighter);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-lighter);
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+    }
+
+    /* Two-column advanced footer */
+    .site-footer-advanced {
+      background: #222;
+      color: #ddd;
+      padding: var(--spacing-xl) 0 var(--spacing-md);
+    }
+
+    .footer-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+      font-family: var(--font-family-ui);
+    }
+
+    .footer-columns h3 {
+      color: var(--color-white);
+      font-size: var(--font-size-lg);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .footer-columns p,
+    .footer-columns a {
+      color: #bbb;
+      font-size: var(--font-size-sm);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .footer-columns a:hover {
+      color: var(--color-white);
+    }
+
+    .footer-col-right {
+      text-align: right;
+    }
+
+    .footer-social-row {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-md);
+      flex-wrap: wrap;
+      padding: var(--spacing-md) 0;
+      border-top: 1px solid #444;
+      border-bottom: 1px solid #444;
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+    }
+
+    .footer-social-row a {
+      color: #bbb;
+      text-decoration: none;
+    }
+
+    .footer-social-row a:hover {
+      color: var(--color-white);
+    }
+
+    .footer-copyright {
+      text-align: center;
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+      color: #888;
+      padding-top: var(--spacing-md);
+    }
+
+    @media (max-width: 700px) {
+      .footer-columns {
+        grid-template-columns: 1fr;
+        text-align: left;
+      }
+
+      .footer-col-right {
+        text-align: left;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -36,13 +219,13 @@
     </div>
   </header>
 
-  <!-- Gallery hero -->
-  <section class="gallery-hero">
-    <div class="container">
+  <!-- PLACEHOLDER hero — swap background for a real photo of Kay's work -->
+  <section class="gallery-fullscreen-hero">
+    <div class="hero-inner">
       <h1 class="lang-en">Paintings by Kay</h1>
       <h1 class="lang-zh">Kay的画作</h1>
-      <p class="gallery-intro lang-en">A collection of Kay's original artwork &mdash; more coming soon.</p>
-      <p class="gallery-intro lang-zh">Kay的原创作品系列——更多作品即将上线。</p>
+      <p class="lang-en">Photo coming soon</p>
+      <p class="lang-zh">图片即将上线</p>
     </div>
   </section>
 
@@ -122,34 +305,80 @@
     </div>
   </section>
 
-  <!-- About / Services two-panel section -->
-  <section class="about-services">
+  <!-- Alternating image/text panels -->
+  <section class="container">
+    <div class="about-panel-row">
+      <div class="about-panel-image">
+        <span class="lang-en">Photo coming soon</span>
+        <span class="lang-zh">图片即将上线</span>
+      </div>
+      <div class="about-panel-text">
+        <h2 class="lang-en">About Kay's Gallery</h2>
+        <h2 class="lang-zh">关于Kay的画廊</h2>
+        <p class="lang-en">A growing collection of Kay's original artwork across painting, drawing, and mixed media. More about Kay's artistic journey coming soon.</p>
+        <p class="lang-zh">收录Kay在绘画、素描、综合材料等领域的原创作品。关于Kay创作历程的介绍即将上线。</p>
+        <a href="home.html" class="lang-en">Learn more &rarr;</a>
+        <a href="home.html" class="lang-zh">了解更多 &rarr;</a>
+      </div>
+    </div>
+
+    <div class="about-panel-row reversed">
+      <div class="about-panel-image">
+        <span class="lang-en">Photo coming soon</span>
+        <span class="lang-zh">图片即将上线</span>
+      </div>
+      <div class="about-panel-text">
+        <h2 class="lang-en">Commissions &amp; Inquiries</h2>
+        <h2 class="lang-zh">定制与咨询</h2>
+        <p class="lang-en">Interested in a custom piece or purchasing artwork? Reach out and we'll be happy to help.</p>
+        <p class="lang-zh">对定制作品或购买作品感兴趣？欢迎与我们联系。</p>
+        <a href="index.html#contact" class="lang-en">Contact us &rarr;</a>
+        <a href="index.html#contact" class="lang-zh">联系我们 &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video feature placeholder -->
+  <section class="video-feature">
     <div class="container">
-      <div class="about-services-grid">
-        <div class="about-panel">
-          <h3 class="lang-en">About Kay's Gallery</h3>
-          <h3 class="lang-zh">关于Kay的画廊</h3>
-          <p class="lang-en">A growing collection of Kay's original artwork across painting, drawing, and mixed media. More about Kay's artistic journey coming soon.</p>
-          <p class="lang-zh">收录Kay在绘画、素描、综合材料等领域的原创作品。关于Kay创作历程的介绍即将上线。</p>
-          <a href="home.html" class="lang-en">Learn more &rarr;</a>
-          <a href="home.html" class="lang-zh">了解更多 &rarr;</a>
-        </div>
-        <div class="about-panel">
-          <h3 class="lang-en">Commissions &amp; Inquiries</h3>
-          <h3 class="lang-zh">定制与咨询</h3>
-          <p class="lang-en">Interested in a custom piece or purchasing artwork? Reach out and we'll be happy to help.</p>
-          <p class="lang-zh">对定制作品或购买作品感兴趣？欢迎与我们联系。</p>
-          <a href="index.html#contact" class="lang-en">Contact us &rarr;</a>
-          <a href="index.html#contact" class="lang-zh">联系我们 &rarr;</a>
-        </div>
+      <h2 class="lang-en">Recent Video Features</h2>
+      <h2 class="lang-zh">近期视频</h2>
+      <div class="video-placeholder">
+        <span class="lang-en">Video coming soon</span>
+        <span class="lang-zh">视频即将上线</span>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer role="contentinfo">
+  <footer role="contentinfo" class="site-footer-advanced">
     <div class="container">
-      <div class="footer-content">
+      <div class="footer-columns">
+        <div>
+          <h3 class="lang-en">Kay's Gallery</h3>
+          <h3 class="lang-zh">Kay's 画廊</h3>
+          <a href="index.html#newsletter" class="lang-en">Join our mailing list</a>
+          <a href="index.html#newsletter" class="lang-zh">加入邮件订阅</a>
+        </div>
+        <div class="footer-col-right">
+          <h3 class="lang-en">Contact Us</h3>
+          <h3 class="lang-zh">联系我们</h3>
+          <a href="mailto:QiDumplingsINC@gmail.com">QiDumplingsINC@gmail.com</a>
+          <a href="tel:+17033458016">(703) 345-8016</a>
+          <a href="home.html" class="lang-en">Home</a>
+          <a href="home.html" class="lang-zh">首页</a>
+          <a href="index.html" class="lang-en">Special Chili Sauce</a>
+          <a href="index.html" class="lang-zh">特制辣椒酱</a>
+        </div>
+      </div>
+
+      <div class="footer-social-row">
+        <a href="https://instagram.com/your-instagram-handle" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.facebook.com/share/1EFRRZNRMs/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="http://xhslink.com/m/41QoyH8K49O" target="_blank" rel="noopener noreferrer">Rednote</a>
+      </div>
+
+      <div class="footer-copyright">
         <p class="lang-en">&copy; 2024&ndash;<span id="copyright-year"></span> Kay's Creations. All rights reserved.</p>
         <p class="lang-zh">&copy; 2024&ndash;<span id="copyright-year-zh"></span> Kay's创作空间。版权所有。</p>
       </div>

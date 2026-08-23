@@ -1178,20 +1178,24 @@
     /* ========================================
        LANGUAGE HIDDEN CLASSES
        ======================================== */
+    /* !important is deliberate: this class of bug (a component class
+       sharing the element also sets `display`, winning the cascade tie
+       by declaration order) has broken language switching on other
+       pages in this site. Language visibility must always win. */
     .lang-en {
-      display: block;
+      display: block !important;
     }
 
     .lang-zh {
-      display: none;
+      display: none !important;
     }
 
     body.chinese .lang-en {
-      display: none;
+      display: none !important;
     }
 
     body.chinese .lang-zh {
-      display: block;
+      display: block !important;
     }
 
     /* ========================================
