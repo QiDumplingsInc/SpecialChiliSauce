@@ -11,85 +11,7 @@
 
   <link rel="icon" type="image/png" href="assets/logo/favicon.png">
   <link rel="stylesheet" href="assets/css/site.css">
-
-  <style>
-    .gallery-hero {
-      padding: var(--spacing-xl) 0 var(--spacing-lg);
-      text-align: center;
-    }
-
-    .gallery-hero h1 {
-      font-size: var(--font-size-4xl);
-      color: var(--color-text);
-      margin-bottom: var(--spacing-sm);
-    }
-
-    .gallery-intro {
-      max-width: 700px;
-      margin: 0 auto;
-      color: var(--color-text-light);
-      font-size: var(--font-size-lg);
-    }
-
-    .medium-section {
-      padding: var(--spacing-lg) 0 var(--spacing-xl);
-    }
-
-    .medium-section-title {
-      text-align: center;
-      font-family: var(--font-family-ui);
-      font-size: var(--font-size-sm);
-      font-weight: bold;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--color-text-light);
-      margin-bottom: var(--spacing-lg);
-    }
-
-    /* PLACEHOLDER: each tile links to a category sub-page. Swap the
-       .medium-placeholder box for a real <img> once photos exist,
-       following the commented example further down the page. */
-    .medium-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: var(--spacing-md);
-    }
-
-    .medium-card {
-      display: block;
-      text-decoration: none;
-      color: var(--color-text);
-    }
-
-    .medium-placeholder {
-      aspect-ratio: 1 / 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--color-bg-lighter);
-      border: 1px solid var(--color-bg-lighter);
-      border-radius: var(--radius-sm);
-      color: var(--color-text-lighter);
-      font-family: var(--font-family-ui);
-      font-size: var(--font-size-sm);
-      text-align: center;
-      padding: var(--spacing-md);
-      transition: var(--transition-base);
-    }
-
-    .medium-card:hover .medium-placeholder {
-      border-color: var(--color-text);
-    }
-
-    .medium-card-label {
-      display: block;
-      margin-top: var(--spacing-sm);
-      text-align: center;
-      font-family: var(--font-family-ui);
-      font-weight: bold;
-      font-size: var(--font-size-base);
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/gallery.css">
 </head>
 
 <body>
@@ -140,14 +62,6 @@
         </a>
       -->
       <div class="medium-grid">
-        <a href="gallery-painting.html" class="medium-card">
-          <div class="medium-placeholder">
-            <span class="lang-en">Image coming soon</span>
-            <span class="lang-zh">图片即将上线</span>
-          </div>
-          <span class="medium-card-label lang-en">Painting</span>
-          <span class="medium-card-label lang-zh">绘画</span>
-        </a>
         <a href="gallery-drawing.html" class="medium-card">
           <div class="medium-placeholder">
             <span class="lang-en">Image coming soon</span>
@@ -164,6 +78,70 @@
           <span class="medium-card-label lang-en">Mixed Media</span>
           <span class="medium-card-label lang-zh">综合材料</span>
         </a>
+        <a href="gallery-painting.html" class="medium-card">
+          <div class="medium-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <span class="medium-card-label lang-en">Painting</span>
+          <span class="medium-card-label lang-zh">绘画</span>
+        </a>
+        <a href="gallery-photography.html" class="medium-card">
+          <div class="medium-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <span class="medium-card-label lang-en">Photography</span>
+          <span class="medium-card-label lang-zh">摄影</span>
+        </a>
+        <a href="gallery-printmaking.html" class="medium-card">
+          <div class="medium-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <span class="medium-card-label lang-en">Printmaking</span>
+          <span class="medium-card-label lang-zh">版画</span>
+        </a>
+        <a href="gallery-sculpture.html" class="medium-card">
+          <div class="medium-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <span class="medium-card-label lang-en">Sculpture</span>
+          <span class="medium-card-label lang-zh">雕塑</span>
+        </a>
+        <a href="gallery-work-on-paper.html" class="medium-card">
+          <div class="medium-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <span class="medium-card-label lang-en">Work on Paper</span>
+          <span class="medium-card-label lang-zh">纸本作品</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About / Services two-panel section -->
+  <section class="about-services">
+    <div class="container">
+      <div class="about-services-grid">
+        <div class="about-panel">
+          <h3 class="lang-en">About Kay's Gallery</h3>
+          <h3 class="lang-zh">关于Kay的画廊</h3>
+          <p class="lang-en">A growing collection of Kay's original artwork across painting, drawing, and mixed media. More about Kay's artistic journey coming soon.</p>
+          <p class="lang-zh">收录Kay在绘画、素描、综合材料等领域的原创作品。关于Kay创作历程的介绍即将上线。</p>
+          <a href="home.html" class="lang-en">Learn more &rarr;</a>
+          <a href="home.html" class="lang-zh">了解更多 &rarr;</a>
+        </div>
+        <div class="about-panel">
+          <h3 class="lang-en">Commissions &amp; Inquiries</h3>
+          <h3 class="lang-zh">定制与咨询</h3>
+          <p class="lang-en">Interested in a custom piece or purchasing artwork? Reach out and we'll be happy to help.</p>
+          <p class="lang-zh">对定制作品或购买作品感兴趣？欢迎与我们联系。</p>
+          <a href="index.html#contact" class="lang-en">Contact us &rarr;</a>
+          <a href="index.html#contact" class="lang-zh">联系我们 &rarr;</a>
+        </div>
       </div>
     </div>
   </section>

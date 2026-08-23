@@ -11,54 +11,7 @@
 
   <link rel="icon" type="image/png" href="assets/logo/favicon.png">
   <link rel="stylesheet" href="assets/css/site.css">
-
-  <style>
-    .category-hero {
-      padding: var(--spacing-xl) 0 var(--spacing-lg);
-      text-align: center;
-    }
-
-    .category-hero h1 {
-      font-size: var(--font-size-4xl);
-      color: var(--color-text);
-      margin-bottom: var(--spacing-sm);
-    }
-
-    .category-back {
-      display: inline-block;
-      margin-bottom: var(--spacing-md);
-      font-family: var(--font-family-ui);
-      font-size: var(--font-size-sm);
-      color: var(--color-text-light);
-      text-decoration: none;
-    }
-
-    .category-back:hover {
-      color: var(--color-text);
-    }
-
-    .painting-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: var(--spacing-md);
-      padding-bottom: var(--spacing-xl);
-    }
-
-    .painting-placeholder {
-      aspect-ratio: 4 / 3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--color-bg-lighter);
-      border: 2px dashed var(--color-text-lighter);
-      border-radius: var(--radius-md);
-      color: var(--color-text-lighter);
-      font-family: var(--font-family-ui);
-      font-size: var(--font-size-sm);
-      text-align: center;
-      padding: var(--spacing-md);
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/gallery.css">
 </head>
 
 <body>
@@ -91,26 +44,107 @@
     </div>
   </section>
 
-  <!--
-    PLACEHOLDER: replace the tiles below with real images once
-    available, e.g.:
-    <div class="painting-item">
-      <img src="assets/gallery/painting-1.jpg" alt="Description of the painting" loading="lazy">
-    </div>
-  -->
   <section class="container">
-    <div class="painting-grid">
-      <div class="painting-placeholder">
-        <span class="lang-en">Drawing coming soon</span>
-        <span class="lang-zh">素描作品即将上线</span>
-      </div>
-      <div class="painting-placeholder">
-        <span class="lang-en">Drawing coming soon</span>
-        <span class="lang-zh">素描作品即将上线</span>
-      </div>
-      <div class="painting-placeholder">
-        <span class="lang-en">Drawing coming soon</span>
-        <span class="lang-zh">素描作品即将上线</span>
+    <div class="category-layout">
+      <!--
+        PLACEHOLDER filter sidebar — mirrors the reference gallery's
+        filter categories structurally. Not wired to real filtering
+        logic yet since there's no real artwork catalog to filter.
+      -->
+      <aside class="filter-panel" aria-label="Filter artworks">
+        <h4 class="lang-en">Size</h4>
+        <h4 class="lang-zh">尺寸</h4>
+        <label><input type="checkbox" disabled> <span class="lang-en">Small</span><span class="lang-zh">小</span></label>
+        <label><input type="checkbox" disabled> <span class="lang-en">Medium</span><span class="lang-zh">中</span></label>
+        <label><input type="checkbox" disabled> <span class="lang-en">Large</span><span class="lang-zh">大</span></label>
+        <label><input type="checkbox" disabled> <span class="lang-en">Very large</span><span class="lang-zh">特大</span></label>
+
+        <h4 class="lang-en">Color</h4>
+        <h4 class="lang-zh">颜色</h4>
+        <label><input type="checkbox" disabled> <span class="lang-en">Blacks &amp; Whites</span><span class="lang-zh">黑白</span></label>
+        <label><input type="checkbox" disabled> <span class="lang-en">Blues</span><span class="lang-zh">蓝色</span></label>
+        <label><input type="checkbox" disabled> <span class="lang-en">Browns</span><span class="lang-zh">棕色</span></label>
+        <label><input type="checkbox" disabled> <span class="lang-en">Greens</span><span class="lang-zh">绿色</span></label>
+        <label><input type="checkbox" disabled> <span class="lang-en">Reds</span><span class="lang-zh">红色</span></label>
+
+        <h4 class="lang-en">Style</h4>
+        <h4 class="lang-zh">风格</h4>
+        <label><input type="checkbox" disabled> <span class="lang-en">Abstract</span><span class="lang-zh">抽象</span></label>
+        <label><input type="checkbox" disabled> <span class="lang-en">Figurative</span><span class="lang-zh">具象</span></label>
+        <label><input type="checkbox" disabled> <span class="lang-en">Realist</span><span class="lang-zh">写实</span></label>
+
+        <h4 class="lang-en">Keyword</h4>
+        <h4 class="lang-zh">关键词</h4>
+        <input type="text" disabled placeholder="Search">
+
+        <h4 class="lang-en">Year</h4>
+        <h4 class="lang-zh">年份</h4>
+        <div class="filter-year-range">
+          <input type="number" disabled placeholder="From">
+          <input type="number" disabled placeholder="To">
+        </div>
+
+        <button class="filter-submit lang-en" disabled>Submit</button>
+        <button class="filter-submit lang-zh" disabled>提交</button>
+      </aside>
+
+      <!--
+        PLACEHOLDER: replace each .artwork-placeholder box with a real
+        <img> once photos exist, e.g.:
+        <div class="artwork-placeholder">
+          <img src="assets/gallery/drawing-1.jpg" alt="Description" loading="lazy">
+        </div>
+      -->
+      <div>
+        <div class="artwork-grid">
+          <div class="artwork-card">
+            <div class="artwork-placeholder">
+              <span class="lang-en">Image coming soon</span>
+              <span class="lang-zh">图片即将上线</span>
+            </div>
+            <div class="artwork-artist">Kay</div>
+            <div class="artwork-title lang-en">Untitled, 2026</div>
+            <div class="artwork-title lang-zh">无题，2026</div>
+            <div class="artwork-actions">
+              <a href="#" class="lang-en">Wishlist</a>
+              <a href="#" class="lang-zh">收藏</a>
+              <a href="#" class="lang-en">Inquire</a>
+              <a href="#" class="lang-zh">咨询</a>
+            </div>
+          </div>
+          <div class="artwork-card">
+            <div class="artwork-placeholder">
+              <span class="lang-en">Image coming soon</span>
+              <span class="lang-zh">图片即将上线</span>
+            </div>
+            <div class="artwork-artist">Kay</div>
+            <div class="artwork-title lang-en">Untitled, 2026</div>
+            <div class="artwork-title lang-zh">无题，2026</div>
+            <div class="artwork-actions">
+              <a href="#" class="lang-en">Wishlist</a>
+              <a href="#" class="lang-zh">收藏</a>
+              <a href="#" class="lang-en">Inquire</a>
+              <a href="#" class="lang-zh">咨询</a>
+            </div>
+          </div>
+          <div class="artwork-card">
+            <div class="artwork-placeholder">
+              <span class="lang-en">Image coming soon</span>
+              <span class="lang-zh">图片即将上线</span>
+            </div>
+            <div class="artwork-artist">Kay</div>
+            <div class="artwork-title lang-en">Untitled, 2026</div>
+            <div class="artwork-title lang-zh">无题，2026</div>
+            <div class="artwork-actions">
+              <a href="#" class="lang-en">Wishlist</a>
+              <a href="#" class="lang-zh">收藏</a>
+              <a href="#" class="lang-en">Inquire</a>
+              <a href="#" class="lang-zh">咨询</a>
+            </div>
+          </div>
+        </div>
+        <div class="pagination lang-en">Page 1 of 1</div>
+        <div class="pagination lang-zh">第 1 页，共 1 页</div>
       </div>
     </div>
   </section>

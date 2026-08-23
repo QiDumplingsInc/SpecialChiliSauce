@@ -13,57 +13,85 @@
   <link rel="stylesheet" href="assets/css/site.css">
 
   <style>
+    :root {
+      --color-accent: #3D6B4F;
+      --color-accent-dark: #2A4A37;
+    }
+
+    header {
+      border-bottom: 1px solid var(--color-bg-lighter);
+    }
+
+    .language-switcher button.active {
+      background: var(--color-accent);
+    }
+
     .hub-hero {
-      min-height: 80vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: var(--spacing-xl) 0 var(--spacing-sm);
       text-align: center;
-      padding: var(--spacing-xl) 0;
     }
 
     .hub-hero h1 {
-      font-size: var(--font-size-5xl);
+      font-size: var(--font-size-4xl);
       color: var(--color-text);
       margin-bottom: var(--spacing-sm);
     }
 
     .hub-tagline {
-      font-size: var(--font-size-xl);
+      font-size: var(--font-size-lg);
       color: var(--color-text-light);
-      margin-bottom: var(--spacing-xl);
-      font-style: italic;
+      margin-bottom: var(--spacing-md);
     }
 
     .hub-options {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: var(--spacing-lg);
-      max-width: 700px;
+      max-width: 1000px;
       margin: 0 auto;
+      padding: var(--spacing-lg) 0 var(--spacing-xl);
     }
 
     .hub-card {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: var(--spacing-sm);
-      background: var(--color-white);
-      border: 1px solid var(--color-bg-lighter);
-      border-radius: var(--radius-md);
-      padding: var(--spacing-lg) var(--spacing-md);
       text-decoration: none;
       color: var(--color-text);
+    }
+
+    .hub-card-photo {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--color-bg-lighter);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .hub-card-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       transition: var(--transition-base);
     }
 
-    .hub-card:hover {
-      border-color: var(--color-text);
-      transform: translateY(-4px);
+    .hub-card:hover .hub-card-photo img {
+      transform: scale(1.04);
     }
 
-    .hub-card-icon {
-      font-size: 3.5rem;
+    .hub-card-photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-lighter);
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+      text-align: center;
+      padding: var(--spacing-md);
+      border: 2px dashed var(--color-text-lighter);
+      border-radius: var(--radius-md);
     }
 
     .hub-card-title {
@@ -71,15 +99,28 @@
       font-weight: bold;
       font-family: var(--font-family-ui);
       color: var(--color-text);
+      margin-bottom: var(--spacing-sm);
+      text-align: center;
     }
 
-    .hub-card-subtitle {
-      font-size: var(--font-size-sm);
-      color: var(--color-text-light);
+    .hub-card-button {
+      display: inline-block;
+      align-self: center;
+      background: var(--color-accent);
+      color: var(--color-white);
+      padding: var(--spacing-xs) var(--spacing-lg);
+      border-radius: var(--radius-sm);
       font-family: var(--font-family-ui);
+      font-weight: bold;
+      font-size: var(--font-size-sm);
+      transition: var(--transition-base);
     }
 
-    @media (max-width: 600px) {
+    .hub-card:hover .hub-card-button {
+      background: var(--color-accent-dark);
+    }
+
+    @media (max-width: 700px) {
       .hub-options {
         grid-template-columns: 1fr;
       }
@@ -115,23 +156,35 @@
       <h1 class="lang-zh">欢迎</h1>
       <p class="hub-tagline lang-en">Handcrafted chili sauce, and Kay's original paintings</p>
       <p class="hub-tagline lang-zh">手工特制辣椒酱，以及Kay的原创画作</p>
+    </div>
+  </section>
 
-      <div class="hub-options">
-        <a href="index.html" class="hub-card">
-          <span class="hub-card-icon" aria-hidden="true">🌶️</span>
-          <span class="hub-card-title lang-en">Special Chili Sauce</span>
-          <span class="hub-card-title lang-zh">特制辣椒酱</span>
-          <span class="hub-card-subtitle lang-en">Shop &amp; learn more</span>
-          <span class="hub-card-subtitle lang-zh">选购 &amp; 了解更多</span>
-        </a>
-        <a href="gallery.html" class="hub-card">
-          <span class="hub-card-icon" aria-hidden="true">🎨</span>
-          <span class="hub-card-title lang-en">Gallery</span>
-          <span class="hub-card-title lang-zh">画廊</span>
-          <span class="hub-card-subtitle lang-en">Paintings by Kay</span>
-          <span class="hub-card-subtitle lang-zh">Kay的画作</span>
-        </a>
-      </div>
+  <!-- Two photo blocks, each linking to its own site -->
+  <section class="container">
+    <div class="hub-options">
+      <a href="index.html" class="hub-card">
+        <div class="hub-card-photo">
+          <!-- PLACEHOLDER: existing product photo, swap for a final
+               hero-style photo whenever ready -->
+          <img src="assets/product/3_jar_with_labels.png" alt="Kay's Special Chili Sauce jars" loading="lazy">
+        </div>
+        <span class="hub-card-title lang-en">Special Chili Sauce</span>
+        <span class="hub-card-title lang-zh">特制辣椒酱</span>
+        <span class="hub-card-button lang-en">Shop Now</span>
+        <span class="hub-card-button lang-zh">立即选购</span>
+      </a>
+      <a href="gallery.html" class="hub-card">
+        <div class="hub-card-photo">
+          <!-- PLACEHOLDER: replace with a real photo of one of Kay's
+               paintings once available -->
+          <div class="hub-card-photo-placeholder lang-en">Gallery photo coming soon</div>
+          <div class="hub-card-photo-placeholder lang-zh">画廊图片即将上线</div>
+        </div>
+        <span class="hub-card-title lang-en">Gallery</span>
+        <span class="hub-card-title lang-zh">画廊</span>
+        <span class="hub-card-button lang-en">View Gallery</span>
+        <span class="hub-card-button lang-zh">查看画廊</span>
+      </a>
     </div>
   </section>
 

@@ -1,0 +1,283 @@
+/* Shared gallery-specific components: used by gallery.html and the
+   per-medium category pages (gallery-<medium>.html). Loaded alongside
+   assets/css/site.css, which covers the base design system. */
+
+.gallery-hero {
+  padding: var(--spacing-xl) 0 var(--spacing-lg);
+  text-align: center;
+}
+
+.gallery-hero h1 {
+  font-size: var(--font-size-4xl);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.gallery-intro {
+  max-width: 700px;
+  margin: 0 auto;
+  color: var(--color-text-light);
+  font-size: var(--font-size-lg);
+}
+
+/* ========================================
+   EXPLORE BY MEDIUM (hub page)
+   ======================================== */
+.medium-section {
+  padding: var(--spacing-lg) 0 var(--spacing-xl);
+}
+
+.medium-section-title {
+  text-align: center;
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-sm);
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-lg);
+}
+
+.medium-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.medium-card {
+  display: block;
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.medium-placeholder {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-lighter);
+  border: 1px solid var(--color-bg-lighter);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-lighter);
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  padding: var(--spacing-md);
+  transition: var(--transition-base);
+}
+
+.medium-card:hover .medium-placeholder {
+  border-color: var(--color-text);
+}
+
+.medium-card-label {
+  display: block;
+  margin-top: var(--spacing-sm);
+  text-align: center;
+  font-family: var(--font-family-ui);
+  font-weight: bold;
+  font-size: var(--font-size-base);
+}
+
+/* ========================================
+   ABOUT / SERVICES two-panel section (hub page)
+   ======================================== */
+.about-services {
+  padding: var(--spacing-xl) 0;
+  background: var(--color-bg-light);
+}
+
+.about-services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+}
+
+.about-panel {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+}
+
+.about-panel h3 {
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-sm);
+}
+
+.about-panel p {
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-sm);
+}
+
+.about-panel a {
+  font-family: var(--font-family-ui);
+  font-weight: bold;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+@media (max-width: 700px) {
+  .about-services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========================================
+   CATEGORY PAGE: hero + back link
+   ======================================== */
+.category-hero {
+  padding: var(--spacing-xl) 0 var(--spacing-lg);
+  text-align: center;
+}
+
+.category-hero h1 {
+  font-size: var(--font-size-4xl);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.category-back {
+  display: inline-block;
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  text-decoration: none;
+}
+
+.category-back:hover {
+  color: var(--color-text);
+}
+
+/* ========================================
+   CATEGORY PAGE: filter sidebar + artwork grid
+   ======================================== */
+.category-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--spacing-lg);
+  padding-bottom: var(--spacing-xl);
+  align-items: start;
+}
+
+.filter-panel {
+  font-family: var(--font-family-ui);
+  border: 1px solid var(--color-bg-lighter);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md);
+}
+
+.filter-panel h4 {
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: var(--spacing-md) 0 var(--spacing-xs);
+}
+
+.filter-panel h4:first-child {
+  margin-top: 0;
+}
+
+.filter-panel label {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin-bottom: 0.35rem;
+}
+
+.filter-panel input[type="text"],
+.filter-panel input[type="number"] {
+  width: 100%;
+  padding: 0.4rem;
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--color-bg-lighter);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.filter-year-range {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.filter-submit {
+  width: 100%;
+  margin-top: var(--spacing-sm);
+  padding: 0.5rem;
+  background: var(--color-text);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family-ui);
+  font-weight: bold;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.artwork-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.artwork-card {
+  font-family: var(--font-family-ui);
+}
+
+.artwork-placeholder {
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-lighter);
+  border: 2px dashed var(--color-text-lighter);
+  border-radius: var(--radius-md);
+  color: var(--color-text-lighter);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-xs);
+}
+
+.artwork-artist {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+.artwork-title {
+  font-style: italic;
+  font-size: var(--font-size-sm);
+}
+
+.artwork-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.35rem;
+  font-size: var(--font-size-sm);
+}
+
+.artwork-actions a {
+  color: var(--color-text-light);
+  text-decoration: none;
+}
+
+.artwork-actions a:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.pagination {
+  text-align: center;
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  padding: var(--spacing-lg) 0;
+}
+
+@media (max-width: 700px) {
+  .category-layout {
+    grid-template-columns: 1fr;
+  }
+}
