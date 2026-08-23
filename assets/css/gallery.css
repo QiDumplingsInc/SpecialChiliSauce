@@ -2,6 +2,130 @@
    per-medium category pages (gallery-<medium>.html). Loaded alongside
    assets/css/site.css, which covers the base design system. */
 
+/* ========================================
+   STICKY HEADER + NAV TABS (as one pinned unit)
+   ======================================== */
+.gallery-header-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.gallery-header-sticky header {
+  /* header itself no longer needs its own sticky/shadow — the
+     wrapper above pins both the logo bar and the nav tabs together */
+  position: static;
+  box-shadow: none;
+}
+
+/* ========================================
+   GALLERY NAV TABS (shared across gallery pages)
+   ======================================== */
+.gallery-nav-tabs {
+  border-bottom: 1px solid var(--color-bg-lighter);
+  background: var(--color-white);
+  box-shadow: var(--shadow-sm);
+}
+
+.gallery-nav-tabs ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) 0;
+}
+
+.gallery-nav-tabs a {
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-sm);
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-text);
+  text-decoration: none;
+  padding: var(--spacing-xs) 0;
+  border-bottom: 2px solid transparent;
+}
+
+.gallery-nav-tabs a:hover,
+.gallery-nav-tabs a.active {
+  border-bottom-color: var(--color-text);
+}
+
+@media (max-width: 900px) {
+  .gallery-nav-tabs ul {
+    gap: var(--spacing-sm);
+  }
+
+  .gallery-nav-tabs a {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+  }
+}
+
+/* ========================================
+   ROLLING HERO CAROUSEL (gallery.html only)
+   ======================================== */
+.hero-carousel {
+  position: relative;
+  min-height: 70vh;
+  overflow: hidden;
+}
+
+.hero-carousel-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--color-bg-lighter);
+  border: 2px dashed var(--color-text-lighter);
+  color: var(--color-text-light);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.8s ease;
+}
+
+.hero-carousel-slide.active {
+  opacity: 1;
+  visibility: visible;
+  position: relative;
+}
+
+.hero-carousel-slide h1 {
+  font-size: var(--font-size-4xl);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.hero-carousel-pager {
+  position: absolute;
+  bottom: var(--spacing-md);
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  z-index: 2;
+}
+
+.hero-carousel-pager button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--color-text-light);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.hero-carousel-pager button.active {
+  background: var(--color-text);
+  border-color: var(--color-text);
+}
+
 .gallery-hero {
   padding: var(--spacing-xl) 0 var(--spacing-lg);
   text-align: center;

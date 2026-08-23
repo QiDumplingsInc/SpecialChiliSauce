@@ -14,24 +14,10 @@
   <link rel="stylesheet" href="assets/css/gallery.css">
 
   <style>
-    /* PLACEHOLDER hero banner — swap the background for a real photo
-       of Kay's work once available. */
-    .gallery-fullscreen-hero {
-      min-height: 70vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      background: var(--color-bg-lighter);
-      border: 2px dashed var(--color-text-lighter);
-      color: var(--color-text-light);
-    }
-
-    .gallery-fullscreen-hero .hero-inner h1 {
-      font-size: var(--font-size-4xl);
-      color: var(--color-text);
-      margin-bottom: var(--spacing-xs);
-    }
+    /* PLACEHOLDER carousel slides — swap each slide's background for
+       a real photo of Kay's work once available. Carousel styling
+       itself (.hero-carousel, .hero-carousel-slide, pager) lives in
+       assets/css/gallery.css since it's shared infrastructure. */
 
     /* Alternating full-width image/text panels */
     .about-panel-row {
@@ -198,8 +184,11 @@
 </head>
 
 <body>
-  <!-- Header -->
-  <header role="banner">
+  <!-- Header + Nav Tabs: wrapped together so both stay pinned
+       to the top as one unit while scrolling -->
+  <div class="gallery-header-sticky">
+    <!-- Header -->
+    <header role="banner">
     <!-- Language Switcher: nested inside header so mobile positioning
          is relative to the header box, never above/overlapping it -->
     <div class="language-switcher" role="navigation" aria-label="Language switcher">
@@ -219,13 +208,51 @@
     </div>
   </header>
 
-  <!-- PLACEHOLDER hero — swap background for a real photo of Kay's work -->
-  <section class="gallery-fullscreen-hero">
-    <div class="hero-inner">
-      <h1 class="lang-en">Paintings by Kay</h1>
-      <h1 class="lang-zh">Kay的画作</h1>
-      <p class="lang-en">Photo coming soon</p>
-      <p class="lang-zh">图片即将上线</p>
+  <!-- Gallery nav tabs — shared across gallery.html and category pages -->
+  <nav class="gallery-nav-tabs" role="navigation" aria-label="Gallery sections">
+    <ul>
+      <li><a href="gallery-new-arrivals.html"><span class="lang-en">New Arrivals</span><span class="lang-zh">新品上架</span></a></li>
+      <li><a href="gallery-portfolio.html"><span class="lang-en">Portfolio</span><span class="lang-zh">作品集</span></a></li>
+      <li><a href="gallery-artists.html"><span class="lang-en">Artists</span><span class="lang-zh">艺术家</span></a></li>
+      <li><a href="gallery.html" class="active"><span class="lang-en">Artworks</span><span class="lang-zh">作品</span></a></li>
+      <li><a href="gallery-exhibitions.html"><span class="lang-en">Exhibitions</span><span class="lang-zh">展览</span></a></li>
+      <li><a href="gallery-collections.html"><span class="lang-en">Collections</span><span class="lang-zh">系列</span></a></li>
+      <li><a href="gallery.html#about"><span class="lang-en">About</span><span class="lang-zh">关于</span></a></li>
+    </ul>
+    </nav>
+  </div>
+
+  <!-- PLACEHOLDER rolling hero carousel — swap each slide's content
+       for real photos/exhibition info once available -->
+  <section class="hero-carousel" id="heroCarousel">
+    <div class="hero-carousel-slide active">
+      <div>
+        <h1 class="lang-en">Paintings by Kay</h1>
+        <h1 class="lang-zh">Kay的画作</h1>
+        <p class="lang-en">Photo coming soon</p>
+        <p class="lang-zh">图片即将上线</p>
+      </div>
+    </div>
+    <div class="hero-carousel-slide">
+      <div>
+        <h1 class="lang-en">New Work Coming Soon</h1>
+        <h1 class="lang-zh">新作品即将上线</h1>
+        <p class="lang-en">Photo coming soon</p>
+        <p class="lang-zh">图片即将上线</p>
+      </div>
+    </div>
+    <div class="hero-carousel-slide">
+      <div>
+        <h1 class="lang-en">Explore the Collection</h1>
+        <h1 class="lang-zh">探索作品系列</h1>
+        <p class="lang-en">Photo coming soon</p>
+        <p class="lang-zh">图片即将上线</p>
+      </div>
+    </div>
+    <div class="hero-carousel-pager" role="tablist" aria-label="Carousel slides">
+      <button class="active" data-slide="0" aria-label="Go to slide 1"></button>
+      <button data-slide="1" aria-label="Go to slide 2"></button>
+      <button data-slide="2" aria-label="Go to slide 3"></button>
     </div>
   </section>
 
@@ -306,7 +333,7 @@
   </section>
 
   <!-- Alternating image/text panels -->
-  <section class="container">
+  <section class="container" id="about">
     <div class="about-panel-row">
       <div class="about-panel-image">
         <span class="lang-en">Photo coming soon</span>
@@ -391,6 +418,42 @@
     document.querySelectorAll('#copyright-year, #copyright-year-zh').forEach(el => {
       el.textContent = currentYear;
     });
+  </script>
+  <script>
+    // Rolling hero carousel — auto-advances unless the visitor prefers
+    // reduced motion, in which case it just shows the first slide.
+    (function () {
+      const carousel = document.getElementById('heroCarousel');
+      if (!carousel) return;
+      const slides = carousel.querySelectorAll('.hero-carousel-slide');
+      const dots = carousel.querySelectorAll('.hero-carousel-pager button');
+      let current = 0;
+      let timer;
+
+      function goTo(index) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        current = (index + slides.length) % slides.length;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+      }
+
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          goTo(i);
+          resetTimer();
+        });
+      });
+
+      function resetTimer() {
+        clearInterval(timer);
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          timer = setInterval(() => goTo(current + 1), 6000);
+        }
+      }
+
+      resetTimer();
+    })();
   </script>
 </body>
 

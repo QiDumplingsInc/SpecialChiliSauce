@@ -15,8 +15,11 @@
 </head>
 
 <body>
-  <!-- Header -->
-  <header role="banner">
+  <!-- Header + Nav Tabs: wrapped together so both stay pinned
+       to the top as one unit while scrolling -->
+  <div class="gallery-header-sticky">
+    <!-- Header -->
+    <header role="banner">
     <div class="language-switcher" role="navigation" aria-label="Language switcher">
       <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
       <button class="lang-btn" data-lang="zh" aria-label="切换到中文">中文</button>
@@ -33,6 +36,20 @@
       </div>
     </div>
   </header>
+
+  <!-- Gallery nav tabs — shared across gallery.html and category pages -->
+  <nav class="gallery-nav-tabs" role="navigation" aria-label="Gallery sections">
+    <ul>
+      <li><a href="gallery-new-arrivals.html"><span class="lang-en">New Arrivals</span><span class="lang-zh">新品上架</span></a></li>
+      <li><a href="gallery-portfolio.html"><span class="lang-en">Portfolio</span><span class="lang-zh">作品集</span></a></li>
+      <li><a href="gallery-artists.html"><span class="lang-en">Artists</span><span class="lang-zh">艺术家</span></a></li>
+      <li><a href="gallery.html" class="active"><span class="lang-en">Artworks</span><span class="lang-zh">作品</span></a></li>
+      <li><a href="gallery-exhibitions.html"><span class="lang-en">Exhibitions</span><span class="lang-zh">展览</span></a></li>
+      <li><a href="gallery-collections.html"><span class="lang-en">Collections</span><span class="lang-zh">系列</span></a></li>
+      <li><a href="gallery.html#about"><span class="lang-en">About</span><span class="lang-zh">关于</span></a></li>
+    </ul>
+    </nav>
+  </div>
 
   <!-- Category hero -->
   <section class="category-hero">
