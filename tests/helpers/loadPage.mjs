@@ -4,14 +4,15 @@ import path from 'node:path';
 import { JSDOM } from 'jsdom';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const htmlPath = path.join(__dirname, '..', '..', 'index.html');
+const repoRoot = path.join(__dirname, '..', '..');
 
-// Loads the real index.html into jsdom and runs its actual inline
-// <script>, so tests exercise the site's real logic rather than a
-// reimplementation of it. Waits for 'load' so setup that runs inside
-// the DOMContentLoaded handler (e.g. initial language sync) has settled.
-export async function loadPage() {
-  const html = readFileSync(htmlPath, 'utf-8');
+// Loads a real page (index.html by default) into jsdom and runs its
+// actual inline <script>, so tests exercise the site's real logic
+// rather than a reimplementation of it. Waits for 'load' so setup
+// that runs inside the DOMContentLoaded handler (e.g. initial
+// language sync) has settled.
+export async function loadPage(filename = 'index.html') {
+  const html = readFileSync(path.join(repoRoot, filename), 'utf-8');
   const dom = new JSDOM(html, {
     url: 'https://qidumplingsinc.github.io/SpecialChiliSauce/',
     runScripts: 'dangerously',

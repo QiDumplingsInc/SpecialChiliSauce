@@ -180,6 +180,103 @@
         text-align: left;
       }
     }
+
+    /* Newsletter section — mirrors index.html's newsletter-* classes
+       so both forms look/behave consistently, kept in this page's own
+       <style> rather than a shared file per the same reasoning as
+       index.html: self-contained pages are simpler to keep working
+       independently and to test. */
+    .gallery-newsletter {
+      padding: var(--spacing-xl) 0;
+      text-align: center;
+      background: var(--color-bg-light);
+    }
+
+    .gallery-newsletter h2 {
+      font-family: var(--font-family-geometric);
+      font-weight: 300;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: var(--font-size-2xl);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .gallery-newsletter-intro {
+      max-width: 600px;
+      margin: 0 auto var(--spacing-md);
+      color: var(--color-text-light);
+    }
+
+    .gallery-newsletter-form {
+      max-width: 560px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      justify-content: center;
+      font-family: var(--font-family-ui);
+    }
+
+    .gallery-newsletter-field {
+      flex: 1 1 180px;
+      padding: 0.7rem var(--spacing-sm);
+      border: 1px solid var(--color-bg-lighter);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-base);
+    }
+
+    .gallery-newsletter-field:focus {
+      outline: none;
+      border-color: var(--color-text);
+    }
+
+    .gallery-newsletter-submit {
+      flex: 1 1 140px;
+      padding: 0.7rem var(--spacing-sm);
+      background: var(--color-text);
+      color: var(--color-white);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-family-geometric);
+      font-weight: 300;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: var(--font-size-sm);
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .gallery-newsletter-submit:hover {
+      background: #000;
+    }
+
+    .gallery-newsletter-submit:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .gallery-newsletter-status {
+      max-width: 560px;
+      margin: var(--spacing-sm) auto 0;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
+      font-style: italic;
+      display: none;
+    }
+
+    .gallery-newsletter-status.visible {
+      display: block;
+    }
+
+    .gallery-newsletter-honeypot {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
   </style>
 </head>
 
@@ -218,6 +315,13 @@
       <li><a href="gallery-exhibitions.html"><span class="lang-en">Exhibitions</span><span class="lang-zh">展览</span></a></li>
       <li><a href="gallery-collections.html"><span class="lang-en">Collections</span><span class="lang-zh">系列</span></a></li>
       <li><a href="gallery.html#about"><span class="lang-en">About</span><span class="lang-zh">关于</span></a></li>
+      <li class="gallery-search">
+        <button type="button" class="gallery-search-toggle" aria-expanded="false" aria-label="Search">&#128269;</button>
+        <form class="gallery-search-form" role="search">
+          <input type="text" class="gallery-search-input" placeholder="Search" aria-label="Search pages">
+        </form>
+        <div class="gallery-search-results" role="listbox" aria-label="Search results"></div>
+      </li>
     </ul>
     </nav>
   </div>
@@ -377,6 +481,31 @@
     </div>
   </section>
 
+  <!-- Newsletter signup — mirrors index.html's, posts to the same
+       Google Apps Script endpoint with a hidden source=gallery field
+       so Sheet rows can be told apart from chili sauce signups -->
+  <section class="gallery-newsletter" id="newsletter">
+    <div class="container">
+      <h2 class="lang-en">Stay in the Loop</h2>
+      <h2 class="lang-zh">订阅我们的消息</h2>
+      <p class="gallery-newsletter-intro lang-en">Get updates on new artwork and upcoming exhibitions.</p>
+      <p class="gallery-newsletter-intro lang-zh">获取新作品和即将举行的展览的最新消息。</p>
+
+      <form class="gallery-newsletter-form" id="galleryNewsletterForm">
+        <input type="text" class="gallery-newsletter-honeypot" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="source" value="gallery">
+        <input type="text" class="gallery-newsletter-field" id="galleryNewsletterName" name="name" data-placeholder-en="First Name" data-placeholder-zh="姓名" placeholder="First Name" aria-label="First Name" maxlength="100" required>
+        <input type="email" class="gallery-newsletter-field" id="galleryNewsletterEmail" name="email" data-placeholder-en="Email Address" data-placeholder-zh="电子邮箱" placeholder="Email Address" aria-label="Email Address" maxlength="100" required>
+        <button type="submit" class="gallery-newsletter-submit lang-en">Subscribe</button>
+        <button type="submit" class="gallery-newsletter-submit lang-zh">订阅</button>
+      </form>
+      <p class="gallery-newsletter-status" id="galleryNewsletterStatusEn" role="status" aria-live="polite">Thanks for subscribing! We'll keep you posted.</p>
+      <p class="gallery-newsletter-status" id="galleryNewsletterStatusZh" role="status" aria-live="polite">感谢您的订阅！我们会随时通知您最新消息。</p>
+      <p class="gallery-newsletter-status" id="galleryNewsletterErrorEn" role="status" aria-live="polite">Something went wrong &mdash; please try again.</p>
+      <p class="gallery-newsletter-status" id="galleryNewsletterErrorZh" role="status" aria-live="polite">提交时出现问题，请重试。</p>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer role="contentinfo" class="site-footer-advanced">
     <div class="container">
@@ -384,8 +513,8 @@
         <div>
           <h3 class="lang-en">Kay's Gallery</h3>
           <h3 class="lang-zh">Kay's 画廊</h3>
-          <a href="index.html#newsletter" class="lang-en">Join our mailing list</a>
-          <a href="index.html#newsletter" class="lang-zh">加入邮件订阅</a>
+          <a href="#newsletter" class="lang-en">Join our mailing list</a>
+          <a href="#newsletter" class="lang-zh">加入邮件订阅</a>
         </div>
         <div class="footer-col-right">
           <h3 class="lang-en">Contact Us</h3>
@@ -413,10 +542,57 @@
   </footer>
 
   <script src="assets/js/language.js"></script>
+  <script src="assets/js/gallery-search.js"></script>
   <script>
     const currentYear = new Date().getFullYear();
     document.querySelectorAll('#copyright-year, #copyright-year-zh').forEach(el => {
       el.textContent = currentYear;
+    });
+  </script>
+  <script>
+    // Newsletter signup — mirrors index.html's handler, posts to the
+    // same Google Apps Script endpoint (the hidden "source" field
+    // tells the two forms apart in the Sheet).
+    const GALLERY_NEWSLETTER_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwxhYrrxZZp43HZn_SY79ZXwXfee-HNYwGzxmiR0uIvgU7tKMSi3IiiRV1WGrTLwdiicQ/exec';
+    const galleryNewsletterForm = document.getElementById('galleryNewsletterForm');
+    const galleryNewsletterStatusEn = document.getElementById('galleryNewsletterStatusEn');
+    const galleryNewsletterStatusZh = document.getElementById('galleryNewsletterStatusZh');
+    const galleryNewsletterErrorEn = document.getElementById('galleryNewsletterErrorEn');
+    const galleryNewsletterErrorZh = document.getElementById('galleryNewsletterErrorZh');
+    const galleryNewsletterAllStatus = [galleryNewsletterStatusEn, galleryNewsletterStatusZh, galleryNewsletterErrorEn, galleryNewsletterErrorZh];
+    const galleryNewsletterSubmitButtons = galleryNewsletterForm.querySelectorAll('.gallery-newsletter-submit');
+
+    function showGalleryNewsletterMessage(el) {
+      galleryNewsletterAllStatus.forEach(msg => msg.classList.remove('visible'));
+      el.classList.add('visible');
+    }
+
+    galleryNewsletterForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const isZh = document.body.classList.contains('chinese');
+
+      if (galleryNewsletterForm.elements['_gotcha'].value) {
+        galleryNewsletterForm.reset();
+        return;
+      }
+
+      galleryNewsletterSubmitButtons.forEach(btn => btn.disabled = true);
+
+      fetch(GALLERY_NEWSLETTER_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: new URLSearchParams(new FormData(galleryNewsletterForm))
+      })
+        .then(function() {
+          showGalleryNewsletterMessage(isZh ? galleryNewsletterStatusZh : galleryNewsletterStatusEn);
+          galleryNewsletterForm.reset();
+        })
+        .catch(function() {
+          showGalleryNewsletterMessage(isZh ? galleryNewsletterErrorZh : galleryNewsletterErrorEn);
+        })
+        .finally(function() {
+          galleryNewsletterSubmitButtons.forEach(btn => btn.disabled = false);
+        });
     });
   </script>
   <script>

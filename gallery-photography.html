@@ -47,6 +47,13 @@
       <li><a href="gallery-exhibitions.html"><span class="lang-en">Exhibitions</span><span class="lang-zh">展览</span></a></li>
       <li><a href="gallery-collections.html"><span class="lang-en">Collections</span><span class="lang-zh">系列</span></a></li>
       <li><a href="gallery.html#about"><span class="lang-en">About</span><span class="lang-zh">关于</span></a></li>
+      <li class="gallery-search">
+        <button type="button" class="gallery-search-toggle" aria-expanded="false" aria-label="Search">&#128269;</button>
+        <form class="gallery-search-form" role="search">
+          <input type="text" class="gallery-search-input" placeholder="Search" aria-label="Search pages">
+        </form>
+        <div class="gallery-search-results" role="listbox" aria-label="Search results"></div>
+      </li>
     </ul>
     </nav>
   </div>
@@ -252,6 +259,7 @@
   </footer>
 
   <script src="assets/js/language.js"></script>
+  <script src="assets/js/gallery-search.js"></script>
   <script src="assets/js/gallery-filters.js"></script>
   <script>
     const currentYear = new Date().getFullYear();
