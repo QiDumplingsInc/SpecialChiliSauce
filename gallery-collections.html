@@ -47,6 +47,13 @@
       <li><a href="gallery-exhibitions.html"><span class="lang-en">Exhibitions</span><span class="lang-zh">展览</span></a></li>
       <li><a href="gallery-collections.html" class="active"><span class="lang-en">Collections</span><span class="lang-zh">系列</span></a></li>
       <li><a href="gallery.html#about"><span class="lang-en">About</span><span class="lang-zh">关于</span></a></li>
+      <li class="gallery-search">
+        <button type="button" class="gallery-search-toggle" aria-expanded="false" aria-controls="gallery-search-results" aria-label="Search" data-label-en="Search" data-label-zh="搜索">&#8981;</button>
+        <form class="gallery-search-form" role="search">
+          <input type="text" class="gallery-search-input" data-placeholder-en="Search" data-placeholder-zh="搜索" placeholder="Search" aria-label="Search">
+          <div class="gallery-search-results" id="gallery-search-results" role="region" aria-live="polite" aria-label="Search results"></div>
+        </form>
+      </li>
     </ul>
     </nav>
   </div>
@@ -81,6 +88,7 @@
   </footer>
 
   <script src="assets/js/language.js"></script>
+  <script src="assets/js/gallery-search.js"></script>
   <script>
     const currentYear = new Date().getFullYear();
     document.querySelectorAll('#copyright-year, #copyright-year-zh').forEach(el => {
