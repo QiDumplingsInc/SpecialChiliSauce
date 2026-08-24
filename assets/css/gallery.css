@@ -93,7 +93,8 @@
 
 .gallery-search-form {
   display: none;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   position: absolute;
   right: 0;
   top: calc(100% + var(--spacing-xs));
@@ -120,21 +121,15 @@
 
 .gallery-search-results {
   display: none;
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.4rem);
   width: 260px;
   max-height: 320px;
   overflow-y: auto;
-  background: var(--color-white);
-  border: 1px solid var(--color-bg-lighter);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-lg);
-  z-index: 20;
+  margin-top: 0.4rem;
 }
 
 .gallery-search-results.visible {
   display: block;
+  border-top: 1px solid var(--color-bg-lighter);
 }
 
 .gallery-search-results a {
@@ -164,8 +159,7 @@
 }
 
 @media (max-width: 700px) {
-  .gallery-search-form,
-  .gallery-search-results {
+  .gallery-search-form {
     right: auto;
     left: 0;
   }

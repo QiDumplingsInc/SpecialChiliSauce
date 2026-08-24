@@ -65,6 +65,23 @@ test('valid submission posts name, email, and source=gallery, then shows the Eng
   assert.ok(!document.getElementById('galleryNewsletterStatusZh').classList.contains('visible'));
 });
 
+test('valid submission in Chinese mode shows the Chinese thank-you message', async (t) => {
+  const dom = await loadPage('gallery.html');
+  t.after(() => dom.window.close());
+  const { document, Event } = dom.window;
+  dom.window.fetch = () => Promise.resolve({});
+
+  document
+    .querySelector('.lang-btn[data-lang="zh"]')
+    .dispatchEvent(new Event('click', { bubbles: true }));
+
+  fillAndSubmit(dom, { name: 'Jian', email: 'jian@example.com' });
+  await flushPromises();
+
+  assert.ok(document.getElementById('galleryNewsletterStatusZh').classList.contains('visible'));
+  assert.ok(!document.getElementById('galleryNewsletterStatusEn').classList.contains('visible'));
+});
+
 test('submit buttons are disabled while the request is in flight, then re-enabled', async (t) => {
   const dom = await loadPage('gallery.html');
   t.after(() => dom.window.close());
