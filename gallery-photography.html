@@ -70,10 +70,10 @@
     -->
     <div class="artwork-filter-bar">
       <div class="filter-dropdown">
-        <button class="filter-dropdown-toggle" type="button">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-size" aria-expanded="false">
           <span class="lang-en">Size Range</span><span class="lang-zh">尺寸范围</span>
         </button>
-        <div class="filter-dropdown-panel">
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-size">
           <button type="button" class="filter-option" role="checkbox" aria-checked="false">
             <span class="filter-check" aria-hidden="true">&#10003;</span>
             <span class="lang-en">Small</span><span class="lang-zh">小</span>
@@ -93,10 +93,10 @@
         </div>
       </div>
       <div class="filter-dropdown">
-        <button class="filter-dropdown-toggle" type="button">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-color" aria-expanded="false">
           <span class="lang-en">Color</span><span class="lang-zh">颜色</span>
         </button>
-        <div class="filter-dropdown-panel">
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-color">
           <button type="button" class="filter-option" role="checkbox" aria-checked="false">
             <span class="filter-check" aria-hidden="true">&#10003;</span>
             <span class="lang-en">Blacks &amp; Whites</span><span class="lang-zh">黑白</span>
@@ -120,10 +120,10 @@
         </div>
       </div>
       <div class="filter-dropdown">
-        <button class="filter-dropdown-toggle" type="button">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-medium" aria-expanded="false">
           <span class="lang-en">Medium</span><span class="lang-zh">媒介</span>
         </button>
-        <div class="filter-dropdown-panel">
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-medium">
           <button type="button" class="filter-option" role="checkbox" aria-checked="false">
             <span class="filter-check" aria-hidden="true">&#10003;</span>
             <span class="lang-en">Painting</span><span class="lang-zh">绘画</span>
@@ -139,10 +139,10 @@
         </div>
       </div>
       <div class="filter-dropdown">
-        <button class="filter-dropdown-toggle" type="button">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-style" aria-expanded="false">
           <span class="lang-en">Style</span><span class="lang-zh">风格</span>
         </button>
-        <div class="filter-dropdown-panel">
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-style">
           <button type="button" class="filter-option" role="checkbox" aria-checked="false">
             <span class="filter-check" aria-hidden="true">&#10003;</span>
             <span class="lang-en">Abstract</span><span class="lang-zh">抽象</span>
@@ -158,18 +158,18 @@
         </div>
       </div>
       <div class="filter-dropdown">
-        <button class="filter-dropdown-toggle" type="button">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-keyword" aria-expanded="false">
           <span class="lang-en">Keyword</span><span class="lang-zh">关键词</span>
         </button>
-        <div class="filter-dropdown-panel">
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-keyword">
           <input type="text" disabled placeholder="Search">
         </div>
       </div>
       <div class="filter-dropdown">
-        <button class="filter-dropdown-toggle" type="button">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-year" aria-expanded="false">
           <span class="lang-en">Year Range</span><span class="lang-zh">年份范围</span>
         </button>
-        <div class="filter-dropdown-panel">
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-year">
           <div class="filter-year-range">
             <input type="number" disabled placeholder="From">
             <input type="number" disabled placeholder="To">
@@ -201,7 +201,6 @@
         <div class="artwork-title lang-zh">无题，2026</div>
         <a href="#" class="artwork-view-details lang-en">View More Details</a>
         <a href="#" class="artwork-view-details lang-zh">查看详情</a>
-        <br>
         <a href="#" class="artwork-inquire lang-en">Inquire</a>
         <a href="#" class="artwork-inquire lang-zh">咨询</a>
       </div>
@@ -218,7 +217,6 @@
         <div class="artwork-title lang-zh">无题，2026</div>
         <a href="#" class="artwork-view-details lang-en">View More Details</a>
         <a href="#" class="artwork-view-details lang-zh">查看详情</a>
-        <br>
         <a href="#" class="artwork-inquire lang-en">Inquire</a>
         <a href="#" class="artwork-inquire lang-zh">咨询</a>
       </div>
@@ -235,7 +233,6 @@
         <div class="artwork-title lang-zh">无题，2026</div>
         <a href="#" class="artwork-view-details lang-en">View More Details</a>
         <a href="#" class="artwork-view-details lang-zh">查看详情</a>
-        <br>
         <a href="#" class="artwork-inquire lang-en">Inquire</a>
         <a href="#" class="artwork-inquire lang-zh">咨询</a>
       </div>
@@ -255,45 +252,11 @@
   </footer>
 
   <script src="assets/js/language.js"></script>
+  <script src="assets/js/gallery-filters.js"></script>
   <script>
     const currentYear = new Date().getFullYear();
     document.querySelectorAll('#copyright-year, #copyright-year-zh').forEach(el => {
       el.textContent = currentYear;
-    });
-  </script>
-  <script>
-    // Filter dropdown toggles — open/close on click, close when
-    // clicking outside or pressing Escape. Not wired to real filtering
-    // logic yet since there's no real artwork catalog to filter.
-    document.querySelectorAll('.filter-dropdown').forEach((dropdown) => {
-      const toggle = dropdown.querySelector('.filter-dropdown-toggle');
-      toggle.addEventListener('click', () => {
-        const isOpen = dropdown.classList.contains('open');
-        document.querySelectorAll('.filter-dropdown.open').forEach((d) => d.classList.remove('open'));
-        if (!isOpen) dropdown.classList.add('open');
-      });
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.filter-dropdown')) {
-        document.querySelectorAll('.filter-dropdown.open').forEach((d) => d.classList.remove('open'));
-      }
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.filter-dropdown.open').forEach((d) => d.classList.remove('open'));
-      }
-    });
-
-    // Toggle a filter option's selected state (multi-select checklist,
-    // not wired to real filtering logic yet).
-    document.querySelectorAll('.filter-option').forEach((option) => {
-      option.addEventListener('click', () => {
-        const nowSelected = !option.classList.contains('selected');
-        option.classList.toggle('selected', nowSelected);
-        option.setAttribute('aria-checked', String(nowSelected));
-      });
     });
   </script>
 </body>
