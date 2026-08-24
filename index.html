@@ -1178,20 +1178,24 @@
     /* ========================================
        LANGUAGE HIDDEN CLASSES
        ======================================== */
+    /* !important is deliberate: this class of bug (a component class
+       sharing the element also sets `display`, winning the cascade tie
+       by declaration order) has broken language switching on other
+       pages in this site. Language visibility must always win. */
     .lang-en {
-      display: block;
+      display: block !important;
     }
 
     .lang-zh {
-      display: none;
+      display: none !important;
     }
 
     body.chinese .lang-en {
-      display: none;
+      display: none !important;
     }
 
     body.chinese .lang-zh {
-      display: block;
+      display: block !important;
     }
 
     /* ========================================
@@ -1452,6 +1456,9 @@
         <div class="logo lang-en">Kay's Special Chili Oil Sauce</div>
         <div class="logo lang-zh">Kay's 特制辣椒油</div>
         <nav class="social-links" role="navigation" aria-label="Social media links">
+          <a href="home.html">
+            <span class="lang-en"><span aria-hidden="true">🏠</span> Home</span><span class="lang-zh"><span aria-hidden="true">🏠</span> 首页</span>
+          </a>
           <button class="social-btn" data-qr="wechat" aria-label="WeChat QR Code">
             <span class="lang-en">WeChat</span><span class="lang-zh">微信</span>
           </button>

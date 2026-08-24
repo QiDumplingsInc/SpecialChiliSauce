@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Collections - Kay's Gallery</title>
+  <meta name="description" content="Collections at Kay's Gallery.">
+
+  <link rel="icon" type="image/png" href="assets/logo/favicon.png">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/gallery.css">
+</head>
+
+<body>
+  <!-- Header + Nav Tabs: wrapped together so both stay pinned
+       to the top as one unit while scrolling -->
+  <div class="gallery-header-sticky">
+    <!-- Header -->
+    <header role="banner">
+    <div class="language-switcher" role="navigation" aria-label="Language switcher">
+      <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+      <button class="lang-btn" data-lang="zh" aria-label="切换到中文">中文</button>
+    </div>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo lang-en">Kay's Gallery</div>
+        <div class="logo lang-zh">Kay's 画廊</div>
+        <nav class="header-nav" role="navigation" aria-label="Site navigation">
+          <a href="home.html">
+            <span class="lang-en"><span aria-hidden="true">🏠</span> Home</span><span class="lang-zh"><span aria-hidden="true">🏠</span> 首页</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Gallery nav tabs — shared across gallery.html and category pages -->
+  <nav class="gallery-nav-tabs" role="navigation" aria-label="Gallery sections">
+    <ul>
+      <li><a href="gallery-new-arrivals.html"><span class="lang-en">New Arrivals</span><span class="lang-zh">新品上架</span></a></li>
+      <li><a href="gallery-portfolio.html"><span class="lang-en">Portfolio</span><span class="lang-zh">作品集</span></a></li>
+      <li><a href="gallery-artists.html"><span class="lang-en">Artists</span><span class="lang-zh">艺术家</span></a></li>
+      <li><a href="gallery.html"><span class="lang-en">Artworks</span><span class="lang-zh">作品</span></a></li>
+      <li><a href="gallery-exhibitions.html"><span class="lang-en">Exhibitions</span><span class="lang-zh">展览</span></a></li>
+      <li><a href="gallery-collections.html" class="active"><span class="lang-en">Collections</span><span class="lang-zh">系列</span></a></li>
+      <li><a href="gallery.html#about"><span class="lang-en">About</span><span class="lang-zh">关于</span></a></li>
+    </ul>
+    </nav>
+  </div>
+
+  <!-- Category hero -->
+  <section class="category-hero">
+    <div class="container">
+      <a href="gallery.html" class="category-back lang-en">&larr; Back to Gallery</a>
+      <a href="gallery.html" class="category-back lang-zh">&larr; 返回画廊</a>
+      <h1 class="lang-en">Collections</h1>
+      <h1 class="lang-zh">系列</h1>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="painting-grid">
+      <div class="painting-placeholder">
+        <span class="lang-en">Content coming soon</span>
+        <span class="lang-zh">内容即将上线</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <p class="lang-en">&copy; 2024&ndash;<span id="copyright-year"></span> Kay's Creations. All rights reserved.</p>
+        <p class="lang-zh">&copy; 2024&ndash;<span id="copyright-year-zh"></span> Kay's创作空间。版权所有。</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/language.js"></script>
+  <script>
+    const currentYear = new Date().getFullYear();
+    document.querySelectorAll('#copyright-year, #copyright-year-zh').forEach(el => {
+      el.textContent = currentYear;
+    });
+  </script>
+</body>
+
+</html>

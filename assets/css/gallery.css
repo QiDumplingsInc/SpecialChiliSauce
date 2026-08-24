@@ -1,0 +1,524 @@
+/* Shared gallery-specific components: used by gallery.html and the
+   per-medium category pages (gallery-<medium>.html). Loaded alongside
+   assets/css/site.css, which covers the base design system. */
+
+/* Light-weight, wide-tracked geometric sans-serif — used for gallery
+   nav/headings/labels per explicit style direction (distinct from the
+   chili sauce site's --font-family-ui, which stays a regular-weight
+   system sans for buttons/prices/nav there). */
+:root {
+  --font-family-geometric: 'Futura', 'Century Gothic', 'Avenir Next', 'Avenir', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ========================================
+   STICKY HEADER + NAV TABS (as one pinned unit)
+   ======================================== */
+.gallery-header-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.gallery-header-sticky header {
+  /* header itself no longer needs its own sticky/shadow — the
+     wrapper above pins both the logo bar and the nav tabs together */
+  position: static;
+  box-shadow: none;
+}
+
+/* ========================================
+   GALLERY NAV TABS (shared across gallery pages)
+   ======================================== */
+.gallery-nav-tabs {
+  border-bottom: 1px solid var(--color-bg-lighter);
+  background: var(--color-white);
+  box-shadow: var(--shadow-sm);
+}
+
+.gallery-nav-tabs ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) 0;
+}
+
+.gallery-nav-tabs a {
+  font-family: var(--font-family-geometric);
+  font-size: var(--font-size-sm);
+  font-weight: 300;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-text);
+  text-decoration: none;
+  padding: var(--spacing-xs) 0;
+  border-bottom: 2px solid transparent;
+}
+
+.gallery-nav-tabs a:hover,
+.gallery-nav-tabs a.active {
+  border-bottom-color: var(--color-text);
+}
+
+@media (max-width: 900px) {
+  .gallery-nav-tabs ul {
+    gap: var(--spacing-sm);
+  }
+
+  .gallery-nav-tabs a {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+  }
+}
+
+/* ========================================
+   ROLLING HERO CAROUSEL (gallery.html only)
+   ======================================== */
+.hero-carousel {
+  position: relative;
+  min-height: 70vh;
+  overflow: hidden;
+}
+
+.hero-carousel-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--color-bg-lighter);
+  border: 2px dashed var(--color-text-lighter);
+  color: var(--color-text-light);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.8s ease;
+}
+
+.hero-carousel-slide.active {
+  opacity: 1;
+  visibility: visible;
+  position: relative;
+}
+
+.hero-carousel-slide h1 {
+  font-size: var(--font-size-4xl);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.hero-carousel-pager {
+  position: absolute;
+  bottom: var(--spacing-md);
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  z-index: 2;
+}
+
+.hero-carousel-pager button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--color-text-light);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.hero-carousel-pager button.active {
+  background: var(--color-text);
+  border-color: var(--color-text);
+}
+
+.gallery-hero {
+  padding: var(--spacing-xl) 0 var(--spacing-lg);
+  text-align: center;
+}
+
+.gallery-hero h1 {
+  font-size: var(--font-size-4xl);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.gallery-intro {
+  max-width: 700px;
+  margin: 0 auto;
+  color: var(--color-text-light);
+  font-size: var(--font-size-lg);
+}
+
+/* ========================================
+   EXPLORE BY MEDIUM (hub page)
+   ======================================== */
+.medium-section {
+  padding: var(--spacing-lg) 0 var(--spacing-xl);
+}
+
+.medium-section-title {
+  text-align: center;
+  font-family: var(--font-family-geometric);
+  font-size: var(--font-size-sm);
+  font-weight: 300;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-lg);
+}
+
+.medium-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.medium-card {
+  display: block;
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.medium-placeholder {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-lighter);
+  border: 1px solid var(--color-bg-lighter);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-lighter);
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  padding: var(--spacing-md);
+  transition: var(--transition-base);
+}
+
+.medium-card:hover .medium-placeholder {
+  border-color: var(--color-text);
+}
+
+.medium-card-label {
+  display: block;
+  margin-top: var(--spacing-sm);
+  text-align: center;
+  font-family: var(--font-family-ui);
+  font-weight: bold;
+  font-size: var(--font-size-base);
+}
+
+/* ========================================
+   ABOUT / SERVICES two-panel section (hub page)
+   ======================================== */
+.about-services {
+  padding: var(--spacing-xl) 0;
+  background: var(--color-bg-light);
+}
+
+.about-services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+}
+
+.about-panel {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+}
+
+.about-panel h3 {
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-sm);
+}
+
+.about-panel p {
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-sm);
+}
+
+.about-panel a {
+  font-family: var(--font-family-ui);
+  font-weight: bold;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+@media (max-width: 700px) {
+  .about-services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========================================
+   CATEGORY PAGE: hero + back link
+   ======================================== */
+.category-hero {
+  padding: var(--spacing-xl) 0 var(--spacing-lg);
+  text-align: center;
+}
+
+.category-hero h1 {
+  font-family: var(--font-family-geometric);
+  font-size: var(--font-size-4xl);
+  font-weight: 300;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.category-back {
+  display: inline-block;
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  text-decoration: none;
+}
+
+.category-back:hover {
+  color: var(--color-text);
+}
+
+/* ========================================
+   CATEGORY PAGE: horizontal filter dropdown bar
+   ======================================== */
+.artwork-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-bg-lighter);
+}
+
+.filter-dropdown {
+  position: relative;
+}
+
+.filter-dropdown-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family-geometric);
+  font-size: var(--font-size-sm);
+  font-weight: 300;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  padding: 0;
+}
+
+.filter-dropdown-toggle:hover,
+.filter-dropdown.open .filter-dropdown-toggle {
+  color: var(--color-text);
+}
+
+.filter-dropdown-panel {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--spacing-sm));
+  min-width: 180px;
+  background: var(--color-white);
+  border: 1px solid var(--color-bg-lighter);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-sm);
+  z-index: 10;
+}
+
+.filter-dropdown.open .filter-dropdown-panel {
+  display: block;
+}
+
+.filter-dropdown-panel label {
+  display: block;
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
+  padding: 0.3rem 0;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-base);
+  color: var(--color-text-lighter);
+  padding: 0.3rem 0;
+}
+
+.filter-check {
+  color: var(--color-text-lighter);
+}
+
+.filter-option.selected {
+  color: var(--color-text);
+  font-weight: bold;
+}
+
+.filter-option.selected .filter-check {
+  color: var(--color-text);
+}
+
+.filter-dropdown-panel input[type="text"],
+.filter-dropdown-panel input[type="number"] {
+  width: 100%;
+  padding: 0.4rem;
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--color-bg-lighter);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.filter-year-range {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.filter-submit {
+  width: 100%;
+  margin-top: var(--spacing-xs);
+  padding: 0.5rem;
+  background: var(--color-text);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family-geometric);
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+/* ========================================
+   CATEGORY PAGE: artwork grid + cards
+   ======================================== */
+.artwork-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-lg) var(--spacing-md);
+  padding-bottom: var(--spacing-xl);
+}
+
+.artwork-card {
+  font-family: var(--font-family-ui);
+}
+
+.artwork-image-wrap {
+  position: relative;
+  margin-bottom: var(--spacing-sm);
+}
+
+.artwork-placeholder {
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-lighter);
+  border: 2px dashed var(--color-text-lighter);
+  color: var(--color-text-lighter);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  padding: var(--spacing-md);
+}
+
+.artwork-wishlist {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  color: var(--color-text-lighter);
+  line-height: 1;
+}
+
+.artwork-wishlist:hover {
+  color: var(--color-text);
+}
+
+.artwork-artist {
+  font-family: var(--font-family-geometric);
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+}
+
+.artwork-title {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin: 0.2rem 0 0.4rem;
+}
+
+.artwork-view-details {
+  font-family: var(--font-family-geometric);
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  text-decoration: none;
+  margin-bottom: var(--spacing-sm);
+}
+
+.artwork-view-details:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.artwork-inquire {
+  background: var(--color-bg-lighter);
+  color: var(--color-text);
+  border: none;
+  padding: 0.5rem var(--spacing-md);
+  font-family: var(--font-family-geometric);
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.artwork-inquire:hover {
+  background: var(--color-text);
+  color: var(--color-white);
+}
+
+.pagination {
+  text-align: center;
+  font-family: var(--font-family-geometric);
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  padding: var(--spacing-lg) 0;
+}
+
+@media (max-width: 700px) {
+  .artwork-filter-bar {
+    justify-content: flex-start;
+  }
+}

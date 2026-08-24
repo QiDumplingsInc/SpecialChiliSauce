@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Kay's Creations - Home</title>
+  <meta name="description" content="Welcome to Kay's Creations: handcrafted chili sauce and Kay's original paintings.">
+
+  <link rel="icon" type="image/png" href="assets/logo/favicon.png">
+  <link rel="stylesheet" href="assets/css/site.css">
+
+  <style>
+    :root {
+      --color-accent: #3D6B4F;
+      --color-accent-dark: #2A4A37;
+    }
+
+    header {
+      border-bottom: 1px solid var(--color-bg-lighter);
+    }
+
+    .language-switcher button.active {
+      background: var(--color-accent);
+    }
+
+    .hub-hero {
+      padding: var(--spacing-xl) 0 var(--spacing-sm);
+      text-align: center;
+    }
+
+    .hub-hero h1 {
+      font-size: var(--font-size-4xl);
+      color: var(--color-text);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .hub-tagline {
+      font-size: var(--font-size-lg);
+      color: var(--color-text-light);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .hub-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-lg);
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: var(--spacing-lg) 0 var(--spacing-xl);
+    }
+
+    .hub-card {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: var(--color-text);
+    }
+
+    .hub-card-photo {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--color-bg-lighter);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .hub-card-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition-base);
+    }
+
+    .hub-card:hover .hub-card-photo img {
+      transform: scale(1.04);
+    }
+
+    .hub-card-photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-lighter);
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+      text-align: center;
+      padding: var(--spacing-md);
+      border: 2px dashed var(--color-text-lighter);
+      border-radius: var(--radius-md);
+    }
+
+    .hub-card-title {
+      font-size: var(--font-size-xl);
+      font-weight: bold;
+      font-family: var(--font-family-ui);
+      color: var(--color-text);
+      margin-bottom: var(--spacing-sm);
+      text-align: center;
+    }
+
+    .hub-card-button {
+      display: inline-block;
+      align-self: center;
+      background: var(--color-accent);
+      color: var(--color-white);
+      padding: var(--spacing-xs) var(--spacing-lg);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-family-ui);
+      font-weight: bold;
+      font-size: var(--font-size-sm);
+      transition: var(--transition-base);
+    }
+
+    .hub-card:hover .hub-card-button {
+      background: var(--color-accent-dark);
+    }
+
+    @media (max-width: 700px) {
+      .hub-options {
+        grid-template-columns: 1fr;
+      }
+
+      .hub-hero h1 {
+        font-size: var(--font-size-3xl);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header role="banner">
+    <!-- Language Switcher: nested inside header so mobile positioning
+         is relative to the header box, never above/overlapping it -->
+    <div class="language-switcher" role="navigation" aria-label="Language switcher">
+      <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+      <button class="lang-btn" data-lang="zh" aria-label="切换到中文">中文</button>
+    </div>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo lang-en">Kay's Creations</div>
+        <div class="logo lang-zh">Kay's 创作空间</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hub Hero -->
+  <section class="hub-hero">
+    <div class="container">
+      <h1 class="lang-en">Welcome</h1>
+      <h1 class="lang-zh">欢迎</h1>
+      <p class="hub-tagline lang-en">Handcrafted chili sauce, and Kay's original paintings</p>
+      <p class="hub-tagline lang-zh">手工特制辣椒酱，以及Kay的原创画作</p>
+    </div>
+  </section>
+
+  <!-- Two photo blocks, each linking to its own site -->
+  <section class="container">
+    <div class="hub-options">
+      <a href="index.html" class="hub-card">
+        <div class="hub-card-photo">
+          <!-- PLACEHOLDER: existing product photo, swap for a final
+               hero-style photo whenever ready -->
+          <img src="assets/product/3_jar_with_labels.png" alt="Kay's Special Chili Sauce jars" loading="lazy">
+        </div>
+        <span class="hub-card-title lang-en">Special Chili Sauce</span>
+        <span class="hub-card-title lang-zh">特制辣椒酱</span>
+        <span class="hub-card-button lang-en">Shop Now</span>
+        <span class="hub-card-button lang-zh">立即选购</span>
+      </a>
+      <a href="gallery.html" class="hub-card">
+        <div class="hub-card-photo">
+          <!-- PLACEHOLDER: replace with a real photo of one of Kay's
+               paintings once available -->
+          <div class="hub-card-photo-placeholder lang-en">Gallery photo coming soon</div>
+          <div class="hub-card-photo-placeholder lang-zh">画廊图片即将上线</div>
+        </div>
+        <span class="hub-card-title lang-en">Gallery</span>
+        <span class="hub-card-title lang-zh">画廊</span>
+        <span class="hub-card-button lang-en">View Gallery</span>
+        <span class="hub-card-button lang-zh">查看画廊</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <p class="lang-en">&copy; 2024&ndash;<span id="copyright-year"></span> Kay's Creations. All rights reserved.</p>
+        <p class="lang-zh">&copy; 2024&ndash;<span id="copyright-year-zh"></span> Kay's创作空间。版权所有。</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/language.js"></script>
+  <script>
+    const currentYear = new Date().getFullYear();
+    document.querySelectorAll('#copyright-year, #copyright-year-zh').forEach(el => {
+      el.textContent = currentYear;
+    });
+  </script>
+</body>
+
+</html>

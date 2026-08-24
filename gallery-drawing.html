@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Drawing - Kay's Gallery</title>
+  <meta name="description" content="Drawings by Kay.">
+
+  <link rel="icon" type="image/png" href="assets/logo/favicon.png">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/gallery.css">
+</head>
+
+<body>
+  <!-- Header + Nav Tabs: wrapped together so both stay pinned
+       to the top as one unit while scrolling -->
+  <div class="gallery-header-sticky">
+    <!-- Header -->
+    <header role="banner">
+    <div class="language-switcher" role="navigation" aria-label="Language switcher">
+      <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+      <button class="lang-btn" data-lang="zh" aria-label="切换到中文">中文</button>
+    </div>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo lang-en">Kay's Gallery</div>
+        <div class="logo lang-zh">Kay's 画廊</div>
+        <nav class="header-nav" role="navigation" aria-label="Site navigation">
+          <a href="home.html">
+            <span class="lang-en"><span aria-hidden="true">🏠</span> Home</span><span class="lang-zh"><span aria-hidden="true">🏠</span> 首页</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Gallery nav tabs — shared across gallery.html and category pages -->
+  <nav class="gallery-nav-tabs" role="navigation" aria-label="Gallery sections">
+    <ul>
+      <li><a href="gallery-new-arrivals.html"><span class="lang-en">New Arrivals</span><span class="lang-zh">新品上架</span></a></li>
+      <li><a href="gallery-portfolio.html"><span class="lang-en">Portfolio</span><span class="lang-zh">作品集</span></a></li>
+      <li><a href="gallery-artists.html"><span class="lang-en">Artists</span><span class="lang-zh">艺术家</span></a></li>
+      <li><a href="gallery.html" class="active"><span class="lang-en">Artworks</span><span class="lang-zh">作品</span></a></li>
+      <li><a href="gallery-exhibitions.html"><span class="lang-en">Exhibitions</span><span class="lang-zh">展览</span></a></li>
+      <li><a href="gallery-collections.html"><span class="lang-en">Collections</span><span class="lang-zh">系列</span></a></li>
+      <li><a href="gallery.html#about"><span class="lang-en">About</span><span class="lang-zh">关于</span></a></li>
+    </ul>
+    </nav>
+  </div>
+
+  <!-- Category hero -->
+  <section class="category-hero">
+    <div class="container">
+      <a href="gallery.html" class="category-back lang-en">&larr; Back to Gallery</a>
+      <a href="gallery.html" class="category-back lang-zh">&larr; 返回画廊</a>
+      <h1 class="lang-en">Drawing</h1>
+      <h1 class="lang-zh">素描</h1>
+    </div>
+  </section>
+
+  <section class="container">
+    <!--
+      PLACEHOLDER filter dropdown bar — mirrors the reference gallery's
+      filter categories structurally (horizontal dropdowns, not a
+      sidebar). Not wired to real filtering logic yet since there's no
+      real artwork catalog to filter.
+    -->
+    <div class="artwork-filter-bar">
+      <div class="filter-dropdown">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-size" aria-expanded="false">
+          <span class="lang-en">Size Range</span><span class="lang-zh">尺寸范围</span>
+        </button>
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-size">
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Small</span><span class="lang-zh">小</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Medium</span><span class="lang-zh">中</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Large</span><span class="lang-zh">大</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Very large</span><span class="lang-zh">特大</span>
+          </button>
+        </div>
+      </div>
+      <div class="filter-dropdown">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-color" aria-expanded="false">
+          <span class="lang-en">Color</span><span class="lang-zh">颜色</span>
+        </button>
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-color">
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Blacks &amp; Whites</span><span class="lang-zh">黑白</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Blues</span><span class="lang-zh">蓝色</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Browns</span><span class="lang-zh">棕色</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Greens</span><span class="lang-zh">绿色</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Reds</span><span class="lang-zh">红色</span>
+          </button>
+        </div>
+      </div>
+      <div class="filter-dropdown">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-medium" aria-expanded="false">
+          <span class="lang-en">Medium</span><span class="lang-zh">媒介</span>
+        </button>
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-medium">
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Painting</span><span class="lang-zh">绘画</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Drawing</span><span class="lang-zh">素描</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Mixed Media</span><span class="lang-zh">综合材料</span>
+          </button>
+        </div>
+      </div>
+      <div class="filter-dropdown">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-style" aria-expanded="false">
+          <span class="lang-en">Style</span><span class="lang-zh">风格</span>
+        </button>
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-style">
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Abstract</span><span class="lang-zh">抽象</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Figurative</span><span class="lang-zh">具象</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Realist</span><span class="lang-zh">写实</span>
+          </button>
+        </div>
+      </div>
+      <div class="filter-dropdown">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-keyword" aria-expanded="false">
+          <span class="lang-en">Keyword</span><span class="lang-zh">关键词</span>
+        </button>
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-keyword">
+          <input type="text" disabled placeholder="Search">
+        </div>
+      </div>
+      <div class="filter-dropdown">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-year" aria-expanded="false">
+          <span class="lang-en">Year Range</span><span class="lang-zh">年份范围</span>
+        </button>
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-year">
+          <div class="filter-year-range">
+            <input type="number" disabled placeholder="From">
+            <input type="number" disabled placeholder="To">
+          </div>
+          <button class="filter-submit lang-en" disabled>Submit</button>
+          <button class="filter-submit lang-zh" disabled>提交</button>
+        </div>
+      </div>
+    </div>
+
+    <!--
+      PLACEHOLDER: replace each .artwork-placeholder box with a real
+      <img> once photos exist, e.g.:
+      <div class="artwork-placeholder">
+        <img src="assets/gallery/painting-1.jpg" alt="Description" loading="lazy">
+      </div>
+    -->
+    <div class="artwork-grid">
+      <div class="artwork-card">
+        <div class="artwork-image-wrap">
+          <div class="artwork-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <button class="artwork-wishlist" aria-label="Add to wishlist">&#9825;</button>
+        </div>
+        <div class="artwork-artist">KAY</div>
+        <div class="artwork-title lang-en">Untitled, 2026</div>
+        <div class="artwork-title lang-zh">无题，2026</div>
+        <a href="#" class="artwork-view-details lang-en">View More Details</a>
+        <a href="#" class="artwork-view-details lang-zh">查看详情</a>
+        <a href="#" class="artwork-inquire lang-en">Inquire</a>
+        <a href="#" class="artwork-inquire lang-zh">咨询</a>
+      </div>
+      <div class="artwork-card">
+        <div class="artwork-image-wrap">
+          <div class="artwork-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <button class="artwork-wishlist" aria-label="Add to wishlist">&#9825;</button>
+        </div>
+        <div class="artwork-artist">KAY</div>
+        <div class="artwork-title lang-en">Untitled, 2026</div>
+        <div class="artwork-title lang-zh">无题，2026</div>
+        <a href="#" class="artwork-view-details lang-en">View More Details</a>
+        <a href="#" class="artwork-view-details lang-zh">查看详情</a>
+        <a href="#" class="artwork-inquire lang-en">Inquire</a>
+        <a href="#" class="artwork-inquire lang-zh">咨询</a>
+      </div>
+      <div class="artwork-card">
+        <div class="artwork-image-wrap">
+          <div class="artwork-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <button class="artwork-wishlist" aria-label="Add to wishlist">&#9825;</button>
+        </div>
+        <div class="artwork-artist">KAY</div>
+        <div class="artwork-title lang-en">Untitled, 2026</div>
+        <div class="artwork-title lang-zh">无题，2026</div>
+        <a href="#" class="artwork-view-details lang-en">View More Details</a>
+        <a href="#" class="artwork-view-details lang-zh">查看详情</a>
+        <a href="#" class="artwork-inquire lang-en">Inquire</a>
+        <a href="#" class="artwork-inquire lang-zh">咨询</a>
+      </div>
+    </div>
+    <div class="pagination lang-en">Page 1 of 1</div>
+    <div class="pagination lang-zh">第 1 页，共 1 页</div>
+  </section>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <p class="lang-en">&copy; 2024&ndash;<span id="copyright-year"></span> Kay's Creations. All rights reserved.</p>
+        <p class="lang-zh">&copy; 2024&ndash;<span id="copyright-year-zh"></span> Kay's创作空间。版权所有。</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/language.js"></script>
+  <script src="assets/js/gallery-filters.js"></script>
+  <script>
+    const currentYear = new Date().getFullYear();
+    document.querySelectorAll('#copyright-year, #copyright-year-zh').forEach(el => {
+      el.textContent = currentYear;
+    });
+  </script>
+</body>
+
+</html>

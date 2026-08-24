@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Kay's Gallery - Paintings by Kay</title>
+  <meta name="description" content="A gallery of original artwork by Kay.">
+
+  <link rel="icon" type="image/png" href="assets/logo/favicon.png">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/gallery.css">
+
+  <style>
+    /* PLACEHOLDER carousel slides — swap each slide's background for
+       a real photo of Kay's work once available. Carousel styling
+       itself (.hero-carousel, .hero-carousel-slide, pager) lives in
+       assets/css/gallery.css since it's shared infrastructure. */
+
+    /* Alternating full-width image/text panels */
+    .about-panel-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-xl) 0;
+    }
+
+    .about-panel-row.reversed .about-panel-image {
+      order: 2;
+    }
+
+    .about-panel-image {
+      aspect-ratio: 3 / 2;
+      background: var(--color-bg-lighter);
+      border: 2px dashed var(--color-text-lighter);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-lighter);
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+      text-align: center;
+      padding: var(--spacing-md);
+    }
+
+    .about-panel-text h2 {
+      font-size: var(--font-size-2xl);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .about-panel-text p {
+      color: var(--color-text-light);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .about-panel-text a {
+      font-family: var(--font-family-ui);
+      font-weight: bold;
+      font-size: var(--font-size-sm);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 700px) {
+      .about-panel-row,
+      .about-panel-row.reversed {
+        grid-template-columns: 1fr;
+      }
+
+      .about-panel-row.reversed .about-panel-image {
+        order: 0;
+      }
+    }
+
+    /* Video feature placeholder */
+    .video-feature {
+      padding: var(--spacing-xl) 0;
+      text-align: center;
+      background: var(--color-bg-light);
+    }
+
+    .video-feature h2 {
+      font-family: var(--font-family-ui);
+      letter-spacing: 1px;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .video-placeholder {
+      max-width: 640px;
+      aspect-ratio: 16 / 9;
+      margin: 0 auto;
+      background: var(--color-bg-lighter);
+      border: 2px dashed var(--color-text-lighter);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-lighter);
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+    }
+
+    /* Two-column advanced footer */
+    .site-footer-advanced {
+      background: #222;
+      color: #ddd;
+      padding: var(--spacing-xl) 0 var(--spacing-md);
+    }
+
+    .footer-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+      font-family: var(--font-family-ui);
+    }
+
+    .footer-columns h3 {
+      color: var(--color-white);
+      font-size: var(--font-size-lg);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .footer-columns p,
+    .footer-columns a {
+      color: #bbb;
+      font-size: var(--font-size-sm);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .footer-columns a:hover {
+      color: var(--color-white);
+    }
+
+    .footer-col-right {
+      text-align: right;
+    }
+
+    .footer-social-row {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-md);
+      flex-wrap: wrap;
+      padding: var(--spacing-md) 0;
+      border-top: 1px solid #444;
+      border-bottom: 1px solid #444;
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+    }
+
+    .footer-social-row a {
+      color: #bbb;
+      text-decoration: none;
+    }
+
+    .footer-social-row a:hover {
+      color: var(--color-white);
+    }
+
+    .footer-copyright {
+      text-align: center;
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+      color: #888;
+      padding-top: var(--spacing-md);
+    }
+
+    @media (max-width: 700px) {
+      .footer-columns {
+        grid-template-columns: 1fr;
+        text-align: left;
+      }
+
+      .footer-col-right {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header + Nav Tabs: wrapped together so both stay pinned
+       to the top as one unit while scrolling -->
+  <div class="gallery-header-sticky">
+    <!-- Header -->
+    <header role="banner">
+    <!-- Language Switcher: nested inside header so mobile positioning
+         is relative to the header box, never above/overlapping it -->
+    <div class="language-switcher" role="navigation" aria-label="Language switcher">
+      <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+      <button class="lang-btn" data-lang="zh" aria-label="切换到中文">中文</button>
+    </div>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo lang-en">Kay's Gallery</div>
+        <div class="logo lang-zh">Kay's 画廊</div>
+        <nav class="header-nav" role="navigation" aria-label="Site navigation">
+          <a href="home.html">
+            <span class="lang-en"><span aria-hidden="true">🏠</span> Home</span><span class="lang-zh"><span aria-hidden="true">🏠</span> 首页</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Gallery nav tabs — shared across gallery.html and category pages -->
+  <nav class="gallery-nav-tabs" role="navigation" aria-label="Gallery sections">
+    <ul>
+      <li><a href="gallery-new-arrivals.html"><span class="lang-en">New Arrivals</span><span class="lang-zh">新品上架</span></a></li>
+      <li><a href="gallery-portfolio.html"><span class="lang-en">Portfolio</span><span class="lang-zh">作品集</span></a></li>
+      <li><a href="gallery-artists.html"><span class="lang-en">Artists</span><span class="lang-zh">艺术家</span></a></li>
+      <li><a href="gallery.html" class="active"><span class="lang-en">Artworks</span><span class="lang-zh">作品</span></a></li>
+      <li><a href="gallery-exhibitions.html"><span class="lang-en">Exhibitions</span><span class="lang-zh">展览</span></a></li>
+      <li><a href="gallery-collections.html"><span class="lang-en">Collections</span><span class="lang-zh">系列</span></a></li>
+      <li><a href="gallery.html#about"><span class="lang-en">About</span><span class="lang-zh">关于</span></a></li>
+    </ul>
+    </nav>
+  </div>
+
+  <!-- PLACEHOLDER rolling hero carousel — swap each slide's content
+       for real photos/exhibition info once available -->
+  <section class="hero-carousel" id="heroCarousel">
+    <div class="hero-carousel-slide active">
+      <div>
+        <h1 class="lang-en">Paintings by Kay</h1>
+        <h1 class="lang-zh">Kay的画作</h1>
+        <p class="lang-en">Photo coming soon</p>
+        <p class="lang-zh">图片即将上线</p>
+      </div>
+    </div>
+    <div class="hero-carousel-slide">
+      <div>
+        <h1 class="lang-en">New Work Coming Soon</h1>
+        <h1 class="lang-zh">新作品即将上线</h1>
+        <p class="lang-en">Photo coming soon</p>
+        <p class="lang-zh">图片即将上线</p>
+      </div>
+    </div>
+    <div class="hero-carousel-slide">
+      <div>
+        <h1 class="lang-en">Explore the Collection</h1>
+        <h1 class="lang-zh">探索作品系列</h1>
+        <p class="lang-en">Photo coming soon</p>
+        <p class="lang-zh">图片即将上线</p>
+      </div>
+    </div>
+    <div class="hero-carousel-pager" role="tablist" aria-label="Carousel slides">
+      <button class="active" data-slide="0" aria-label="Go to slide 1"></button>
+      <button data-slide="1" aria-label="Go to slide 2"></button>
+      <button data-slide="2" aria-label="Go to slide 3"></button>
+    </div>
+  </section>
+
+  <!-- Explore by Medium -->
+  <section class="medium-section">
+    <div class="container">
+      <h2 class="medium-section-title lang-en">Explore by Medium</h2>
+      <h2 class="medium-section-title lang-zh">按创作媒介浏览</h2>
+
+      <!--
+        PLACEHOLDER: replace each .medium-placeholder box with a real
+        <img> once photos exist, e.g.:
+        <a href="gallery-painting.html" class="medium-card">
+          <img src="assets/gallery/painting-cover.jpg" alt="Painting" loading="lazy">
+          <span class="medium-card-label lang-en">Painting</span>
+          <span class="medium-card-label lang-zh">绘画</span>
+        </a>
+      -->
+      <div class="medium-grid">
+        <a href="gallery-drawing.html" class="medium-card">
+          <div class="medium-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <span class="medium-card-label lang-en">Drawing</span>
+          <span class="medium-card-label lang-zh">素描</span>
+        </a>
+        <a href="gallery-mixed-media.html" class="medium-card">
+          <div class="medium-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <span class="medium-card-label lang-en">Mixed Media</span>
+          <span class="medium-card-label lang-zh">综合材料</span>
+        </a>
+        <a href="gallery-painting.html" class="medium-card">
+          <div class="medium-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <span class="medium-card-label lang-en">Painting</span>
+          <span class="medium-card-label lang-zh">绘画</span>
+        </a>
+        <a href="gallery-photography.html" class="medium-card">
+          <div class="medium-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <span class="medium-card-label lang-en">Photography</span>
+          <span class="medium-card-label lang-zh">摄影</span>
+        </a>
+        <a href="gallery-printmaking.html" class="medium-card">
+          <div class="medium-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <span class="medium-card-label lang-en">Printmaking</span>
+          <span class="medium-card-label lang-zh">版画</span>
+        </a>
+        <a href="gallery-sculpture.html" class="medium-card">
+          <div class="medium-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <span class="medium-card-label lang-en">Sculpture</span>
+          <span class="medium-card-label lang-zh">雕塑</span>
+        </a>
+        <a href="gallery-work-on-paper.html" class="medium-card">
+          <div class="medium-placeholder">
+            <span class="lang-en">Image coming soon</span>
+            <span class="lang-zh">图片即将上线</span>
+          </div>
+          <span class="medium-card-label lang-en">Work on Paper</span>
+          <span class="medium-card-label lang-zh">纸本作品</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alternating image/text panels -->
+  <section class="container" id="about">
+    <div class="about-panel-row">
+      <div class="about-panel-image">
+        <span class="lang-en">Photo coming soon</span>
+        <span class="lang-zh">图片即将上线</span>
+      </div>
+      <div class="about-panel-text">
+        <h2 class="lang-en">About Kay's Gallery</h2>
+        <h2 class="lang-zh">关于Kay的画廊</h2>
+        <p class="lang-en">A growing collection of Kay's original artwork across painting, drawing, and mixed media. More about Kay's artistic journey coming soon.</p>
+        <p class="lang-zh">收录Kay在绘画、素描、综合材料等领域的原创作品。关于Kay创作历程的介绍即将上线。</p>
+        <a href="home.html" class="lang-en">Learn more &rarr;</a>
+        <a href="home.html" class="lang-zh">了解更多 &rarr;</a>
+      </div>
+    </div>
+
+    <div class="about-panel-row reversed">
+      <div class="about-panel-image">
+        <span class="lang-en">Photo coming soon</span>
+        <span class="lang-zh">图片即将上线</span>
+      </div>
+      <div class="about-panel-text">
+        <h2 class="lang-en">Commissions &amp; Inquiries</h2>
+        <h2 class="lang-zh">定制与咨询</h2>
+        <p class="lang-en">Interested in a custom piece or purchasing artwork? Reach out and we'll be happy to help.</p>
+        <p class="lang-zh">对定制作品或购买作品感兴趣？欢迎与我们联系。</p>
+        <a href="index.html#contact" class="lang-en">Contact us &rarr;</a>
+        <a href="index.html#contact" class="lang-zh">联系我们 &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video feature placeholder -->
+  <section class="video-feature">
+    <div class="container">
+      <h2 class="lang-en">Recent Video Features</h2>
+      <h2 class="lang-zh">近期视频</h2>
+      <div class="video-placeholder">
+        <span class="lang-en">Video coming soon</span>
+        <span class="lang-zh">视频即将上线</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer role="contentinfo" class="site-footer-advanced">
+    <div class="container">
+      <div class="footer-columns">
+        <div>
+          <h3 class="lang-en">Kay's Gallery</h3>
+          <h3 class="lang-zh">Kay's 画廊</h3>
+          <a href="index.html#newsletter" class="lang-en">Join our mailing list</a>
+          <a href="index.html#newsletter" class="lang-zh">加入邮件订阅</a>
+        </div>
+        <div class="footer-col-right">
+          <h3 class="lang-en">Contact Us</h3>
+          <h3 class="lang-zh">联系我们</h3>
+          <a href="mailto:QiDumplingsINC@gmail.com">QiDumplingsINC@gmail.com</a>
+          <a href="tel:+17033458016">(703) 345-8016</a>
+          <a href="home.html" class="lang-en">Home</a>
+          <a href="home.html" class="lang-zh">首页</a>
+          <a href="index.html" class="lang-en">Special Chili Sauce</a>
+          <a href="index.html" class="lang-zh">特制辣椒酱</a>
+        </div>
+      </div>
+
+      <div class="footer-social-row">
+        <a href="https://instagram.com/your-instagram-handle" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.facebook.com/share/1EFRRZNRMs/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="http://xhslink.com/m/41QoyH8K49O" target="_blank" rel="noopener noreferrer">Rednote</a>
+      </div>
+
+      <div class="footer-copyright">
+        <p class="lang-en">&copy; 2024&ndash;<span id="copyright-year"></span> Kay's Creations. All rights reserved.</p>
+        <p class="lang-zh">&copy; 2024&ndash;<span id="copyright-year-zh"></span> Kay's创作空间。版权所有。</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/language.js"></script>
+  <script>
+    const currentYear = new Date().getFullYear();
+    document.querySelectorAll('#copyright-year, #copyright-year-zh').forEach(el => {
+      el.textContent = currentYear;
+    });
+  </script>
+  <script>
+    // Rolling hero carousel — auto-advances unless the visitor prefers
+    // reduced motion, in which case it just shows the first slide.
+    (function () {
+      const carousel = document.getElementById('heroCarousel');
+      if (!carousel) return;
+      const slides = carousel.querySelectorAll('.hero-carousel-slide');
+      const dots = carousel.querySelectorAll('.hero-carousel-pager button');
+      let current = 0;
+      let timer;
+
+      function goTo(index) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        current = (index + slides.length) % slides.length;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+      }
+
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          goTo(i);
+          resetTimer();
+        });
+      });
+
+      function resetTimer() {
+        clearInterval(timer);
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          timer = setInterval(() => goTo(current + 1), 6000);
+        }
+      }
+
+      resetTimer();
+    })();
+  </script>
+</body>
+
+</html>
