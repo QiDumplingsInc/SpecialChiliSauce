@@ -2,6 +2,14 @@
    per-medium category pages (gallery-<medium>.html). Loaded alongside
    assets/css/site.css, which covers the base design system. */
 
+/* Light-weight, wide-tracked geometric sans-serif — used for gallery
+   nav/headings/labels per explicit style direction (distinct from the
+   chili sauce site's --font-family-ui, which stays a regular-weight
+   system sans for buttons/prices/nav there). */
+:root {
+  --font-family-geometric: 'Futura', 'Century Gothic', 'Avenir Next', 'Avenir', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 /* ========================================
    STICKY HEADER + NAV TABS (as one pinned unit)
    ======================================== */
@@ -37,10 +45,10 @@
 }
 
 .gallery-nav-tabs a {
-  font-family: var(--font-family-ui);
+  font-family: var(--font-family-geometric);
   font-size: var(--font-size-sm);
-  font-weight: bold;
-  letter-spacing: 1.5px;
+  font-weight: 300;
+  letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--color-text);
   text-decoration: none;
@@ -153,10 +161,10 @@
 
 .medium-section-title {
   text-align: center;
-  font-family: var(--font-family-ui);
+  font-family: var(--font-family-geometric);
   font-size: var(--font-size-sm);
-  font-weight: bold;
-  letter-spacing: 2px;
+  font-weight: 300;
+  letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--color-text-light);
   margin-bottom: var(--spacing-lg);
@@ -257,7 +265,11 @@
 }
 
 .category-hero h1 {
+  font-family: var(--font-family-geometric);
   font-size: var(--font-size-4xl);
+  font-weight: 300;
+  letter-spacing: 3px;
+  text-transform: uppercase;
   color: var(--color-text);
   margin-bottom: var(--spacing-sm);
 }
@@ -276,43 +288,96 @@
 }
 
 /* ========================================
-   CATEGORY PAGE: filter sidebar + artwork grid
+   CATEGORY PAGE: horizontal filter dropdown bar
    ======================================== */
-.category-layout {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: var(--spacing-lg);
-  padding-bottom: var(--spacing-xl);
-  align-items: start;
+.artwork-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-bg-lighter);
 }
 
-.filter-panel {
-  font-family: var(--font-family-ui);
+.filter-dropdown {
+  position: relative;
+}
+
+.filter-dropdown-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family-geometric);
+  font-size: var(--font-size-sm);
+  font-weight: 300;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  padding: 0;
+}
+
+.filter-dropdown-toggle:hover,
+.filter-dropdown.open .filter-dropdown-toggle {
+  color: var(--color-text);
+}
+
+.filter-dropdown-panel {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--spacing-sm));
+  min-width: 180px;
+  background: var(--color-white);
   border: 1px solid var(--color-bg-lighter);
   border-radius: var(--radius-sm);
-  padding: var(--spacing-md);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-sm);
+  z-index: 10;
 }
 
-.filter-panel h4 {
-  font-size: var(--font-size-sm);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin: var(--spacing-md) 0 var(--spacing-xs);
-}
-
-.filter-panel h4:first-child {
-  margin-top: 0;
-}
-
-.filter-panel label {
+.filter-dropdown.open .filter-dropdown-panel {
   display: block;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-light);
-  margin-bottom: 0.35rem;
 }
 
-.filter-panel input[type="text"],
-.filter-panel input[type="number"] {
+.filter-dropdown-panel label {
+  display: block;
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
+  padding: 0.3rem 0;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-base);
+  color: var(--color-text-lighter);
+  padding: 0.3rem 0;
+}
+
+.filter-check {
+  color: var(--color-text-lighter);
+}
+
+.filter-option.selected {
+  color: var(--color-text);
+  font-weight: bold;
+}
+
+.filter-option.selected .filter-check {
+  color: var(--color-text);
+}
+
+.filter-dropdown-panel input[type="text"],
+.filter-dropdown-panel input[type="number"] {
   width: 100%;
   padding: 0.4rem;
   font-size: var(--font-size-sm);
@@ -328,26 +393,37 @@
 
 .filter-submit {
   width: 100%;
-  margin-top: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
   padding: 0.5rem;
   background: var(--color-text);
   color: var(--color-white);
   border: none;
   border-radius: var(--radius-sm);
-  font-family: var(--font-family-ui);
-  font-weight: bold;
+  font-family: var(--font-family-geometric);
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   font-size: var(--font-size-sm);
   cursor: pointer;
 }
 
+/* ========================================
+   CATEGORY PAGE: artwork grid + cards
+   ======================================== */
 .artwork-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-lg) var(--spacing-md);
+  padding-bottom: var(--spacing-xl);
 }
 
 .artwork-card {
   font-family: var(--font-family-ui);
+}
+
+.artwork-image-wrap {
+  position: relative;
+  margin-bottom: var(--spacing-sm);
 }
 
 .artwork-placeholder {
@@ -357,51 +433,94 @@
   justify-content: center;
   background: var(--color-bg-lighter);
   border: 2px dashed var(--color-text-lighter);
-  border-radius: var(--radius-md);
   color: var(--color-text-lighter);
   font-size: var(--font-size-sm);
   text-align: center;
   padding: var(--spacing-md);
-  margin-bottom: var(--spacing-xs);
+}
+
+.artwork-wishlist {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  color: var(--color-text-lighter);
+  line-height: 1;
+}
+
+.artwork-wishlist:hover {
+  color: var(--color-text);
 }
 
 .artwork-artist {
+  font-family: var(--font-family-geometric);
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   font-size: var(--font-size-sm);
-  color: var(--color-text-light);
+  color: var(--color-text);
 }
 
 .artwork-title {
-  font-style: italic;
   font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin: 0.2rem 0 0.4rem;
 }
 
-.artwork-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.35rem;
-  font-size: var(--font-size-sm);
-}
-
-.artwork-actions a {
+.artwork-view-details {
+  display: inline-block;
+  font-family: var(--font-family-geometric);
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   color: var(--color-text-light);
   text-decoration: none;
+  margin-bottom: var(--spacing-sm);
 }
 
-.artwork-actions a:hover {
+.artwork-view-details:hover {
   color: var(--color-text);
   text-decoration: underline;
 }
 
+.artwork-inquire {
+  display: inline-block;
+  background: var(--color-bg-lighter);
+  color: var(--color-text);
+  border: none;
+  padding: 0.5rem var(--spacing-md);
+  font-family: var(--font-family-geometric);
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.artwork-inquire:hover {
+  background: var(--color-text);
+  color: var(--color-white);
+}
+
 .pagination {
   text-align: center;
-  font-family: var(--font-family-ui);
+  font-family: var(--font-family-geometric);
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   font-size: var(--font-size-sm);
   color: var(--color-text-light);
   padding: var(--spacing-lg) 0;
 }
 
 @media (max-width: 700px) {
-  .category-layout {
-    grid-template-columns: 1fr;
+  .artwork-filter-bar {
+    justify-content: flex-start;
   }
 }
