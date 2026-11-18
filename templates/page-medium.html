@@ -21,8 +21,8 @@
     <div class="container">
       <a href="gallery.html" class="category-back lang-en">&larr; Back to Gallery</a>
       <a href="gallery.html" class="category-back lang-zh">&larr; 返回画廊</a>
-      <h1 class="lang-en">{{TITLE_EN}}</h1>
-      <h1 class="lang-zh">{{TITLE_ZH}}</h1>
+      <h1 class="lang-en"{{TITLE_EN_EDIT_ATTR}}>{{TITLE_EN}}</h1>
+      <h1 class="lang-zh"{{TITLE_ZH_EDIT_ATTR}}>{{TITLE_ZH}}</h1>
     </div>
   </section>
 
@@ -42,6 +42,6 @@
       el.textContent = currentYear;
     });
   </script>
-</body>
+{{> edit-mode-bootstrap}}</body>
 
 </html>

@@ -63,8 +63,8 @@
     <div class="container">
       <a href="gallery.html" class="category-back lang-en">&larr; Back to Gallery</a>
       <a href="gallery.html" class="category-back lang-zh">&larr; 返回画廊</a>
-      <h1 class="lang-en">Photography</h1>
-      <h1 class="lang-zh">摄影</h1>
+      <h1 class="lang-en" data-edit-field="content/gallery.json|mediumPages|photography|titleEn">Photography</h1>
+      <h1 class="lang-zh" data-edit-field="content/gallery.json|mediumPages|photography|titleZh">摄影</h1>
     </div>
   </section>
 
@@ -94,6 +94,45 @@
     document.querySelectorAll('#copyright-year, #copyright-year-zh').forEach(el => {
       el.textContent = currentYear;
     });
+  </script>
+  <!-- Admin edit mode, loaded on demand.
+       A visitor who never asks for edit mode pays only for this check: no
+       stylesheet, no overlay script, no extra request. Edit mode is a mode
+       toggle and nothing more -- there is no credential here and there is
+       none to find, because on a static site a browser-side check protects
+       nothing, and the only thing edit mode produces is a file the editor
+       downloads and hands to a reviewer. -->
+  <script>
+    (function () {
+      var wanted = false;
+      try {
+        wanted =
+          new URLSearchParams(window.location.search).get('edit') === '1' ||
+          window.sessionStorage.getItem('galleryEditMode') === 'on';
+      } catch (error) {
+        // A browser that blocks storage or lacks URLSearchParams simply does
+        // not get edit mode. Failing quiet here keeps the public page working.
+        wanted = false;
+      }
+      if (!wanted) return;
+
+      var stylesheet = document.createElement('link');
+      stylesheet.rel = 'stylesheet';
+      stylesheet.href = 'assets/css/edit-mode.css';
+      document.head.appendChild(stylesheet);
+
+      // The overlay reads window.GALLERY_EDIT_RULES, so the generated rules
+      // have to be in place before it runs. Chaining on load rather than
+      // relying on append order is what makes that ordering actually hold.
+      var rules = document.createElement('script');
+      rules.src = 'assets/js/edit-mode-rules.js';
+      rules.onload = function () {
+        var overlay = document.createElement('script');
+        overlay.src = 'assets/js/edit-mode.js';
+        document.body.appendChild(overlay);
+      };
+      document.body.appendChild(rules);
+    })();
   </script>
 </body>
 

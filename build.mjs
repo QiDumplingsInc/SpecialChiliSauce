@@ -7,7 +7,8 @@
 //         templates/partials/*   (header, footers, filter bar, placeholder card)
 // Output: gallery.html plus gallery-<slug>.html at the repo root, written in
 //         place so GitHub Pages keeps serving the committed HTML with no
-//         build step at deploy time.
+//         build step at deploy time. Also assets/js/gallery-search-index.js
+//         and assets/js/edit-mode-rules.js, both generated from the same data.
 //
 // Process: load the data, resolve every {{> partial}} include, substitute the
 // {{TOKEN}} placeholders, then either write each file or, with --check,
@@ -15,12 +16,23 @@
 // difference. --check is what CI and the test suite use to prove the committed
 // HTML has not drifted away from the templates.
 //
+// Admin edit mode: every element whose text is an editable content value is
+// rendered with a data-edit-field attribute carrying the patch address for
+// that value. The contract the browser overlay relies on is that such an
+// element's textContent is exactly the raw value on disk, which is why an
+// artwork title is wrapped in its own span instead of being composed with the
+// year into one string. Every address emitted is checked against the gate's
+// own whitelist before anything is written, so the build -- not a reviewer --
+// is what stops an address that names a field edit mode must not reach.
+//
 // Run: node build.mjs          (write)
 //      node build.mjs --check  (verify, no writes)
 
 import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { EDITABLE_CONTENT } from './scripts/content-patch.mjs';
 
 const repoRoot = dirname(fileURLToPath(import.meta.url));
 const checkOnly = process.argv.includes('--check');
@@ -106,6 +118,25 @@ const yearLabel = (artwork) => ({
   zh: artwork.year === undefined ? UNDATED_ZH : String(artwork.year),
 });
 
+// Every patch address the generated pages are allowed to carry, derived from
+// the gate's own whitelist crossed with the records that actually exist. The
+// browser overlay turns a data-edit-field attribute straight into a patch
+// edit, so an address that names a non-whitelisted field or a record that is
+// not there would hand the editor a pencil whose submit can only ever be
+// rejected. Checking the rendered output against this set makes that a build
+// failure rather than something a reviewer has to notice.
+const editableAddresses = new Set();
+for (const [file, collections] of Object.entries(EDITABLE_CONTENT)) {
+  const data = file === 'content/gallery.json' ? galleryConfig : artworkCatalog;
+  for (const [collection, spec] of Object.entries(collections)) {
+    for (const record of data[collection] ?? []) {
+      for (const field of Object.keys(spec.fields)) {
+        editableAddresses.add(`${file}|${collection}|${record[spec.keyField]}|${field}`);
+      }
+    }
+  }
+}
+
 const partialsDir = path.join(repoRoot, 'templates', 'partials');
 const partials = new Map();
 for (const fileName of readdirSync(partialsDir)) {
@@ -127,8 +158,8 @@ for (const page of galleryConfig.mediumPages) {
   mediumGrid += '            <span class="lang-en">Image coming soon</span>\n';
   mediumGrid += '            <span class="lang-zh">图片即将上线</span>\n';
   mediumGrid += '          </div>\n';
-  mediumGrid += `          <span class="medium-card-label lang-en">${escapeHtml(page.titleEn)}</span>\n`;
-  mediumGrid += `          <span class="medium-card-label lang-zh">${escapeHtml(page.titleZh)}</span>\n`;
+  mediumGrid += `          <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|${escapeHtml(page.slug)}|titleEn">${escapeHtml(page.titleEn)}</span>\n`;
+  mediumGrid += `          <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|${escapeHtml(page.slug)}|titleZh">${escapeHtml(page.titleZh)}</span>\n`;
   mediumGrid += '        </a>\n';
 }
 mediumGrid += '      </div>\n';
@@ -228,11 +259,15 @@ for (const page of galleryConfig.mediumPages) {
       artworkGrid += ` data-alt-en="${escapeHtml(artwork.altEn)}" data-alt-zh="${escapeHtml(artwork.altZh)}">\n`;
       artworkGrid += '        </div>\n';
       artworkGrid += '        <div class="artwork-artist">KAY</div>\n';
-      artworkGrid += `        <div class="artwork-title lang-en">${escapeHtml(artwork.titleEn)}, ${escapeHtml(year.en)}</div>\n`;
-      artworkGrid += `        <div class="artwork-title lang-zh">${escapeHtml(artwork.titleZh)}，${escapeHtml(year.zh)}</div>\n`;
+      // The title is wrapped in its own span rather than composed with the
+      // year into one string, so the element carrying the edit address holds
+      // exactly the title that is on disk and nothing else. That is the whole
+      // contract the browser overlay reads: textContent is the value.
+      artworkGrid += `        <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|titleEn">${escapeHtml(artwork.titleEn)}</span>, ${escapeHtml(year.en)}</div>\n`;
+      artworkGrid += `        <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|titleZh">${escapeHtml(artwork.titleZh)}</span>，${escapeHtml(year.zh)}</div>\n`;
       if (artwork.dimensionsEn && artwork.dimensionsZh) {
-        artworkGrid += `        <div class="artwork-dimensions lang-en">${escapeHtml(artwork.dimensionsEn)}</div>\n`;
-        artworkGrid += `        <div class="artwork-dimensions lang-zh">${escapeHtml(artwork.dimensionsZh)}</div>\n`;
+        artworkGrid += `        <div class="artwork-dimensions lang-en" data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|dimensionsEn">${escapeHtml(artwork.dimensionsEn)}</div>\n`;
+        artworkGrid += `        <div class="artwork-dimensions lang-zh" data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|dimensionsZh">${escapeHtml(artwork.dimensionsZh)}</div>\n`;
       }
       artworkGrid += '      </div>\n';
     }
@@ -253,6 +288,8 @@ for (const page of galleryConfig.mediumPages) {
       LANGUAGE_SWITCHER_NOTE: '',
       TITLE_EN: escapeHtml(page.titleEn),
       TITLE_ZH: escapeHtml(page.titleZh),
+      TITLE_EN_EDIT_ATTR: ` data-edit-field="content/gallery.json|mediumPages|${escapeHtml(page.slug)}|titleEn"`,
+      TITLE_ZH_EDIT_ATTR: ` data-edit-field="content/gallery.json|mediumPages|${escapeHtml(page.slug)}|titleZh"`,
       META_DESCRIPTION: escapeHtml(page.metaDescription),
       FILTER_BAR: filterBar,
       ARTWORK_GRID: artworkGrid,
@@ -268,9 +305,13 @@ for (const page of galleryConfig.sectionPages) {
       LANGUAGE_SWITCHER_NOTE: '',
       TITLE_EN: escapeHtml(page.titleEn),
       TITLE_ZH: escapeHtml(page.titleZh),
+      TITLE_EN_EDIT_ATTR: ` data-edit-field="content/gallery.json|sectionPages|${escapeHtml(page.slug)}|titleEn"`,
+      TITLE_ZH_EDIT_ATTR: ` data-edit-field="content/gallery.json|sectionPages|${escapeHtml(page.slug)}|titleZh"`,
       META_DESCRIPTION: escapeHtml(page.metaDescription),
       BODY_EN: escapeHtml(page.bodyEn),
       BODY_ZH: escapeHtml(page.bodyZh),
+      BODY_EN_EDIT_ATTR: ` data-edit-field="content/gallery.json|sectionPages|${escapeHtml(page.slug)}|bodyEn"`,
+      BODY_ZH_EDIT_ATTR: ` data-edit-field="content/gallery.json|sectionPages|${escapeHtml(page.slug)}|bodyZh"`,
     },
   });
 }
@@ -301,12 +342,30 @@ const searchIndexSource =
   '// Do not edit by hand; run "npm run build".\n' +
   `window.GALLERY_SEARCH_INDEX = ${JSON.stringify(searchIndex, null, 2)};\n`;
 
+// The browser overlay has to tell an editor "at most 200 characters" before
+// they submit, which means it needs the same per-field limits the gate
+// enforces. Generating that table from EDITABLE_CONTENT rather than retyping
+// it in the client keeps one source of truth: change a limit in the gate and
+// --check fails until this file is regenerated, so the friendly message can
+// never quietly disagree with the rule that actually decides.
+const editModeRulesSource =
+  '// Generated by build.mjs from EDITABLE_CONTENT in scripts/content-patch.mjs.\n' +
+  '// Do not edit by hand; run "npm run build".\n' +
+  '//\n' +
+  '// These limits exist to give the editor a fast, friendly message. They are a\n' +
+  '// courtesy, not a control: scripts/content-patch.mjs re-validates every edit\n' +
+  '// when the downloaded patch is applied, and that check is the one that counts.\n' +
+  `window.GALLERY_EDIT_RULES = ${JSON.stringify(EDITABLE_CONTENT, null, 2)};\n`;
+
 const drifted = [];
 const searchIndexPath = path.join(workRoot, 'assets', 'js', 'gallery-search-index.js');
+const editModeRulesPath = path.join(workRoot, 'assets', 'js', 'edit-mode-rules.js');
 if (checkOnly) {
   if (readFileSync(searchIndexPath, 'utf8') !== searchIndexSource) drifted.push('assets/js/gallery-search-index.js');
+  if (readFileSync(editModeRulesPath, 'utf8') !== editModeRulesSource) drifted.push('assets/js/edit-mode-rules.js');
 } else {
   writeFileSync(searchIndexPath, searchIndexSource);
+  writeFileSync(editModeRulesPath, editModeRulesSource);
 }
 
 for (const page of pages) {
@@ -348,6 +407,27 @@ for (const page of pages) {
   const leftover = rendered.match(/\{\{[^}]+\}\}/);
   if (leftover) {
     throw new Error(`${page.fileName}: unsubstituted placeholder ${leftover[0]}`);
+  }
+
+  // Edit mode can only ever reach the addresses rendered into the page, so
+  // this is the point where the whitelist stops being documentation and
+  // becomes enforcement. An address that is malformed, names a field the gate
+  // refuses, or points at a record that does not exist fails the build here
+  // rather than becoming a pencil in the browser that cannot submit.
+  for (const match of rendered.matchAll(/data-edit-field="([^"]*)"/g)) {
+    const address = match[1];
+    const parts = address.split('|');
+    if (parts.length !== 4 || parts.some((part) => part === '')) {
+      throw new Error(
+        `${page.fileName}: data-edit-field "${address}" is not a four-part file|collection|key|field address`
+      );
+    }
+    if (!editableAddresses.has(address)) {
+      throw new Error(
+        `${page.fileName}: data-edit-field "${address}" is not an editable address; ` +
+          'it names a field missing from EDITABLE_CONTENT in scripts/content-patch.mjs, or a record that does not exist'
+      );
+    }
   }
 
   const outputPath = path.join(workRoot, page.fileName);
