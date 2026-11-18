@@ -231,13 +231,15 @@ test('rejects a valid edit when any other edit in the patch is invalid', () => {
 });
 
 test('refuses to write a content file whose formatting it cannot reproduce', () => {
-  // content/gallery.json is hand-formatted with compact single-line objects that
+  // A hand-formatted content file with compact single-line objects is something
   // JSON.stringify cannot reproduce, so a parse-and-rewrite would reformat the
-  // whole file and bury the real edit. The gate enforces that by code rather
-  // than by convention, and will start allowing the file the day its formatting
-  // is normalised.
+  // whole file and bury the real edit. The fixture is compacted deliberately
+  // rather than relying on a committed file being misformatted, so this stays a
+  // test of the guard and not a test of the repo's current formatting.
   const contentRoot = freshContentRoot();
   const target = path.join(contentRoot, 'content', 'gallery.json');
+  const parsed = JSON.parse(readFileSync(target, 'utf8'));
+  writeFileSync(target, `${JSON.stringify(parsed)}\n`);
   const before = readFileSync(target, 'utf8');
 
   const result = applyContentPatch(
@@ -257,10 +259,13 @@ test('refuses to write a content file whose formatting it cannot reproduce', () 
   rmSync(contentRoot, { recursive: true, force: true });
 });
 
-test('accepts the same gallery.json edit once the file formatting round-trips', () => {
+test('accepts a gallery page title edit against the committed file as it stands', () => {
+  // The committed content/gallery.json round-trips, so gallery page copy is
+  // editable with no normalisation step. If someone reformats that file by hand
+  // and breaks the round-trip, this test fails and names the reason, rather than
+  // the breakage surfacing as a pencil in the browser that cannot submit.
   const contentRoot = freshContentRoot();
   const target = path.join(contentRoot, 'content', 'gallery.json');
-  writeFileSync(target, `${JSON.stringify(JSON.parse(readFileSync(target, 'utf8')), null, 4)}\n`);
 
   const result = applyContentPatch(
     patchOf({
