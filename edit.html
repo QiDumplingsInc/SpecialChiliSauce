@@ -102,6 +102,15 @@
 
 <body>
   <main class="container edit-entry">
+    <!-- Every string on this page is hand-written here and absent from
+         content/*.json, so edit mode cannot reach this page's own copy and no
+         element here carries data-edit-field. If that ever changes, the edit
+         still has to travel through scripts/content-patch.mjs, and the value
+         still has to be written back with textContent, never innerHTML.
+         Hand-adding an editable field here and rendering it as markup is the
+         one way to turn this page into an injection sink, so both layers are
+         load-bearing, not incidental. Recorded from the ARQ-17 security review
+         as a future-regression guard. -->
     <h1>
       Edit mode
       <span lang="zh">编辑模式</span>
