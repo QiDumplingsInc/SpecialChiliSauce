@@ -20,6 +20,10 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 const MAX_EDITS_PER_PATCH = 200;
+// A hard ceiling on any raw string value, applied before trim() and well above
+// the largest per-field limit. Without it a multi-megabyte value was accepted
+// into the patch and copied once by trim() before being rejected on length.
+const MAX_RAW_VALUE_LENGTH = 4096;
 
 /**
  * The complete set of content a signed-in editor may change, keyed by content
@@ -180,8 +184,22 @@ export function applyContentPatch(patch, options = {}) {
 
     const rule = spec.fields[field];
     if (rule.type === 'text') {
+      if (value === null) {
+        if (rule.optional !== true) {
+          errors.push(`${at}: field ${field} cannot be cleared`);
+          continue;
+        }
+        accepted.push({ file, collection, key, field, value: null, spec, rule });
+        continue;
+      }
       if (typeof value !== 'string') {
         errors.push(`${at}: value for ${field} must be a string, got ${typeof value}`);
+        continue;
+      }
+      if (value.length > MAX_RAW_VALUE_LENGTH) {
+        errors.push(
+          `${at}: value for ${field} must be at most ${MAX_RAW_VALUE_LENGTH} characters before trimming, got ${value.length}`
+        );
         continue;
       }
       const trimmed = value.trim();
@@ -202,12 +220,14 @@ export function applyContentPatch(patch, options = {}) {
         errors.push(`${at}: value for ${field} must not contain control characters`);
         continue;
       }
-      if (/[<>]/.test(trimmed)) {
-        // The build HTML-escapes every value, so markup here would render as
-        // literal angle brackets on the page rather than execute. Rejecting it
-        // keeps that a defence in depth instead of the only defence, and stops
-        // an editor pasting markup that would visibly break their own copy.
-        errors.push(`${at}: value for ${field} must not contain markup characters < or >`);
+      if (/[<>{}]/.test(trimmed)) {
+        // Angle brackets: the build HTML-escapes every value, so markup here
+        // would render as literal brackets rather than execute. Rejecting it
+        // keeps that a defence in depth instead of the only defence.
+        // Braces: the build substitutes {{TOKEN}} placeholders and then throws
+        // on any that is left over, so a brace in editable wording is a
+        // gate-valid patch that would take the whole site build down.
+        errors.push(`${at}: value for ${field} must not contain the characters < > { or }`);
         continue;
       }
       accepted.push({ file, collection, key, field, value: trimmed, spec, rule });

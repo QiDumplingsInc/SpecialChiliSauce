@@ -11,7 +11,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, chmodSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -187,6 +187,46 @@ test('a dry run validates and reports the change without writing anything', () =
     assert.deepEqual(result.summary.map((entry) => entry.after), ['Lemons and a Lime']);
     assert.equal(readFileSync(path.join(workspace, 'content', 'artworks.json'), 'utf8'), before);
   } finally {
+    rmSync(workspace, { recursive: true, force: true });
+  }
+});
+
+// Security review F2: the gate writes each touched content file in a loop with
+// no rollback, so a write that fails partway through a two-file patch left one
+// file rewritten and the other not. The submit path owns recovering from that.
+test('rolls back when one content file writes and the next one fails', () => {
+  const workspace = freshWorkspace();
+  const galleryPath = path.join(workspace, 'content', 'gallery.json');
+  try {
+    // gallery.json ships hand-formatted, which the gate refuses. Normalise the
+    // copy in this workspace so the patch reaches the write phase at all.
+    writeFileSync(galleryPath, `${JSON.stringify(JSON.parse(readFileSync(galleryPath, 'utf8')), null, 4)}\n`);
+    const artworksBefore = readFileSync(path.join(workspace, 'content', 'artworks.json'), 'utf8');
+    const galleryBefore = readFileSync(galleryPath, 'utf8');
+
+    const patchPath = writePatch(workspace, {
+      version: 1,
+      edits: [
+        { file: 'content/artworks.json', collection: 'artworks', key: 'painting-001', field: 'titleEn', value: 'Lemons and a Lime' },
+        { file: 'content/gallery.json', collection: 'sectionPages', key: 'artists', field: 'titleEn', value: 'The Artist' },
+      ],
+    });
+    // artworks.json sorts first, so it is written before gallery.json fails.
+    chmodSync(galleryPath, 0o444);
+
+    const result = applyPatchFile(patchPath, { contentRoot: workspace });
+
+    assert.equal(result.ok, false);
+    assert.equal(result.built, false);
+    assert.ok(result.errors.some((message) => /could not be written|rolled back/i.test(message)), result.errors.join('; '));
+    assert.equal(
+      readFileSync(path.join(workspace, 'content', 'artworks.json'), 'utf8'),
+      artworksBefore,
+      'the file that did write must be rolled back when a later file fails'
+    );
+    assert.equal(readFileSync(galleryPath, 'utf8'), galleryBefore);
+  } finally {
+    chmodSync(galleryPath, 0o644);
     rmSync(workspace, { recursive: true, force: true });
   }
 });

@@ -111,6 +111,38 @@ test('clears an optional year with null so the card renders n.d.', () => {
   rmSync(contentRoot, { recursive: true, force: true });
 });
 
+// Security review F4: the module contract says an optional field "may be
+// cleared again", but the text branch rejected every non-string value, so only
+// year could actually be cleared. An editor who adds a dimension by mistake
+// has to be able to take it back off the card.
+test('clears an optional text field with null so the card drops that line', () => {
+  const contentRoot = freshContentRoot();
+  const seeded = applyContentPatch(patchOf(edit({ field: 'dimensionsEn', value: '24 x 18 in' })), { contentRoot });
+  assert.equal(seeded.ok, true);
+
+  const result = applyContentPatch(patchOf(edit({ field: 'dimensionsEn', value: null })), { contentRoot });
+
+  assert.equal(result.ok, true, result.errors.join('; '));
+  assert.equal(result.summary[0].after, null);
+  const artwork = JSON.parse(readFileSync(path.join(contentRoot, 'content', 'artworks.json'), 'utf8'))
+    .artworks.find((entry) => entry.id === 'painting-001');
+  assert.equal('dimensionsEn' in artwork, false, 'a cleared dimension is removed, not stored as null');
+  rmSync(contentRoot, { recursive: true, force: true });
+});
+
+test('refuses to clear a required text field, which would break the build', () => {
+  const contentRoot = freshContentRoot();
+  const target = path.join(contentRoot, 'content', 'artworks.json');
+  const before = readFileSync(target, 'utf8');
+
+  const result = applyContentPatch(patchOf(edit({ field: 'titleEn', value: null })), { contentRoot });
+
+  assert.equal(result.ok, false);
+  assert.match(result.errors.join(' | '), /cannot be cleared/i);
+  assert.equal(readFileSync(target, 'utf8'), before);
+  rmSync(contentRoot, { recursive: true, force: true });
+});
+
 test('reports no change and writes nothing when the value already matches', () => {
   const contentRoot = freshContentRoot();
   const target = path.join(contentRoot, 'content', 'artworks.json');
@@ -145,6 +177,19 @@ const rejects = [
   ['an empty text value', patchOf(edit({ value: '   ' })), /value/i],
   ['a text value over the field limit', patchOf(edit({ value: 'x'.repeat(201) })), /value/i],
   ['markup in a text value', patchOf(edit({ value: 'Lemons <script>alert(1)</script>' })), /value/i],
+  // Security review F1: the build substitutes {{TOKEN}} placeholders and then
+  // throws on any that is left over, so a brace in editable wording is a
+  // gate-valid patch that takes the whole site build down on merge.
+  ['a build placeholder in a text value', patchOf(edit({ value: '{{NAV_TABS}}' })), /value/i],
+  ['a lone brace in a text value', patchOf(edit({ value: 'Lemons }' })), /value/i],
+  ['a build placeholder in gallery page body copy', {
+    version: 1,
+    edits: [{ file: 'content/gallery.json', collection: 'sectionPages', key: 'artists', field: 'bodyEn', value: 'About {{FOOTER}}' }],
+  }, /value/i],
+  // Security review F3: the per-field limit was only checked after trim(), so
+  // a multi-megabyte string was accepted into the patch and copied once before
+  // being rejected on length.
+  ['a raw value far over the hard ceiling', patchOf(edit({ value: `${' '.repeat(5000)}Lemons` })), /value/i],
   ['a newline in a single-line text value', patchOf(edit({ value: 'Lemons\nand limes' })), /value/i],
   ['a control character in a text value', patchOf(edit({ value: 'Lemons\u0000' })), /value/i],
   ['a non-integer year', patchOf(edit({ field: 'year', value: '1998' })), /value/i],

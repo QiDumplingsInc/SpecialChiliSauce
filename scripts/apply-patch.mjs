@@ -85,11 +85,29 @@ export function applyPatchFile(patchPath, options = {}) {
     if (existsSync(absolute)) snapshots.set(absolute, readFileSync(absolute, 'utf8'));
   }
 
-  const patched = applyContentPatch(patch, { contentRoot, dryRun });
+  // The gate writes each touched content file in a loop, so a write that fails
+  // partway through a multi-file patch leaves one file rewritten and the next
+  // one not. Recovering from that is this script's job, not the gate's: restore
+  // every snapshot and report the submission as refused.
+  let patched;
+  try {
+    patched = applyContentPatch(patch, { contentRoot, dryRun });
+  } catch (cause) {
+    for (const [absolute, contents] of snapshots) {
+      if (!existsSync(absolute) || readFileSync(absolute, 'utf8') !== contents) writeFileSync(absolute, contents);
+    }
+    return {
+      ok: false,
+      errors: [`a content file could not be written, so every content change was rolled back: ${cause.message}`],
+      changed: false,
+      built: false,
+      files: [],
+      summary: [],
+    };
+  }
   if (!patched.ok) {
     return { ok: false, errors: patched.errors, changed: false, built: false, files: [], summary: [] };
-  }
-  if (!patched.changed) {
+  }  if (!patched.changed) {
     return { ok: true, errors: [], changed: false, built: false, files: [], summary: [] };
   }
   if (dryRun) {
@@ -102,7 +120,9 @@ export function applyPatchFile(patchPath, options = {}) {
   ];
   const build = spawnSync(command, args, { cwd: repoRoot, encoding: 'utf8' });
   if (build.status !== 0) {
-    for (const [absolute, contents] of snapshots) writeFileSync(absolute, contents);
+    for (const [absolute, contents] of snapshots) {
+      if (!existsSync(absolute) || readFileSync(absolute, 'utf8') !== contents) writeFileSync(absolute, contents);
+    }
     const detail = build.error ? build.error.message : `exit code ${build.status}\n${build.stderr ?? ''}`.trim();
     return {
       ok: false,
