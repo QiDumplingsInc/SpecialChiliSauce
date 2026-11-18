@@ -90,16 +90,53 @@ test('an unknown medium on an artwork fails the build instead of rendering a bro
         titleEn: 'Test',
         titleZh: '测试',
         year: 2026,
-        image: 'assets/gallery/test.jpg',
-        imageWidth: 10,
-        imageHeight: 10,
-        altEn: 'Test',
-        altZh: '测试',
+        images: [
+          {
+            src: 'assets/gallery/test.jpg',
+            width: 10,
+            height: 10,
+            view: 'front',
+            altEn: 'Test',
+            altZh: '测试',
+          },
+        ],
       },
     ],
   });
   // Rendered into a temporary directory via --fixture, so a test run never
   // touches the tracked catalog even if it fails partway through.
+  const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'gallery-build-'));
+  try {
+    mkdirSync(path.join(fixtureRoot, 'content'), { recursive: true });
+    mkdirSync(path.join(fixtureRoot, 'assets', 'js'), { recursive: true });
+    cpSync(path.join(repoRoot, 'content', 'gallery.json'), path.join(fixtureRoot, 'content', 'gallery.json'));
+    writeFileSync(path.join(fixtureRoot, 'content', 'artworks.json'), brokenCatalog);
+    assert.throws(() => execFileSync('node', ['build.mjs', '--fixture', fixtureRoot], { cwd: repoRoot, stdio: 'pipe' }));
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
+test('a front photograph that is not first fails the build', () => {
+  // The owner's rule is that the face-on photograph leads when one exists, and
+  // that a work with no face-on photograph leads with its in-situ shot. A
+  // catalogue that buries the front view behind a room shot is a data mistake,
+  // not a layout preference, so the build refuses it rather than rendering a
+  // card whose primary image is the wrong one.
+  const brokenCatalog = JSON.stringify({
+    artworks: [
+      {
+        id: 'broken-2',
+        medium: 'painting',
+        titleEn: 'Test',
+        titleZh: '测试',
+        images: [
+          { src: 'a.jpg', width: 10, height: 10, view: 'in-situ', altEn: 'Test', altZh: '测试' },
+          { src: 'b.jpg', width: 10, height: 10, view: 'front', altEn: 'Test', altZh: '测试' },
+        ],
+      },
+    ],
+  });
   const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'gallery-build-'));
   try {
     mkdirSync(path.join(fixtureRoot, 'content'), { recursive: true });

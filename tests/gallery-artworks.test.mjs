@@ -24,11 +24,34 @@ const SAMPLE_ARTWORKS = {
       titleEn: 'Dusk Field',
       titleZh: '黄昏原野',
       year: 2024,
-      image: 'assets/gallery/painting-dusk.jpg',
-      imageWidth: 1600,
-      imageHeight: 1200,
-      altEn: 'An abstract field of blue and green under a low sun',
-      altZh: '低垂日光下的蓝绿色抽象原野',
+      // Three photographs, so this work exercises the carousel: the face-on
+      // view first, then the work on a wall, then a close detail.
+      images: [
+        {
+          src: 'assets/gallery/painting-dusk-1.jpg',
+          width: 1600,
+          height: 1200,
+          view: 'front',
+          altEn: 'An abstract field of blue and green under a low sun',
+          altZh: '低垂日光下的蓝绿色抽象原野',
+        },
+        {
+          src: 'assets/gallery/painting-dusk-2.jpg',
+          width: 1000,
+          height: 750,
+          view: 'in-situ',
+          altEn: 'The painting hung above a sideboard in a hallway',
+          altZh: '画作挂在走廊餐边柜上方',
+        },
+        {
+          src: 'assets/gallery/painting-dusk-3.jpg',
+          width: 1000,
+          height: 750,
+          view: 'detail',
+          altEn: 'Close detail of the brushwork at the horizon',
+          altZh: '地平线处笔触的局部特写',
+        },
+      ],
       sizeRange: 'large',
       colors: ['blues', 'greens'],
       style: 'abstract',
@@ -41,17 +64,25 @@ const SAMPLE_ARTWORKS = {
       titleEn: 'Quiet Room',
       titleZh: '静室',
       year: 2026,
-      image: 'assets/gallery/painting-quiet.jpg',
-      imageWidth: 1200,
-      imageHeight: 1500,
-      altEn: 'A figure seated by a window in warm brown light',
-      altZh: '暖棕色光线中坐在窗边的人物',
+      // One photograph, so this work must render no carousel chrome at all.
+      images: [
+        {
+          src: 'assets/gallery/painting-quiet-1.jpg',
+          width: 1200,
+          height: 1500,
+          view: 'front',
+          altEn: 'A figure seated by a window in warm brown light',
+          altZh: '暖棕色光线中坐在窗边的人物',
+        },
+      ],
       sizeRange: 'small',
       colors: ['browns'],
       style: 'figurative',
     },
   ],
 };
+
+const SAMPLE_SLIDE_COUNT = SAMPLE_ARTWORKS.artworks.reduce((total, artwork) => total + artwork.images.length, 0);
 
 async function loadFixturePage(fixtureRoot, fileName) {
   // jsdom does not fetch external <script src>, so inline each local script the
@@ -103,14 +134,90 @@ test('every rendered artwork image carries width, height and an alt in both lang
   try {
     const dom = new JSDOM(readFileSync(path.join(fixtureRoot, 'gallery-painting.html'), 'utf8'));
     const images = [...dom.window.document.querySelectorAll('.artwork-image')];
-    assert.equal(images.length, SAMPLE_ARTWORKS.artworks.length);
+    assert.equal(images.length, SAMPLE_SLIDE_COUNT, 'every photograph in the catalogue must render');
     for (const image of images) {
       assert.match(image.getAttribute('width'), /^\d+$/, 'width must be a pixel count');
       assert.match(image.getAttribute('height'), /^\d+$/, 'height must be a pixel count');
       assert.ok(image.getAttribute('alt'), 'alt must not be empty');
       assert.ok(image.dataset.altEn && image.dataset.altZh, 'both alt languages must be present');
+      assert.ok(image.dataset.view, 'every photograph must declare which view it is');
       assert.equal(image.getAttribute('loading'), 'lazy');
     }
+    dom.window.close();
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
+test('a work with several photographs renders one slide each, front view first', () => {
+  const fixtureRoot = renderWithArtworks(SAMPLE_ARTWORKS);
+  try {
+    const dom = new JSDOM(readFileSync(path.join(fixtureRoot, 'gallery-painting.html'), 'utf8'));
+    const card = dom.window.document.querySelector('.artwork-card[data-title-en="Dusk Field"]');
+    const slides = [...card.querySelectorAll('.artwork-slide .artwork-image')];
+    assert.deepEqual(
+      slides.map((image) => image.dataset.view),
+      ['front', 'in-situ', 'detail'],
+      'slides must follow catalogue order, which puts the face-on view first'
+    );
+    assert.equal(card.querySelectorAll('.artwork-carousel-dot').length, 3, 'one dot per photograph');
+    // The box has to reserve the first photograph's shape, or the grid reflows
+    // as each card's tallest slide loads.
+    assert.match(card.querySelector('.artwork-carousel').getAttribute('style'), /aspect-ratio: 1600 \/ 1200/);
+    dom.window.close();
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
+test('a work with one photograph renders no carousel control', () => {
+  const fixtureRoot = renderWithArtworks(SAMPLE_ARTWORKS);
+  try {
+    const dom = new JSDOM(readFileSync(path.join(fixtureRoot, 'gallery-painting.html'), 'utf8'));
+    const card = dom.window.document.querySelector('.artwork-card[data-title-en="Quiet Room"]');
+    // A control that cannot do anything is worse than no control, so a single
+    // photograph gets a bare image and no arrows, dots or scroll strip.
+    assert.equal(card.querySelectorAll('.artwork-image').length, 1);
+    assert.equal(card.querySelector('.artwork-carousel'), null, 'one photograph needs no scroll strip');
+    assert.equal(card.querySelector('.artwork-carousel-nav'), null, 'one photograph needs no arrows');
+    assert.equal(card.querySelector('.artwork-carousel-dot'), null, 'one photograph needs no dots');
+    dom.window.close();
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
+test('the carousel controls become usable and step through the photographs', async () => {
+  const fixtureRoot = renderWithArtworks(SAMPLE_ARTWORKS);
+  try {
+    const dom = await loadFixturePage(fixtureRoot, 'gallery-painting.html');
+    const card = dom.window.document.querySelector('.artwork-card[data-title-en="Dusk Field"]');
+    const dots = [...card.querySelectorAll('.artwork-carousel-dot')];
+    const next = card.querySelector('.artwork-carousel-next');
+    const previous = card.querySelector('.artwork-carousel-prev');
+    const selected = () => dots.findIndex((dot) => dot.getAttribute('aria-current') === 'true');
+
+    // The arrows and dots ship hidden so they are never inert for a reader
+    // without JavaScript, who can still swipe the scroll-snap strip.
+    assert.ok(!next.hidden && !previous.hidden, 'the script must unhide the controls it drives');
+    assert.equal(selected(), 0);
+
+    next.click();
+    assert.equal(selected(), 1, 'next moves to the second photograph');
+    dots[2].click();
+    assert.equal(selected(), 2, 'a dot jumps straight to its photograph');
+
+    // Both arrows wrap, so neither is ever a dead end that would have to be
+    // disabled at the ends of the strip.
+    next.click();
+    assert.equal(selected(), 0, 'next wraps from the last photograph to the first');
+    previous.click();
+    assert.equal(selected(), 2, 'previous wraps from the first photograph to the last');
+
+    card.querySelector('.artwork-carousel').dispatchEvent(
+      new dom.window.KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true })
+    );
+    assert.equal(selected(), 1, 'a left arrow key moves back one photograph');
     dom.window.close();
   } finally {
     rmSync(fixtureRoot, { recursive: true, force: true });
@@ -248,8 +355,11 @@ test('an undated work renders n.d. and no year filter claims it', async () => {
 
 test('every catalogued image exists and its declared width and height match the file', () => {
   const catalog = JSON.parse(readFileSync(path.join(repoRoot, 'content', 'artworks.json'), 'utf8'));
-  for (const artwork of catalog.artworks) {
-    const bytes = readFileSync(path.join(repoRoot, artwork.image));
+  const images = catalog.artworks.flatMap((artwork) =>
+    artwork.images.map((image) => ({ ...image, artworkId: artwork.id }))
+  );
+  for (const image of images) {
+    const bytes = readFileSync(path.join(repoRoot, image.src));
     // Read the real geometry out of the JPEG rather than trusting the catalog
     // or sips, which reports the pre-rotation buffer for a phone photo. A
     // declared size that disagrees with the file reintroduces the layout shift
@@ -292,9 +402,9 @@ test('every catalogued image exists and its declared width and height match the 
       }
       offset += 2 + segmentLength;
     }
-    assert.ok(width > 0 && height > 0, `${artwork.image} is not a readable JPEG`);
-    assert.equal(artwork.imageWidth, width, `${artwork.id} declares the wrong imageWidth`);
-    assert.equal(artwork.imageHeight, height, `${artwork.id} declares the wrong imageHeight`);
-    assert.equal(orientation, 1, `${artwork.image} carries EXIF orientation ${orientation}; bake the rotation in`);
+    assert.ok(width > 0 && height > 0, `${image.src} is not a readable JPEG`);
+    assert.equal(image.width, width, `${image.artworkId}: ${image.src} declares the wrong width`);
+    assert.equal(image.height, height, `${image.artworkId}: ${image.src} declares the wrong height`);
+    assert.equal(orientation, 1, `${image.src} carries EXIF orientation ${orientation}; bake the rotation in`);
   }
 });

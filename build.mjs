@@ -68,10 +68,11 @@ if (!Array.isArray(artworkCatalog.artworks)) {
   throw new Error('content/artworks.json: artworks must be an array');
 }
 
+const IMAGE_VIEWS = new Set(['front', 'in-situ', 'detail']);
 const mediumSlugs = new Set(galleryConfig.mediumPages.map((page) => page.slug));
 const seenArtworkIds = new Set();
 for (const artwork of artworkCatalog.artworks) {
-  for (const field of ['id', 'medium', 'titleEn', 'titleZh', 'image', 'imageWidth', 'imageHeight', 'altEn', 'altZh']) {
+  for (const field of ['id', 'medium', 'titleEn', 'titleZh']) {
     if (artwork[field] === undefined || artwork[field] === null || artwork[field] === '') {
       throw new Error(`content/artworks.json: artwork ${artwork.id ?? '(no id)'} is missing required field "${field}"`);
     }
@@ -85,11 +86,35 @@ for (const artwork of artworkCatalog.artworks) {
       `content/artworks.json: artwork "${artwork.id}" has medium "${artwork.medium}", which is not a slug in gallery.json mediumPages`
     );
   }
-  if (!Number.isInteger(artwork.imageWidth) || artwork.imageWidth <= 0) {
-    throw new Error(`content/artworks.json: artwork "${artwork.id}" imageWidth must be a positive integer`);
+  if (!Array.isArray(artwork.images) || artwork.images.length === 0) {
+    throw new Error(`content/artworks.json: artwork "${artwork.id}" needs a non-empty images array`);
   }
-  if (!Number.isInteger(artwork.imageHeight) || artwork.imageHeight <= 0) {
-    throw new Error(`content/artworks.json: artwork "${artwork.id}" imageHeight must be a positive integer`);
+  for (const [index, image] of artwork.images.entries()) {
+    for (const field of ['src', 'width', 'height', 'view', 'altEn', 'altZh']) {
+      if (image[field] === undefined || image[field] === null || image[field] === '') {
+        throw new Error(`content/artworks.json: artwork "${artwork.id}" image ${index + 1} is missing "${field}"`);
+      }
+    }
+    if (!IMAGE_VIEWS.has(image.view)) {
+      throw new Error(
+        `content/artworks.json: artwork "${artwork.id}" image ${index + 1} has view "${image.view}"; use front, in-situ or detail`
+      );
+    }
+    if (!Number.isInteger(image.width) || image.width <= 0) {
+      throw new Error(`content/artworks.json: artwork "${artwork.id}" image ${index + 1} width must be a positive integer`);
+    }
+    if (!Number.isInteger(image.height) || image.height <= 0) {
+      throw new Error(`content/artworks.json: artwork "${artwork.id}" image ${index + 1} height must be a positive integer`);
+    }
+  }
+  // The owner's rule for photograph order: the face-on shot leads when one
+  // exists, because that is what the grid shows. A work photographed only in
+  // the room it hangs in is deliberate -- there is no face-on shot to copy
+  // from -- so it leads with the in-situ view and the details follow.
+  if (artwork.images.some((image) => image.view === 'front') && artwork.images[0].view !== 'front') {
+    throw new Error(
+      `content/artworks.json: artwork "${artwork.id}" has a front photograph, so a front image must come first`
+    );
   }
   // year is optional on purpose. Several works are unsigned and undated, and
   // the catalogue records that rather than inventing a plausible year; those
@@ -222,10 +247,56 @@ for (const page of galleryConfig.mediumPages) {
       artworkGrid += ` data-title-zh="${escapeHtml(artwork.titleZh)}"`;
       artworkGrid += '>\n';
       artworkGrid += '        <div class="artwork-image-wrap">\n';
-      artworkGrid += `          <img class="artwork-image" src="${escapeHtml(artwork.image)}"`;
-      artworkGrid += ` alt="${escapeHtml(artwork.altEn)}"`;
-      artworkGrid += ` width="${artwork.imageWidth}" height="${artwork.imageHeight}" loading="lazy"`;
-      artworkGrid += ` data-alt-en="${escapeHtml(artwork.altEn)}" data-alt-zh="${escapeHtml(artwork.altZh)}">\n`;
+      // A work with one photograph renders a bare image: carousel controls on a
+      // single slide would be an affordance that does nothing. A work with
+      // several renders a scroll-snap strip, which already swipes on touch and
+      // scrolls with no script at all; the buttons and dots start hidden and the
+      // carousel script unhides them, so they never sit there inert.
+      const slides = artwork.images;
+      if (slides.length > 1) {
+        // The aspect ratio is per work, so it has to be an inline style rather
+        // than a stylesheet rule. It comes from the first photograph, which is
+        // the one the grid shows.
+        artworkGrid += `          <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="${slides.length}"`;
+        artworkGrid += ` style="aspect-ratio: ${slides[0].width} / ${slides[0].height}" tabindex="0">\n`;
+      }
+      const slideIndent = slides.length > 1 ? '            ' : '          ';
+      for (const [slideIndex, image] of slides.entries()) {
+        if (slides.length > 1) {
+          artworkGrid += `${slideIndent}<div class="artwork-slide" data-slide="${slideIndex}">\n`;
+        }
+        const imageIndent = slides.length > 1 ? `${slideIndent}  ` : slideIndent;
+        artworkGrid += `${imageIndent}<img class="artwork-image" src="${escapeHtml(image.src)}"`;
+        artworkGrid += ` alt="${escapeHtml(image.altEn)}"`;
+        artworkGrid += ` width="${image.width}" height="${image.height}" loading="lazy"`;
+        artworkGrid += ` data-view="${escapeHtml(image.view)}"`;
+        artworkGrid += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
+        if (slides.length > 1) {
+          artworkGrid += `${slideIndent}</div>\n`;
+        }
+      }
+      if (slides.length > 1) {
+        artworkGrid += '          </div>\n';
+        for (const direction of ['prev', 'next']) {
+          const glyph = direction === 'prev' ? '&#8249;' : '&#8250;';
+          const labelEn = direction === 'prev' ? 'Previous view' : 'Next view';
+          const labelZh = direction === 'prev' ? '上一张' : '下一张';
+          artworkGrid += `          <button type="button" class="artwork-carousel-nav artwork-carousel-${direction}" hidden>\n`;
+          artworkGrid += `            <span aria-hidden="true">${glyph}</span>\n`;
+          artworkGrid += `            <span class="visually-hidden lang-en">${labelEn}</span>\n`;
+          artworkGrid += `            <span class="visually-hidden lang-zh">${labelZh}</span>\n`;
+          artworkGrid += '          </button>\n';
+        }
+        artworkGrid += '          <div class="artwork-carousel-dots" hidden>\n';
+        for (const slideIndex of slides.keys()) {
+          artworkGrid += `            <button type="button" class="artwork-carousel-dot" data-slide="${slideIndex}"`;
+          artworkGrid += slideIndex === 0 ? ' aria-current="true">\n' : '>\n';
+          artworkGrid += `              <span class="visually-hidden lang-en">View ${slideIndex + 1}</span>\n`;
+          artworkGrid += `              <span class="visually-hidden lang-zh">第 ${slideIndex + 1} 张</span>\n`;
+          artworkGrid += '            </button>\n';
+        }
+        artworkGrid += '          </div>\n';
+      }
       artworkGrid += '        </div>\n';
       artworkGrid += '        <div class="artwork-artist">KAY</div>\n';
       artworkGrid += `        <div class="artwork-title lang-en">${escapeHtml(artwork.titleEn)}, ${escapeHtml(year.en)}</div>\n`;
