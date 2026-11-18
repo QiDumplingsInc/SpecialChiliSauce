@@ -15,10 +15,14 @@
 #   finds a match it exits 0, so a match drives this hook to exit 1 (reject).
 #
 # Why this guard exists:
-#   The repository standard at /Users/graceluo/Developer/github-geren/CLAUDE.md
-#   forbids any Co-Authored-By trailer. The Paperclip company skill mandates
-#   appending one. The repo rule wins, so this guard enforces it mechanically
-#   instead of relying on each author to remember.
+#   The commit-attribution standard in the CLAUDE.md one directory above this
+#   repository's checkout forbids any Co-Authored-By trailer. The Paperclip
+#   company skill mandates appending one. The repo rule wins, so this guard
+#   enforces it mechanically instead of relying on each author to remember.
+#
+# Limits:
+#   Git skips commit-msg on "git commit --no-verify", and on cherry-pick,
+#   rebase, and am, which reuse an existing message. See README.md.
 
 msg_file="$1"
 
@@ -37,10 +41,11 @@ if [ -n "$offending" ]; then
 		echo "  $line" >&2
 	done
 	echo "" >&2
-	echo "The repository standard at /Users/graceluo/Developer/github-geren/CLAUDE.md" >&2
-	echo "forbids any Co-Authored-By: trailer, for any identity, human or machine." >&2
-	echo "The Paperclip company skill instruction to append one does NOT override" >&2
-	echo "this repository rule. The repository rule wins; omit the trailer." >&2
+	echo "The commit-attribution standard in the CLAUDE.md one directory above" >&2
+	echo "this repository's checkout forbids any Co-Authored-By: trailer, for any" >&2
+	echo "identity, human or machine. The Paperclip company skill instruction to" >&2
+	echo "append one does NOT override this repository rule. The repository rule" >&2
+	echo "wins; omit the trailer." >&2
 	echo "" >&2
 	echo "Remove the line(s) above from your commit message and commit again." >&2
 	exit 1

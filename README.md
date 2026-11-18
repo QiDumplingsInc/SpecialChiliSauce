@@ -13,7 +13,7 @@ npm test
 
 ## Commit hooks
 
-This repository tracks a `commit-msg` hook in `.githooks/` that rejects any `Co-Authored-By:` trailer, as required by `/Users/graceluo/Developer/github-geren/CLAUDE.md`. Git does not read tracked hooks automatically, so a fresh clone needs this one-time command to activate them:
+This repository tracks a `commit-msg` hook in `.githooks/` that rejects any `Co-Authored-By:` trailer, as required by the commit-attribution standard in the `CLAUDE.md` one directory above this repository's checkout. Git does not read tracked hooks automatically, so a fresh clone needs this one-time command to activate them:
 
 ```
 git config core.hooksPath .githooks
@@ -24,6 +24,21 @@ Repo-local config overrides the global hooks path, and all worktrees of a clone 
 ```
 sh .githooks/commit-msg-test.sh
 ```
+
+### What the guard does not cover
+
+Setting `core.hooksPath` to `.githooks` makes Git read hooks *only* from that directory for this repository, so any hooks installed at the global `core.hooksPath` stop running here. Check what you have there before you run the command:
+
+```
+git config --show-origin --get-all core.hooksPath
+```
+
+Git also skips the `commit-msg` hook entirely on some paths, so a trailer can still reach history through:
+
+- `git commit --no-verify`, which skips the hook by design.
+- `git cherry-pick`, `git rebase`, and `git am`, which reuse an existing message without running `commit-msg`.
+
+`git commit --amend` *is* covered. Treat the guard as a safety net for the ordinary commit path, not a proof that no trailer can ever land.
 
 ## Newsletter signups
 
