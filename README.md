@@ -2,6 +2,22 @@
 
 https://qidumplingsinc.github.io/SpecialChiliSauce/
 
+## Gallery build
+
+Every `gallery*.html` page at the repo root is generated. Do not hand-edit them. Edit the data or the templates and rerun the build:
+
+- `content/gallery.json` -- nav tabs, the medium pages, the section pages
+- `content/artworks.json` -- the artwork catalog (display only; no price, no purchase path)
+- `templates/page-*.html` -- one template per page shape
+- `templates/partials/` -- the header, nav tabs, footers, filter bar and placeholder card, each defined once
+
+```
+npm run build          # rewrite the 13 gallery pages
+npm run build:check    # fail if the committed HTML has drifted from templates/content
+```
+
+The rendered HTML stays committed so GitHub Pages serves the site with no build step at deploy time. `npm test` runs `build:check`, so drift fails the test suite.
+
 ## Testing
 
 Behavioral tests for interactive JS (e.g. the newsletter signup forms and gallery search) run against the real `index.html` and `gallery.html` via jsdom, with network calls mocked.

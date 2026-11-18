@@ -1,0 +1,4 @@
+{
+    "comment": "Single source of truth for artwork shown in the gallery. Artwork is display only; there is no price, no wishlist and no purchase path. Add one object per work to the artworks array. Required: id, medium (must match a slug in gallery.json mediumPages), titleEn, titleZh, year, image, imageWidth, imageHeight, altEn, altZh. Optional: sizeRange (small|medium|large|very-large), colors (array), style (abstract|figurative|realist), dimensionsEn, dimensionsZh. Images go in assets/gallery/. imageWidth and imageHeight are the real pixel dimensions of the file and are rendered as width/height attributes so the browser reserves layout space before the image loads.",
+    "artworks": []
+}

@@ -1,0 +1,37 @@
+  <!-- Header + Nav Tabs: wrapped together so both stay pinned
+       to the top as one unit while scrolling -->
+  <div class="gallery-header-sticky">
+    <!-- Header -->
+    <header role="banner">
+{{LANGUAGE_SWITCHER_NOTE}}
+    <div class="language-switcher" role="navigation" aria-label="Language switcher">
+      <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+      <button class="lang-btn" data-lang="zh" aria-label="切换到中文">中文</button>
+    </div>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo lang-en">Kay's Gallery</div>
+        <div class="logo lang-zh">Kay's 画廊</div>
+        <nav class="header-nav" role="navigation" aria-label="Site navigation">
+          <a href="home.html">
+            <span class="lang-en"><span aria-hidden="true">🏠</span> Home</span><span class="lang-zh"><span aria-hidden="true">🏠</span> 首页</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Gallery nav tabs — shared across gallery.html and category pages -->
+  <nav class="gallery-nav-tabs" role="navigation" aria-label="Gallery sections">
+    <ul>
+{{NAV_TABS}}
+      <li class="gallery-search">
+        <button type="button" class="gallery-search-toggle" aria-expanded="false" aria-controls="gallery-search-results" aria-label="Search" data-label-en="Search" data-label-zh="搜索">&#8981;</button>
+        <form class="gallery-search-form" role="search">
+          <input type="text" class="gallery-search-input" data-placeholder-en="Search" data-placeholder-zh="搜索" placeholder="Search" aria-label="Search">
+          <div class="gallery-search-results" id="gallery-search-results" role="region" aria-live="polite" aria-label="Search results"></div>
+        </form>
+      </li>
+    </ul>
+    </nav>
+  </div>
