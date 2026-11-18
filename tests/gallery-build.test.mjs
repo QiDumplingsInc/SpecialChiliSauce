@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, writeFileSync, mkdirSync, mkdtempSync, cpSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 // Guards the generated-HTML-is-committed tradeoff. gallery*.html is rendered by
@@ -75,12 +76,16 @@ test('an unknown medium on an artwork fails the build instead of rendering a bro
       },
     ],
   });
-  const catalogPath = path.join(repoRoot, 'content', 'artworks.json');
-  const original = readFileSync(catalogPath, 'utf8');
+  // Rendered into a temporary directory via --fixture, so a test run never
+  // touches the tracked catalog even if it fails partway through.
+  const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'gallery-build-'));
   try {
-    execFileSync('node', ['-e', `require('fs').writeFileSync(${JSON.stringify(catalogPath)}, ${JSON.stringify(brokenCatalog)})`]);
-    assert.throws(() => execFileSync('node', ['build.mjs', '--check'], { cwd: repoRoot, stdio: 'pipe' }));
+    mkdirSync(path.join(fixtureRoot, 'content'), { recursive: true });
+    mkdirSync(path.join(fixtureRoot, 'assets', 'js'), { recursive: true });
+    cpSync(path.join(repoRoot, 'content', 'gallery.json'), path.join(fixtureRoot, 'content', 'gallery.json'));
+    writeFileSync(path.join(fixtureRoot, 'content', 'artworks.json'), brokenCatalog);
+    assert.throws(() => execFileSync('node', ['build.mjs', '--fixture', fixtureRoot], { cwd: repoRoot, stdio: 'pipe' }));
   } finally {
-    execFileSync('node', ['-e', `require('fs').writeFileSync(${JSON.stringify(catalogPath)}, ${JSON.stringify(original)})`]);
+    rmSync(fixtureRoot, { recursive: true, force: true });
   }
 });
