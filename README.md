@@ -40,3 +40,16 @@ Artwork in the gallery is display only. There is no price, no wishlist and no pu
 ## Gallery search
 
 The gallery pages include a client-side search box (`assets/js/gallery-search.js`) over `assets/js/gallery-search-index.js`, which the build generates from `content/gallery.json` and `content/artworks.json`. It matches page titles and artwork titles, not full page text.
+
+## Admin edit mode: the content patch gate
+
+`scripts/content-patch.mjs` is the only write path from the browser admin edit mode into this repository. The browser never patches HTML and never touches git: it collects an editor's wording changes into a patch document and submits it to this module, which validates the patch and writes `content/*.json`. The gallery build then regenerates the HTML, so a one-word edit in the browser lands as a one-line JSON diff in a pull request.
+
+The gate fails closed and is all or nothing. One bad edit rejects the whole submission and writes nothing.
+
+- `EDITABLE_CONTENT` in that file is the complete whitelist of what an editor can reach: titles, alt text, dimensions and year on an artwork, plus titles, meta descriptions and body copy on a gallery page. Ids, slugs, image paths, pixel dimensions and facet values are deliberately absent, so edit mode can change wording but cannot break a page or re-point an image.
+- Records can only be updated, never created or deleted.
+- Values must be single-line plain text within a per-field length limit, with no control characters and no `<` or `>`.
+- A content file is refused unless it round-trips through `JSON.stringify(data, null, 4)` byte for byte. `content/artworks.json` does; `content/gallery.json` does not yet, because it is hand-formatted with compact single-line objects. That guard is what keeps the diff readable: a file the gate cannot reproduce exactly would be reformatted end to end, burying the real edit.
+
+`applyContentPatch(patch, { contentRoot, dryRun })` returns `{ ok, errors, changed, files, summary }`. Call it with `dryRun` to show an editor a review screen before they submit; `changed: false` means every edit already matched what is on disk, so no pull request should be opened. `tests/content-patch.test.mjs` covers the whitelist and every rejection case and runs as part of `npm test`.
