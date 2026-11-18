@@ -353,6 +353,37 @@ test('an undated work renders n.d. and no year filter claims it', async () => {
   }
 });
 
+test('every artwork class the build renders has a CSS rule', () => {
+  // The section-page placeholder once shipped with no rule in either
+  // stylesheet and rendered as unstyled text on five live pages. The carousel
+  // adds eight new classes, so check the same class of defect here: markup
+  // referencing a class nobody styled.
+  const fixtureRoot = renderWithArtworks(SAMPLE_ARTWORKS);
+  try {
+    const html = readFileSync(path.join(fixtureRoot, 'gallery-painting.html'), 'utf8');
+    const stylesheets =
+      readFileSync(path.join(repoRoot, 'assets', 'css', 'site.css'), 'utf8') +
+      readFileSync(path.join(repoRoot, 'assets', 'css', 'gallery.css'), 'utf8');
+    const classNames = new Set();
+    for (const match of html.matchAll(/class="([^"{]+)"/g)) {
+      for (const name of match[1].trim().split(/\s+/)) {
+        if (name.startsWith('artwork-') || name === 'visually-hidden') classNames.add(name);
+      }
+    }
+    assert.ok(classNames.has('artwork-slide'), 'sanity check: expected the carousel slide class');
+    assert.ok(classNames.has('visually-hidden'), 'sanity check: expected the control label class');
+    for (const name of classNames) {
+      assert.match(
+        stylesheets,
+        new RegExp(`\\.${name}([\\s,:{]|$)`, 'm'),
+        `.${name} is rendered by build.mjs but has no CSS rule`
+      );
+    }
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
 test('every catalogued image exists and its declared width and height match the file', () => {
   const catalog = JSON.parse(readFileSync(path.join(repoRoot, 'content', 'artworks.json'), 'utf8'));
   const images = catalog.artworks.flatMap((artwork) =>
