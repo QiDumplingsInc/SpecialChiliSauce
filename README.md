@@ -54,7 +54,7 @@ How an editor uses it:
 3. Click **Review changes** to see every pending change as the old value next to the new one, and discard any single one.
 4. Click **Download edit-patch.json** and send that file to whoever maintains the repository.
 
-What is editable: the English and Chinese titles of a medium page, the titles and body copy of a section page, and the titles and dimensions of an artwork. Alt text, meta descriptions and the year are in the gate's whitelist but are not inline-editable yet, because none of them renders as visible text on the page.
+What is editable: the English and Chinese titles of a medium page, the titles and body copy of a section page, and the titles and dimensions of an artwork. That is the whole list, and the next section says why it stops there.
 
 Editing copy on a medium or section page applies today, as does artwork wording: both `content/gallery.json` and `content/artworks.json` round-trip through the gate's formatter, and the build fails if either stops doing so.
 
@@ -66,13 +66,37 @@ Implementation notes:
 - `assets/js/edit-mode.js` and `assets/css/edit-mode.css` load only when edit mode is asked for, so an ordinary page view costs one conditional and no extra requests.
 - The overlay makes no network call and holds nothing durable. Pending edits live in `sessionStorage` so one patch can span several pages.
 
+## Admin edit mode: what it deliberately does not cover
+
+Edit mode reaches wording the build renders as the visible text of one element, and nothing else. Three content fields are wording but are not reachable, and that is a decision rather than unfinished work.
+
+| Field | Where it lives | Why it is out |
+| --- | --- | --- |
+| `altEn`, `altZh` | the `alt` and `data-alt-zh` attributes of each `<img>`, one pair per entry in a work's `images` array | Two values on one element, and `assets/js/language.js` owns `alt` and swaps it on a language change. No element can carry both addresses without breaking the `textContent` contract the overlay reads. They also sit inside an array, which the gate's `file\|collection\|key\|field` address cannot name at all. |
+| `metaDescription` | `<meta name="description">` in `<head>` | Renders nowhere on the page, so there is no "in place" to edit it in. |
+| `year` | composed into the title line, or `n.d.` when absent | An integer, and the displayed text is not the value when it is missing. Inline editing could correct a wrong year but never add a missing one or remove a wrong one, which are the cases that come up. |
+
+**The decision.** These three stay out of `EDITABLE_CONTENT`, and the build fails if a field is whitelisted that the overlay cannot edit, so the gate's whitelist and the pencils on the page are one set rather than two lists that drift. Changing them means editing `content/artworks.json` or `content/gallery.json` in a pull request.
+
+The reason is lifecycle, not difficulty. All three are authored when an artwork or a page record is created, and creating a record is already a repository operation: you add the image file to `assets/gallery/`, add the record, and commit. Alt text, the year and the meta description are written in that same sitting by the same person, next to the image path and the medium slug, which are deliberately not editable either. Edit mode exists for the other job, revising copy on a site that already exists, often by someone who spots the problem while browsing it. Reaching these three would not save a trip to the repository; it would add a second way to do something the author is already in the repository to do.
+
+**The rejected alternative** was a second editing surface: a small form panel in the overlay listing the fields on this page that have no visible element, with a labelled input for each. It was rejected for four reasons.
+
+- It makes one feature carry two mechanisms. The inline path is one contract -- an addressed element's `textContent` is its value on disk -- and a form panel cannot use it. It needs a new build output exposing on-disk values to the client outside that contract, a second value type through client validation, and a second commit path, roughly doubling the overlay for three fields.
+- The feedback that justifies editing in place does not apply. A meta description is judged against a search result, not against the page, so showing it in context buys nothing.
+- Every entry in the whitelist is reach the patch gate grants. Three entries no editor could use widened the write path for no product benefit, which is the least-privilege problem the narrowing fixes.
+- Alt text is an accessibility obligation, and a change to it is better reviewed by someone who knows what alt text should say than applied self-service. A pull request is the right shape for that change.
+
+**To reverse it** the work is bounded and known: build a panel surface in `assets/js/edit-mode.js` fed by on-disk values the build emits for the page, add a `year` rule type back to the validator in `scripts/content-patch.mjs` with its own client mirror, give alt text an address scheme that can reach a field inside a record's `images` array and does not collide with `language.js`, add the fields to `EDITABLE_CONTENT`, and add the rule type to `EDITABLE_RULE_TYPES`. `tests/content-patch.test.mjs` pins the current whitelist on purpose, so that test failing is the prompt to read this section first.
+
 ## Admin edit mode: the content patch gate
 
 `scripts/content-patch.mjs` is the only write path from the browser admin edit mode into this repository. The browser never patches HTML and never touches git: it collects an editor's wording changes into a patch document and submits it to this module, which validates the patch and writes `content/*.json`. The gallery build then regenerates the HTML, so a one-word edit in the browser lands as a one-line JSON diff in a pull request.
 
 The gate fails closed and is all or nothing. One bad edit rejects the whole submission and writes nothing.
 
-- `EDITABLE_CONTENT` in that file is the complete whitelist of what an editor can reach: titles, alt text, dimensions and year on an artwork, plus titles, meta descriptions and body copy on a gallery page. Ids, slugs, image paths, pixel dimensions and facet values are deliberately absent, so edit mode can change wording but cannot break a page or re-point an image.
+- `EDITABLE_CONTENT` in that file is the complete whitelist of what an editor can reach: titles and dimensions on an artwork, plus titles and body copy on a gallery page. Ids, slugs, image paths, pixel dimensions and facet values are deliberately absent, so edit mode can change wording but cannot break a page or re-point an image. Alt text, the year and meta descriptions are absent too, for the reasons in the section above.
+- `EDITABLE_RULE_TYPES` is the set of rule types the browser overlay can edit, and `build.mjs` fails the build if a whitelisted field uses anything else. That is what keeps the whitelist from granting reach no editor can use.
 - Records can only be updated, never created or deleted.
 - Values must be single-line plain text within a per-field length limit, with no control characters and no `<` or `>`.
 - A content file is refused unless it round-trips through `JSON.stringify(data, null, 4)` byte for byte. Both content files do today, and `build.mjs` fails if either drifts, because a file the gate cannot reproduce exactly would be reformatted end to end and bury the real edit.

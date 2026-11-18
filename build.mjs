@@ -32,7 +32,7 @@ import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { EDITABLE_CONTENT, formatContentFile } from './scripts/content-patch.mjs';
+import { EDITABLE_CONTENT, EDITABLE_RULE_TYPES, formatContentFile } from './scripts/content-patch.mjs';
 
 const repoRoot = dirname(fileURLToPath(import.meta.url));
 const checkOnly = process.argv.includes('--check');
@@ -150,10 +150,25 @@ const yearLabel = (artwork) => ({
 // not there would hand the editor a pencil whose submit can only ever be
 // rejected. Checking the rendered output against this set makes that a build
 // failure rather than something a reviewer has to notice.
+//
+// The same loop enforces the other direction: a field in the whitelist whose
+// rule type the overlay cannot edit is reach the gate grants that no editor
+// can use, so it widens the write path for nothing. Failing the build here is
+// what keeps the whitelist and the overlay's reach one set rather than two
+// lists that drift. See EDITABLE_RULE_TYPES in scripts/content-patch.mjs.
 const editableAddresses = new Set();
 for (const [file, collections] of Object.entries(EDITABLE_CONTENT)) {
   const data = file === 'content/gallery.json' ? galleryConfig : artworkCatalog;
   for (const [collection, spec] of Object.entries(collections)) {
+    for (const [field, rule] of Object.entries(spec.fields)) {
+      if (!EDITABLE_RULE_TYPES.includes(rule.type)) {
+        throw new Error(
+          `${file}/${collection}/${field} is whitelisted with rule type "${rule.type}", which the browser ` +
+            `overlay cannot edit (it handles ${EDITABLE_RULE_TYPES.join(', ')}). Either give the overlay a ` +
+            'mechanism for it or take the field out of EDITABLE_CONTENT in scripts/content-patch.mjs.'
+        );
+      }
+    }
     for (const record of data[collection] ?? []) {
       for (const field of Object.keys(spec.fields)) {
         editableAddresses.add(`${file}|${collection}|${record[spec.keyField]}|${field}`);

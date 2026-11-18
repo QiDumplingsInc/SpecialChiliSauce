@@ -14,7 +14,7 @@ import { tmpdir } from 'node:os';
 import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { applyContentPatch, EDITABLE_CONTENT } from '../scripts/content-patch.mjs';
+import { applyContentPatch, EDITABLE_CONTENT, EDITABLE_RULE_TYPES } from '../scripts/content-patch.mjs';
 
 const repoRoot = path.resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -97,24 +97,10 @@ test('adds an optional field that is absent from the record', () => {
   rmSync(contentRoot, { recursive: true, force: true });
 });
 
-test('clears an optional year with null so the card renders n.d.', () => {
-  const contentRoot = freshContentRoot();
-  const seeded = applyContentPatch(patchOf(edit({ field: 'year', value: 1998 })), { contentRoot });
-  assert.equal(seeded.ok, true);
-
-  const result = applyContentPatch(patchOf(edit({ field: 'year', value: null })), { contentRoot });
-
-  assert.equal(result.ok, true);
-  const artwork = JSON.parse(readFileSync(path.join(contentRoot, 'content', 'artworks.json'), 'utf8'))
-    .artworks.find((entry) => entry.id === 'painting-001');
-  assert.equal('year' in artwork, false, 'a cleared year is removed, not stored as null');
-  rmSync(contentRoot, { recursive: true, force: true });
-});
-
 // Security review F4: the module contract says an optional field "may be
-// cleared again", but the text branch rejected every non-string value, so only
-// year could actually be cleared. An editor who adds a dimension by mistake
-// has to be able to take it back off the card.
+// cleared again", but the text branch once rejected every non-string value, so
+// no text field could actually be cleared. An editor who adds a dimension by
+// mistake has to be able to take it back off the card.
 test('clears an optional text field with null so the card drops that line', () => {
   const contentRoot = freshContentRoot();
   const seeded = applyContentPatch(patchOf(edit({ field: 'dimensionsEn', value: '24 x 18 in' })), { contentRoot });
@@ -192,8 +178,22 @@ const rejects = [
   ['a raw value far over the hard ceiling', patchOf(edit({ value: `${' '.repeat(5000)}Lemons` })), /value/i],
   ['a newline in a single-line text value', patchOf(edit({ value: 'Lemons\nand limes' })), /value/i],
   ['a control character in a text value', patchOf(edit({ value: 'Lemons\u0000' })), /value/i],
-  ['a non-integer year', patchOf(edit({ field: 'year', value: '1998' })), /value/i],
-  ['an out-of-range year', patchOf(edit({ field: 'year', value: 99 })), /value/i],
+  // ARQ-14: alt text, the artwork year and a page's meta description were
+  // de-scoped from edit mode, so the gate must now refuse them exactly the way
+  // it refuses any other field the browser cannot reach. These three are the
+  // regression guard on that decision: re-adding one to EDITABLE_CONTENT
+  // without giving the overlay a mechanism for it fails here.
+  ['an artwork year, de-scoped from edit mode', patchOf(edit({ field: 'year', value: 1998 })), /field/i],
+  ['English alt text, de-scoped from edit mode', patchOf(edit({ field: 'altEn', value: 'A still life of lemons' })), /field/i],
+  ['Chinese alt text, de-scoped from edit mode', patchOf(edit({ field: 'altZh', value: 'A still life of lemons' })), /field/i],
+  ['a medium page meta description, de-scoped from edit mode', {
+    version: 1,
+    edits: [{ file: 'content/gallery.json', collection: 'mediumPages', key: 'painting', field: 'metaDescription', value: 'Paintings by Kay.' }],
+  }, /field/i],
+  ['a section page meta description, de-scoped from edit mode', {
+    version: 1,
+    edits: [{ file: 'content/gallery.json', collection: 'sectionPages', key: 'artists', field: 'metaDescription', value: 'Artists represented.' }],
+  }, /field/i],
   ['two edits to the same field', patchOf(edit({ value: 'A' }), edit({ value: 'B' })), /duplicate/i],
   ['more edits than the cap', { version: 1, edits: Array.from({ length: 201 }, () => edit()) }, /edits/i],
 ];
@@ -286,6 +286,74 @@ test('accepts a gallery page title edit against the committed file as it stands'
   rmSync(contentRoot, { recursive: true, force: true });
 });
 
+test('the whitelist is exactly the eight fields edit mode can reach in place', () => {
+  // ARQ-14 scoped edit mode to wording the build renders as the visible text of
+  // one element, which is what the single inline mechanism can address. This is
+  // a deliberate tripwire: every entry here is reach the patch gate grants, so
+  // widening it is a decision to re-read before making, not a line to add.
+  // README.md, under "Admin edit mode: what it deliberately does not cover",
+  // records why alt text, the year and meta descriptions are absent.
+  const whitelisted = [];
+  for (const [file, collections] of Object.entries(EDITABLE_CONTENT)) {
+    for (const [collection, spec] of Object.entries(collections)) {
+      for (const field of Object.keys(spec.fields)) whitelisted.push(`${file}|${collection}|${field}`);
+    }
+  }
+  assert.deepEqual(whitelisted.sort(), [
+    'content/artworks.json|artworks|dimensionsEn',
+    'content/artworks.json|artworks|dimensionsZh',
+    'content/artworks.json|artworks|titleEn',
+    'content/artworks.json|artworks|titleZh',
+    'content/gallery.json|mediumPages|titleEn',
+    'content/gallery.json|mediumPages|titleZh',
+    'content/gallery.json|sectionPages|bodyEn',
+    'content/gallery.json|sectionPages|bodyZh',
+    'content/gallery.json|sectionPages|titleEn',
+    'content/gallery.json|sectionPages|titleZh',
+  ]);
+});
+
+test('every whitelisted field has a rule type the browser overlay can edit', () => {
+  // A whitelisted field the overlay cannot reach is reach the gate grants for
+  // no product use, which is how the whitelist and the overlay drifted apart
+  // before ARQ-14. build.mjs fails the build on the same condition; this pins
+  // the intent with a message that says what to do about it.
+  for (const [file, collections] of Object.entries(EDITABLE_CONTENT)) {
+    for (const [collection, spec] of Object.entries(collections)) {
+      for (const [field, rule] of Object.entries(spec.fields)) {
+        assert.ok(
+          EDITABLE_RULE_TYPES.includes(rule.type),
+          `${file}/${collection}/${field}: rule type "${rule.type}" is not one the overlay can edit ` +
+            `(${EDITABLE_RULE_TYPES.join(', ')}); give the overlay a mechanism for it or de-scope the field`
+        );
+      }
+    }
+  }
+});
+
+test('the gate refuses a rule type it has no validator for', () => {
+  // The fail-closed default behind EDITABLE_RULE_TYPES. The build and the test
+  // above stop an unvalidatable field reaching production, but if one ever did,
+  // the gate must reject the edit rather than write an unchecked value.
+  const contentRoot = freshContentRoot();
+  const target = path.join(contentRoot, 'content', 'artworks.json');
+  const before = readFileSync(target, 'utf8');
+
+  const fields = EDITABLE_CONTENT['content/artworks.json'].artworks.fields;
+  fields.unvalidatable = { type: 'year', optional: true };
+  try {
+    const result = applyContentPatch(
+      patchOf(edit({ field: 'unvalidatable', value: 1998 })),
+      { contentRoot }
+    );
+    assert.equal(result.ok, false);
+    assert.match(result.errors.join(' | '), /unsupported rule type/i);
+    assert.equal(readFileSync(target, 'utf8'), before, 'an unvalidatable field must write nothing');
+  } finally {
+    delete fields.unvalidatable;
+    rmSync(contentRoot, { recursive: true, force: true });
+  }
+});
 test('the whitelist exposes no field that the gallery build treats as structure', () => {
   // The edit mode is text only. If a future change adds an image path, a medium
   // slug or an id to the whitelist, a non-technical editor could break every
