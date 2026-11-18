@@ -1,6 +1,51 @@
 {
-    "comment": "Structure of the gallery section: nav tabs, medium pages, and section pages. Edited by hand; consumed by build.mjs to render gallery*.html. Bilingual site copy lives here as literal UTF-8 because this is localized content, not code.",
-    "placeholderCardCount": 3,
+    "comment": "Structure of the gallery section: nav tabs, medium pages, section pages and the artwork filter facets. Edited by hand; consumed by build.mjs to render gallery*.html. Bilingual site copy lives here as literal UTF-8 because this is localized content, not code.",
+    "searchPages": [
+        { "href": "index.html", "en": "Special Chili Sauce", "zh": "特制辣椒酱" },
+        { "href": "home.html", "en": "Home", "zh": "首页" }
+    ],
+    "facets": [
+        {
+            "key": "size",
+            "field": "sizeRange",
+            "labelEn": "Size Range",
+            "labelZh": "尺寸范围",
+            "values": [
+                { "value": "small", "en": "Small", "zh": "小" },
+                { "value": "medium", "en": "Medium", "zh": "中" },
+                { "value": "large", "en": "Large", "zh": "大" },
+                { "value": "very-large", "en": "Very large", "zh": "特大" }
+            ]
+        },
+        {
+            "key": "colors",
+            "field": "colors",
+            "labelEn": "Color",
+            "labelZh": "颜色",
+            "values": [
+                { "value": "blacks-whites", "en": "Blacks & Whites", "zh": "黑白" },
+                { "value": "blues", "en": "Blues", "zh": "蓝色" },
+                { "value": "browns", "en": "Browns", "zh": "棕色" },
+                { "value": "greens", "en": "Greens", "zh": "绿色" },
+                { "value": "reds", "en": "Reds", "zh": "红色" }
+            ]
+        },
+        {
+            "key": "style",
+            "field": "style",
+            "labelEn": "Style",
+            "labelZh": "风格",
+            "values": [
+                { "value": "abstract", "en": "Abstract", "zh": "抽象" },
+                { "value": "figurative", "en": "Figurative", "zh": "具象" },
+                { "value": "realist", "en": "Realist", "zh": "写实" }
+            ]
+        }
+    ],
+    "artworkEmptyState": {
+        "en": "No works in this medium are published yet.",
+        "zh": "本媒介暂无已发布作品。"
+    },
     "navTabs": [
         {
             "href": "gallery-new-arrivals.html",

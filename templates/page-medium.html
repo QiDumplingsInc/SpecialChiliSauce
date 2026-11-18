@@ -27,21 +27,13 @@
   </section>
 
   <section class="container">
-{{> artwork-filter-bar}}
-    <!--
-      PLACEHOLDER: replace each .artwork-placeholder box with a real
-      <img> once photos exist, e.g.:
-      <div class="artwork-placeholder">
-        <img src="assets/gallery/painting-1.jpg" alt="Description" loading="lazy">
-      </div>
-    -->
+{{FILTER_BAR}}
 {{ARTWORK_GRID}}
-    <div class="pagination lang-en">Page 1 of 1</div>
-    <div class="pagination lang-zh">第 1 页，共 1 页</div>
   </section>
 
 {{> footer-simple}}
   <script src="assets/js/language.js"></script>
+  <script src="assets/js/gallery-search-index.js"></script>
   <script src="assets/js/gallery-search.js"></script>
   <script src="assets/js/gallery-filters.js"></script>
   <script>

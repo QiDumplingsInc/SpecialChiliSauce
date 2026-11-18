@@ -24,6 +24,12 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = dirname(fileURLToPath(import.meta.url));
 const checkOnly = process.argv.includes('--check');
+// --fixture <dir> reads content from <dir>/content and writes the rendered
+// pages into <dir>, leaving the working tree untouched. Templates always come
+// from the repo. Tests use it to render a sample artwork catalog and assert on
+// the real build output instead of mutating tracked files.
+const fixtureFlag = process.argv.indexOf('--fixture');
+const workRoot = fixtureFlag === -1 ? repoRoot : path.resolve(process.argv[fixtureFlag + 1]);
 
 const escapeHtml = (value) =>
   String(value)
@@ -32,8 +38,8 @@ const escapeHtml = (value) =>
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;');
 
-const galleryConfig = JSON.parse(readFileSync(path.join(repoRoot, 'content', 'gallery.json'), 'utf8'));
-const artworkCatalog = JSON.parse(readFileSync(path.join(repoRoot, 'content', 'artworks.json'), 'utf8'));
+const galleryConfig = JSON.parse(readFileSync(path.join(workRoot, 'content', 'gallery.json'), 'utf8'));
+const artworkCatalog = JSON.parse(readFileSync(path.join(workRoot, 'content', 'artworks.json'), 'utf8'));
 
 if (!Array.isArray(galleryConfig.navTabs) || galleryConfig.navTabs.length === 0) {
   throw new Error('content/gallery.json: navTabs must be a non-empty array');
@@ -43,6 +49,20 @@ if (!Array.isArray(galleryConfig.mediumPages) || galleryConfig.mediumPages.lengt
 }
 if (!Array.isArray(galleryConfig.sectionPages)) {
   throw new Error('content/gallery.json: sectionPages must be an array');
+}
+if (!Array.isArray(galleryConfig.facets)) {
+  throw new Error('content/gallery.json: facets must be an array');
+}
+if (!Array.isArray(galleryConfig.searchPages)) {
+  throw new Error('content/gallery.json: searchPages must be an array');
+}
+for (const facet of galleryConfig.facets) {
+  if (!facet.key || !facet.field || !facet.labelEn || !facet.labelZh || !Array.isArray(facet.values)) {
+    throw new Error(`content/gallery.json: facet "${facet.key ?? '(no key)'}" needs key, field, labelEn, labelZh and values`);
+  }
+}
+if (!galleryConfig.artworkEmptyState?.en || !galleryConfig.artworkEmptyState?.zh) {
+  throw new Error('content/gallery.json: artworkEmptyState needs both en and zh copy');
 }
 if (!Array.isArray(artworkCatalog.artworks)) {
   throw new Error('content/artworks.json: artworks must be an array');
@@ -109,13 +129,71 @@ pages.push({
 });
 for (const page of galleryConfig.mediumPages) {
   const works = artworkCatalog.artworks.filter((artwork) => artwork.medium === page.slug);
-  let artworkGrid = '    <div class="artwork-grid">\n';
+
+  // The filter bar is derived from the works actually on the page, so a facet
+  // can never offer a value that matches nothing and the bar disappears
+  // entirely when there is nothing to filter. That is the whole point of
+  // generating it: the old hand-written bar was inert markup.
+  let filterBar = '';
+  if (works.length > 0) {
+    let dropdowns = '';
+    for (const facet of galleryConfig.facets) {
+      const present = facet.values.filter((option) =>
+        works.some((artwork) => {
+          const field = artwork[facet.field];
+          return Array.isArray(field) ? field.includes(option.value) : field === option.value;
+        })
+      );
+      if (present.length < 2) continue;
+      dropdowns += '      <div class="filter-dropdown">\n';
+      dropdowns += `        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-${facet.key}" aria-expanded="false">\n`;
+      dropdowns += `          <span class="lang-en">${escapeHtml(facet.labelEn)}</span><span class="lang-zh">${escapeHtml(facet.labelZh)}</span>\n`;
+      dropdowns += '        </button>\n';
+      dropdowns += `        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-${facet.key}">\n`;
+      for (const option of present) {
+        dropdowns += '          <button type="button" class="filter-option" role="checkbox" aria-checked="false"';
+        dropdowns += ` data-facet="${escapeHtml(facet.key)}" data-value="${escapeHtml(option.value)}">\n`;
+        dropdowns += '            <span class="filter-check" aria-hidden="true">&#10003;</span>\n';
+        dropdowns += `            <span class="lang-en">${escapeHtml(option.en)}</span><span class="lang-zh">${escapeHtml(option.zh)}</span>\n`;
+        dropdowns += '          </button>\n';
+      }
+      dropdowns += '        </div>\n';
+      dropdowns += '      </div>\n';
+    }
+
+    const years = [...new Set(works.map((artwork) => Number(artwork.year)))].sort((a, b) => a - b);
+    if (years.length > 1) {
+      dropdowns += '      <div class="filter-dropdown">\n';
+      dropdowns += '        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-year" aria-expanded="false">\n';
+      dropdowns += '          <span class="lang-en">Year Range</span><span class="lang-zh">年份范围</span>\n';
+      dropdowns += '        </button>\n';
+      dropdowns += '        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-year">\n';
+      dropdowns += '          <div class="filter-year-range">\n';
+      dropdowns += `            <input type="number" class="filter-year-from" min="${years[0]}" max="${years[years.length - 1]}" placeholder="From" aria-label="Earliest year">\n`;
+      dropdowns += `            <input type="number" class="filter-year-to" min="${years[0]}" max="${years[years.length - 1]}" placeholder="To" aria-label="Latest year">\n`;
+      dropdowns += '          </div>\n';
+      dropdowns += '        </div>\n';
+      dropdowns += '      </div>\n';
+    }
+
+    if (dropdowns !== '') {
+      filterBar = '    <div class="artwork-filter-bar">\n';
+      filterBar += dropdowns;
+      filterBar += '      <button type="button" class="filter-clear" hidden>\n';
+      filterBar += '        <span class="lang-en">Clear filters</span><span class="lang-zh">清除筛选</span>\n';
+      filterBar += '      </button>\n';
+      filterBar += '    </div>\n';
+    }
+  }
+
+  let artworkGrid = '';
   if (works.length === 0) {
-    // No catalogued work for this medium yet, so show the placeholder card the
-    // page has always shown. placeholderCardCount keeps the rendered output
-    // identical to the hand-written HTML this build replaces.
-    artworkGrid += partials.get('artwork-card-placeholder').repeat(galleryConfig.placeholderCardCount);
+    artworkGrid += '    <div class="artwork-empty-state">\n';
+    artworkGrid += `      <span class="lang-en">${escapeHtml(galleryConfig.artworkEmptyState.en)}</span>\n`;
+    artworkGrid += `      <span class="lang-zh">${escapeHtml(galleryConfig.artworkEmptyState.zh)}</span>\n`;
+    artworkGrid += '    </div>\n';
   } else {
+    artworkGrid += '    <div class="artwork-grid">\n';
     for (const artwork of works) {
       const colors = Array.isArray(artwork.colors) ? artwork.colors.join(' ') : '';
       artworkGrid += '      <div class="artwork-card"';
@@ -142,8 +220,12 @@ for (const page of galleryConfig.mediumPages) {
       }
       artworkGrid += '      </div>\n';
     }
+    artworkGrid += '    </div>\n';
+    artworkGrid += '    <div class="artwork-no-matches" hidden>\n';
+    artworkGrid += '      <span class="lang-en">No works match the selected filters.</span>\n';
+    artworkGrid += '      <span class="lang-zh">没有符合所选筛选条件的作品。</span>\n';
+    artworkGrid += '    </div>\n';
   }
-  artworkGrid += '    </div>\n';
 
   pages.push({
     fileName: `gallery-${page.slug}.html`,
@@ -156,6 +238,7 @@ for (const page of galleryConfig.mediumPages) {
       TITLE_EN: escapeHtml(page.titleEn),
       TITLE_ZH: escapeHtml(page.titleZh),
       META_DESCRIPTION: escapeHtml(page.metaDescription),
+      FILTER_BAR: filterBar,
       ARTWORK_GRID: artworkGrid,
     },
   });
@@ -176,7 +259,40 @@ for (const page of galleryConfig.sectionPages) {
   });
 }
 
+// The search box used to carry its own hand-maintained copy of every page
+// title. Generating the index from the same content that renders the pages
+// means a new medium page or a new artwork becomes searchable without anybody
+// remembering to edit a second list, and it puts real artwork titles into
+// search results instead of page titles only.
+const searchIndex = [
+  ...galleryConfig.searchPages.map((entry) => ({ en: entry.en, zh: entry.zh, href: entry.href })),
+  ...galleryConfig.navTabs
+    .filter((tab) => !tab.href.includes('#'))
+    .map((tab) => ({ en: tab.en, zh: tab.zh, href: tab.href })),
+  ...galleryConfig.mediumPages.map((page) => ({
+    en: page.titleEn,
+    zh: page.titleZh,
+    href: `gallery-${page.slug}.html`,
+  })),
+  ...artworkCatalog.artworks.map((artwork) => ({
+    en: `${artwork.titleEn}, ${artwork.year}`,
+    zh: `${artwork.titleZh}，${artwork.year}`,
+    href: `gallery-${artwork.medium}.html`,
+  })),
+];
+const searchIndexSource =
+  '// Generated by build.mjs from content/gallery.json and content/artworks.json.\n' +
+  '// Do not edit by hand; run "npm run build".\n' +
+  `window.GALLERY_SEARCH_INDEX = ${JSON.stringify(searchIndex, null, 2)};\n`;
+
 const drifted = [];
+const searchIndexPath = path.join(workRoot, 'assets', 'js', 'gallery-search-index.js');
+if (checkOnly) {
+  if (readFileSync(searchIndexPath, 'utf8') !== searchIndexSource) drifted.push('assets/js/gallery-search-index.js');
+} else {
+  writeFileSync(searchIndexPath, searchIndexSource);
+}
+
 for (const page of pages) {
   let rendered = readFileSync(path.join(repoRoot, 'templates', `${page.templateName}.html`), 'utf8');
 
@@ -206,7 +322,10 @@ for (const page of pages) {
   rendered = rendered.replace('{{LANGUAGE_SWITCHER_NOTE}}\n', page.tokens.LANGUAGE_SWITCHER_NOTE);
   for (const [token, value] of Object.entries(page.tokens)) {
     if (token === 'LANGUAGE_SWITCHER_NOTE') continue;
-    rendered = rendered.replaceAll(`{{${token}}}\n`, value.endsWith('\n') ? value : `${value}\n`);
+    // A block token sits on its own line, so an empty value has to take that
+    // line's newline with it rather than leaving a blank line behind.
+    const blockValue = value === '' ? '' : value.endsWith('\n') ? value : `${value}\n`;
+    rendered = rendered.replaceAll(`{{${token}}}\n`, blockValue);
     rendered = rendered.replaceAll(`{{${token}}}`, value);
   }
 
@@ -215,7 +334,7 @@ for (const page of pages) {
     throw new Error(`${page.fileName}: unsubstituted placeholder ${leftover[0]}`);
   }
 
-  const outputPath = path.join(repoRoot, page.fileName);
+  const outputPath = path.join(workRoot, page.fileName);
   if (checkOnly) {
     const onDisk = readFileSync(outputPath, 'utf8');
     if (onDisk !== rendered) drifted.push(page.fileName);

@@ -31,6 +31,8 @@ npm test
 
 Both `index.html` and `gallery.html` post to the same Google Apps Script Web App endpoint, which writes each submission as a row in a Google Sheet. A hidden `source` field (`chili-sauce` or `gallery`) tells the two pages' signups apart in the Sheet.
 
+Artwork in the gallery is display only. There is no price, no wishlist and no purchase path, so do not reintroduce one without changing this line first.
+
 ## Gallery search
 
-The gallery pages include a client-side search box (`assets/js/gallery-search.js`) over a small hardcoded list of page titles — not a full-text search of page content.
+The gallery pages include a client-side search box (`assets/js/gallery-search.js`) over `assets/js/gallery-search-index.js`, which the build generates from `content/gallery.json` and `content/artworks.json`. It matches page titles and artwork titles, not full page text.
