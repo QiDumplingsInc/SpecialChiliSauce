@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { EDITABLE_CONTENT } from '../scripts/content-patch.mjs';
+import { EDITABLE_CONTENT, formatContentFile } from '../scripts/content-patch.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.join(__dirname, '..');
@@ -239,6 +239,45 @@ test('a hand-written address the gate would refuse fails the build', () => {
       () => execFileSync('node', ['build.mjs'], { cwd: fixtureRoot, stdio: 'pipe' }),
       /four-part file\|collection\|key\|field address/
     );
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
+test('a content file the gate could not rewrite cleanly fails the build', () => {
+  // The address whitelist is not the only thing that decides whether a pencil
+  // can submit. The gate refuses an entire patch when the target file's
+  // formatting does not round-trip, because rewriting it would reformat the
+  // file end to end and bury the edit. That rejection lands on the editor at
+  // submit time, after they have done the work, so the build has to catch the
+  // drift instead. This is the failure mode that actually happened: the gallery
+  // page titles shipped addressable while content/gallery.json was still
+  // hand-compacted, and nothing failed.
+  const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'edit-mode-format-'));
+  try {
+    for (const name of ['build.mjs', 'content', 'templates', 'scripts']) {
+      cpSync(path.join(repoRoot, name), path.join(fixtureRoot, name), { recursive: true });
+    }
+    mkdirSync(path.join(fixtureRoot, 'assets', 'js'), { recursive: true });
+    cpSync(
+      path.join(repoRoot, 'assets', 'js', 'gallery-search-index.js'),
+      path.join(fixtureRoot, 'assets', 'js', 'gallery-search-index.js')
+    );
+
+    const target = path.join(fixtureRoot, 'content', 'gallery.json');
+    const parsed = JSON.parse(readFileSync(target, 'utf8'));
+    writeFileSync(target, `${JSON.stringify(parsed)}\n`);
+
+    assert.throws(
+      () => execFileSync('node', ['build.mjs'], { cwd: fixtureRoot, stdio: 'pipe' }),
+      /formatting does not round-trip/,
+      'a content file edit mode addresses but the gate would refuse must fail the build'
+    );
+
+    // And the committed formatting is what the gate writes, so the same build
+    // passes the moment the file is normalised again.
+    writeFileSync(target, formatContentFile(parsed));
+    execFileSync('node', ['build.mjs'], { cwd: fixtureRoot, stdio: 'pipe' });
   } finally {
     rmSync(fixtureRoot, { recursive: true, force: true });
   }

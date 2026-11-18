@@ -32,7 +32,7 @@ import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { EDITABLE_CONTENT } from './scripts/content-patch.mjs';
+import { EDITABLE_CONTENT, formatContentFile } from './scripts/content-patch.mjs';
 
 const repoRoot = dirname(fileURLToPath(import.meta.url));
 const checkOnly = process.argv.includes('--check');
@@ -159,6 +159,24 @@ for (const [file, collections] of Object.entries(EDITABLE_CONTENT)) {
         editableAddresses.add(`${file}|${collection}|${record[spec.keyField]}|${field}`);
       }
     }
+  }
+}
+
+// Membership in that set is necessary but not sufficient: the gate also refuses
+// a whole patch when the content file's formatting does not round-trip, because
+// rewriting such a file would reformat it end to end and bury the real edit. A
+// correctly addressed pencil on a hand-compacted file is therefore still a
+// pencil that can only ever be rejected -- and that failure reaches the editor
+// at submit time, after they have done the work. Checking the formatting of
+// every file the pages address turns it into a build failure instead, at the
+// moment the file drifts.
+for (const file of Object.keys(EDITABLE_CONTENT)) {
+  const raw = readFileSync(path.join(repoRoot, file), 'utf8');
+  if (formatContentFile(JSON.parse(raw)) !== raw) {
+    throw new Error(
+      `${file}: formatting does not round-trip, so edit mode cannot patch it; ` +
+        'run pretty-format-json --indent=4 --no-sort-keys on it, or stop rendering data-edit-field attributes for it'
+    );
   }
 }
 

@@ -74,6 +74,21 @@ export const EDITABLE_CONTENT = {
 };
 
 /**
+ * Render a parsed content file back to the exact bytes this gate writes.
+ *
+ * Input: `data`, the parsed contents of one content file. Output: the file text,
+ * 4-space indented with a trailing newline, matching the repo's
+ * `pretty-format-json --indent=4 --no-sort-keys` pre-commit convention.
+ *
+ * Process: a single `JSON.stringify`. It is exported because three callers have
+ * to agree on it byte for byte -- this gate's round-trip check, this gate's
+ * write, and the build's check that a page never offers a pencil on a file the
+ * gate would refuse. Were any caller to spell the format itself, the three could
+ * drift and the build would start promising an edit the gate rejects.
+ */
+export const formatContentFile = (data) => `${JSON.stringify(data, null, 4)}\n`;
+
+/**
  * Validate a submitted content patch and, unless `dryRun` is set, apply it to
  * the content files on disk.
  *
@@ -268,7 +283,7 @@ export function applyContentPatch(patch, options = {}) {
         loaded.set(entry.file, null);
         continue;
       }
-      if (`${JSON.stringify(data, null, 4)}\n` !== raw) {
+      if (formatContentFile(data) !== raw) {
         errors.push(
           `${entry.file}: formatting does not round-trip, so applying an edit would reformat the whole file; ` +
             'normalise the file to 4-space JSON formatting before enabling edit mode on it'
@@ -326,7 +341,7 @@ export function applyContentPatch(patch, options = {}) {
   const files = [...touched].sort();
   if (!dryRun) {
     for (const file of files) {
-      writeFileSync(path.join(contentRoot, file), `${JSON.stringify(loaded.get(file), null, 4)}\n`);
+      writeFileSync(path.join(contentRoot, file), formatContentFile(loaded.get(file)));
     }
   }
   return { ok: true, errors: [], changed: true, files, summary };
