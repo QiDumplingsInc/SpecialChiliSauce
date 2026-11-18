@@ -43,9 +43,9 @@ The gallery pages include a client-side search box (`assets/js/gallery-search.js
 
 ## Admin edit mode: editing in the browser
 
-Open any gallery page with `?edit=1` to turn edit mode on, for example `gallery-painting.html?edit=1`. The mode stays on while you move between gallery pages and turns off from the **Exit edit mode** button.
+The way in is `edit.html` -- <https://qidumplingsinc.github.io/SpecialChiliSauce/edit.html>. Bookmark it. It has one button, **Turn on edit mode**, which puts you on the gallery with the mode on. The mode stays on while you move between gallery pages, and turns off from the **Exit edit mode** button in the toolbar or from `edit.html` again. Adding `?edit=1` to any gallery URL by hand still works and is what `edit.html` falls back to when a browser refuses site storage.
 
-Edit mode is a mode toggle, not a login. There is no password and none is needed: the site is static with no server, edit mode changes nothing on the live site, and its only output is a file you download. A password checked in browser JavaScript would protect nothing while implying it did.
+Edit mode is a mode toggle, not a login. There is no password and none is needed: the site is static with no server, edit mode changes nothing on the live site, and its only output is a file you download. A password checked in browser JavaScript would protect nothing while implying it did, so `edit.html` has no field to type into and says plainly that it is not a sign-in. `edit.html` is not linked from the public site -- not as a boundary, since it is none, but so the gallery does not advertise an admin screen that locks nothing.
 
 How an editor uses it:
 
@@ -56,10 +56,11 @@ How an editor uses it:
 
 What is editable: the English and Chinese titles of a medium page, the titles and body copy of a section page, and the titles and dimensions of an artwork. Alt text, meta descriptions and the year are in the gate's whitelist but are not inline-editable yet, because none of them renders as visible text on the page.
 
-Editing copy on a medium or section page produces a patch that the gate currently rejects, because `content/gallery.json` does not round-trip yet (see the gate section below). Artwork wording applies today.
+Editing copy on a medium or section page applies today, as does artwork wording: both `content/gallery.json` and `content/artworks.json` round-trip through the gate's formatter, and the build fails if either stops doing so.
 
 Implementation notes:
 
+- `edit.html` is hand-written and is the only HTML at the repo root that edit mode owns; the `gallery*.html` pages are generated. It links to `gallery.html?edit=1` in the markup, so the front door works with no JavaScript at all, and its script replaces that with a clean `gallery.html` once it has confirmed the browser will hold the `sessionStorage` flag that carries the mode between pages. Turning the mode off there leaves unsubmitted edits alone, the same promise the toolbar's **Exit edit mode** button makes.
 - `build.mjs` emits `data-edit-field="file|collection|key|field"` on every editable element, using the same address string the gate uses internally. The contract the overlay depends on is that such an element's `textContent` is exactly the raw value on disk, which is why an artwork title is rendered in its own span instead of being composed with the year. The build fails if any emitted address is malformed or names something the gate would refuse, so the whitelist is enforced rather than documented.
 - `assets/js/edit-mode-rules.js` is generated from `EDITABLE_CONTENT`, so the length limits the browser reports cannot drift from the ones the gate enforces. `npm run build:check` fails if it has.
 - `assets/js/edit-mode.js` and `assets/css/edit-mode.css` load only when edit mode is asked for, so an ordinary page view costs one conditional and no extra requests.
@@ -74,6 +75,6 @@ The gate fails closed and is all or nothing. One bad edit rejects the whole subm
 - `EDITABLE_CONTENT` in that file is the complete whitelist of what an editor can reach: titles, alt text, dimensions and year on an artwork, plus titles, meta descriptions and body copy on a gallery page. Ids, slugs, image paths, pixel dimensions and facet values are deliberately absent, so edit mode can change wording but cannot break a page or re-point an image.
 - Records can only be updated, never created or deleted.
 - Values must be single-line plain text within a per-field length limit, with no control characters and no `<` or `>`.
-- A content file is refused unless it round-trips through `JSON.stringify(data, null, 4)` byte for byte. `content/artworks.json` does; `content/gallery.json` does not yet, because it is hand-formatted with compact single-line objects. That guard is what keeps the diff readable: a file the gate cannot reproduce exactly would be reformatted end to end, burying the real edit.
+- A content file is refused unless it round-trips through `JSON.stringify(data, null, 4)` byte for byte. Both content files do today, and `build.mjs` fails if either drifts, because a file the gate cannot reproduce exactly would be reformatted end to end and bury the real edit.
 
 `applyContentPatch(patch, { contentRoot, dryRun })` returns `{ ok, errors, changed, files, summary }`. Call it with `dryRun` to show an editor a review screen before they submit; `changed: false` means every edit already matched what is on disk, so no pull request should be opened. `tests/content-patch.test.mjs` covers the whitelist and every rejection case and runs as part of `npm test`.
