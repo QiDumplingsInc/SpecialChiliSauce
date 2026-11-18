@@ -543,6 +543,35 @@
   margin-bottom: var(--spacing-sm);
 }
 
+/* ========================================
+   SECTION PAGES: placeholder panel
+   The five section pages (New Arrivals, Portfolio, Artists,
+   Exhibitions, Collections) keep a placeholder panel until their
+   content is populated. These rules existed nowhere in either
+   stylesheet, so the panel rendered as unstyled body text flush
+   against the page edge on five live pages.
+   ======================================== */
+.painting-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: var(--spacing-lg) 0 var(--spacing-xl);
+}
+
+.painting-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  padding: var(--spacing-lg) var(--spacing-md);
+  background: var(--color-bg-lighter);
+  border: 1px solid var(--color-bg-lighter);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-light);
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-base);
+  text-align: center;
+}
+
 .filter-clear {
   background: none;
   border: none;

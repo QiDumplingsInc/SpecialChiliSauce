@@ -18,6 +18,10 @@ npm run build:check    # fail if the committed HTML has drifted from templates/c
 
 The rendered HTML stays committed so GitHub Pages serves the site with no build step at deploy time. `npm test` runs `build:check`, so drift fails the test suite.
 
+## Adding artwork
+
+Artwork images go in `assets/gallery/`, one web-ready file per work, each referenced by an entry in `content/artworks.json`. Original files are not committed. `assets/gallery/README.md` has the filename rules, the `sips` resize and dimension commands, and the metadata needed per work.
+
 ## Testing
 
 Behavioral tests for interactive JS (e.g. the newsletter signup forms and gallery search) run against the real `index.html` and `gallery.html` via jsdom, with network calls mocked.

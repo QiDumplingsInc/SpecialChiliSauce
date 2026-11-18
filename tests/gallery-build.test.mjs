@@ -59,6 +59,28 @@ test('every generated page highlights exactly one nav tab', () => {
   }
 });
 
+test('every class the section-page template renders has a CSS rule', () => {
+  // The five section pages shipped a .painting-placeholder panel that had no
+  // rule in either stylesheet, so it rendered as unstyled body text. This
+  // catches the same class of defect: markup referencing a class nobody styled.
+  const sectionTemplate = readFileSync(path.join(repoRoot, 'templates', 'page-section.html'), 'utf8');
+  const stylesheets =
+    readFileSync(path.join(repoRoot, 'assets', 'css', 'site.css'), 'utf8') +
+    readFileSync(path.join(repoRoot, 'assets', 'css', 'gallery.css'), 'utf8');
+  const classNames = new Set();
+  for (const match of sectionTemplate.matchAll(/class="([^"{]+)"/g)) {
+    for (const name of match[1].trim().split(/\s+/)) classNames.add(name);
+  }
+  assert.ok(classNames.has('painting-placeholder'), 'sanity check: expected the placeholder class in the template');
+  for (const name of classNames) {
+    assert.match(
+      stylesheets,
+      new RegExp(`\\.${name}([\\s,:{]|$)`, 'm'),
+      `.${name} is rendered by templates/page-section.html but has no CSS rule`
+    );
+  }
+});
+
 test('an unknown medium on an artwork fails the build instead of rendering a broken page', () => {
   const brokenCatalog = JSON.stringify({
     artworks: [
