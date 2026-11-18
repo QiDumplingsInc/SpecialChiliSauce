@@ -75,5 +75,90 @@ window.GALLERY_SEARCH_INDEX = [
     "en": "Work on Paper",
     "zh": "纸本作品",
     "href": "gallery-work-on-paper.html"
+  },
+  {
+    "en": "Lemons, n.d.",
+    "zh": "柠檬，年份不详",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Tomatoes on the Vine, 2020",
+    "zh": "藤上番茄，2020",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Pomegranates, n.d.",
+    "zh": "石榴，年份不详",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Pears, 2022",
+    "zh": "梨，2022",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Red Grapes, 2024",
+    "zh": "红葡萄，2024",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Figs, 2023",
+    "zh": "无花果，2023",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Peonies, n.d.",
+    "zh": "牡丹，年份不详",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Peacock, n.d.",
+    "zh": "孔雀，年份不详",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Parrot, n.d.",
+    "zh": "鹦鹉，年份不详",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Ram, n.d.",
+    "zh": "公羊，年份不详",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Spotted Dog, n.d.",
+    "zh": "彩点狗，年份不详",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Pintail Duck, n.d.",
+    "zh": "针尾鸭，年份不详",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Redfish, n.d.",
+    "zh": "红鼓鱼，年份不详",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Rockfish, 2024",
+    "zh": "石斑鱼，2024",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Goldfish, n.d.",
+    "zh": "金鱼，年份不详",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Cabin in Winter, n.d.",
+    "zh": "冬日木屋，年份不详",
+    "href": "gallery-painting.html"
+  },
+  {
+    "en": "Two Dogs and Cherry Blossoms, n.d.",
+    "zh": "双犬与樱花，年份不详",
+    "href": "gallery-drawing.html"
   }
 ];

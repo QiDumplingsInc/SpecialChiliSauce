@@ -69,9 +69,39 @@
   </section>
 
   <section class="container">
-    <div class="artwork-empty-state">
-      <span class="lang-en">No works in this medium are published yet.</span>
-      <span class="lang-zh">本媒介暂无已发布作品。</span>
+    <div class="artwork-filter-bar">
+      <div class="filter-dropdown">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-colors" aria-expanded="false">
+          <span class="lang-en">Color</span><span class="lang-zh">颜色</span>
+        </button>
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-colors">
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false" data-facet="colors" data-value="browns">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Browns</span><span class="lang-zh">棕色</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false" data-facet="colors" data-value="reds">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Reds</span><span class="lang-zh">红色</span>
+          </button>
+        </div>
+      </div>
+      <button type="button" class="filter-clear" hidden>
+        <span class="lang-en">Clear filters</span><span class="lang-zh">清除筛选</span>
+      </button>
+    </div>
+    <div class="artwork-grid">
+      <div class="artwork-card" data-medium="drawing" data-year="" data-size="" data-colors="reds browns" data-style="realist" data-title-en="Two Dogs and Cherry Blossoms" data-title-zh="双犬与樱花">
+        <div class="artwork-image-wrap">
+          <img class="artwork-image" src="assets/gallery/drawing-001.jpg" alt="Coloured pencil drawing of two greyhounds pressed close together above a knitted collar, with pink cherry blossom branches across the foreground" width="1200" height="867" loading="lazy" data-alt-en="Coloured pencil drawing of two greyhounds pressed close together above a knitted collar, with pink cherry blossom branches across the foreground" data-alt-zh="彩色铅笔画：两只灵缇犬紧紧相依，下方是针织围领，前景横过粉色樱花枝">
+        </div>
+        <div class="artwork-artist">KAY</div>
+        <div class="artwork-title lang-en">Two Dogs and Cherry Blossoms, n.d.</div>
+        <div class="artwork-title lang-zh">双犬与樱花，年份不详</div>
+      </div>
+    </div>
+    <div class="artwork-no-matches" hidden>
+      <span class="lang-en">No works match the selected filters.</span>
+      <span class="lang-zh">没有符合所选筛选条件的作品。</span>
     </div>
   </section>
 
