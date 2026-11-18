@@ -95,10 +95,17 @@ document.addEventListener('DOMContentLoaded', function () {
           break;
         }
       }
-      if (matches) {
-        const year = Number(card.dataset.year);
-        if (from !== null && year < from) matches = false;
-        if (to !== null && year > to) matches = false;
+      if (matches && (from !== null || to !== null)) {
+        // An undated work carries an empty data-year. It cannot be shown to
+        // fall inside a requested range, so any active year bound excludes it
+        // rather than letting it pass one bound and fail the other.
+        if (card.dataset.year === '') {
+          matches = false;
+        } else {
+          const year = Number(card.dataset.year);
+          if (from !== null && year < from) matches = false;
+          if (to !== null && year > to) matches = false;
+        }
       }
       card.hidden = !matches;
       if (matches) visibleCount += 1;

@@ -209,3 +209,92 @@ test('the generated search index covers every medium page and every artwork titl
     rmSync(fixtureRoot, { recursive: true, force: true });
   }
 });
+
+test('an undated work renders n.d. and no year filter claims it', async () => {
+  const fixtureRoot = renderWithArtworks({
+    artworks: [
+      SAMPLE_ARTWORKS.artworks[0],
+      SAMPLE_ARTWORKS.artworks[1],
+      // Two dated works give the year range something to span; the third is the
+      // undated one under test.
+      { ...SAMPLE_ARTWORKS.artworks[1], id: 'painting-undated', titleEn: 'Undated Study', titleZh: '无年份习作', year: undefined },
+    ],
+  });
+  try {
+    const dom = await loadFixturePage(fixtureRoot, 'gallery-painting.html');
+    const { document } = dom.window;
+    const undated = document.querySelector('.artwork-card[data-title-en="Undated Study"]');
+    assert.equal(undated.dataset.year, '', 'an undated work must carry an empty data-year');
+    assert.match(undated.querySelector('.artwork-title.lang-en').textContent, /n\.d\.$/);
+    assert.match(undated.querySelector('.artwork-title.lang-zh').textContent, /年份不详$/);
+
+    // A year bound must exclude the undated work rather than let it pass one
+    // bound and fail the other, which is what Number('') === 0 used to do.
+    const from = document.querySelector('.filter-year-from');
+    from.value = '2000';
+    from.dispatchEvent(new dom.window.Event('input'));
+    assert.ok(undated.hidden, 'an undated work cannot be shown to fall inside a year range');
+
+    const to = document.querySelector('.filter-year-to');
+    from.value = '';
+    to.value = '2100';
+    to.dispatchEvent(new dom.window.Event('input'));
+    assert.ok(undated.hidden, 'an upper year bound alone must exclude the undated work too');
+    dom.window.close();
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
+test('every catalogued image exists and its declared width and height match the file', () => {
+  const catalog = JSON.parse(readFileSync(path.join(repoRoot, 'content', 'artworks.json'), 'utf8'));
+  for (const artwork of catalog.artworks) {
+    const bytes = readFileSync(path.join(repoRoot, artwork.image));
+    // Read the real geometry out of the JPEG rather than trusting the catalog
+    // or sips, which reports the pre-rotation buffer for a phone photo. A
+    // declared size that disagrees with the file reintroduces the layout shift
+    // that width/height exist to prevent, and a leftover EXIF orientation tag
+    // makes the browser rotate an already-rotated image.
+    let width = 0;
+    let height = 0;
+    let orientation = 1;
+    let offset = 2;
+    while (offset < bytes.length - 1) {
+      if (bytes[offset] !== 0xff) {
+        offset += 1;
+        continue;
+      }
+      const marker = bytes[offset + 1];
+      if (marker === 0xd8 || marker === 0x01 || (marker >= 0xd0 && marker <= 0xd7)) {
+        offset += 2;
+        continue;
+      }
+      if (marker === 0xda) break;
+      const segmentLength = bytes.readUInt16BE(offset + 2);
+      if (marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc) {
+        height = bytes.readUInt16BE(offset + 5);
+        width = bytes.readUInt16BE(offset + 7);
+        break;
+      }
+      if (marker === 0xe1 && bytes.toString('ascii', offset + 4, offset + 10) === 'Exif\0\0') {
+        const tiff = offset + 10;
+        const littleEndian = bytes.toString('ascii', tiff, tiff + 2) === 'II';
+        const directory =
+          tiff + (littleEndian ? bytes.readUInt32LE(tiff + 4) : bytes.readUInt32BE(tiff + 4));
+        const entryCount = littleEndian ? bytes.readUInt16LE(directory) : bytes.readUInt16BE(directory);
+        for (let entryIndex = 0; entryIndex < entryCount; entryIndex += 1) {
+          const entry = directory + 2 + entryIndex * 12;
+          const tag = littleEndian ? bytes.readUInt16LE(entry) : bytes.readUInt16BE(entry);
+          if (tag === 0x0112) {
+            orientation = littleEndian ? bytes.readUInt16LE(entry + 8) : bytes.readUInt16BE(entry + 8);
+          }
+        }
+      }
+      offset += 2 + segmentLength;
+    }
+    assert.ok(width > 0 && height > 0, `${artwork.image} is not a readable JPEG`);
+    assert.equal(artwork.imageWidth, width, `${artwork.id} declares the wrong imageWidth`);
+    assert.equal(artwork.imageHeight, height, `${artwork.id} declares the wrong imageHeight`);
+    assert.equal(orientation, 1, `${artwork.image} carries EXIF orientation ${orientation}; bake the rotation in`);
+  }
+});

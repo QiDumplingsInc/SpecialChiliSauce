@@ -71,7 +71,7 @@ if (!Array.isArray(artworkCatalog.artworks)) {
 const mediumSlugs = new Set(galleryConfig.mediumPages.map((page) => page.slug));
 const seenArtworkIds = new Set();
 for (const artwork of artworkCatalog.artworks) {
-  for (const field of ['id', 'medium', 'titleEn', 'titleZh', 'year', 'image', 'imageWidth', 'imageHeight', 'altEn', 'altZh']) {
+  for (const field of ['id', 'medium', 'titleEn', 'titleZh', 'image', 'imageWidth', 'imageHeight', 'altEn', 'altZh']) {
     if (artwork[field] === undefined || artwork[field] === null || artwork[field] === '') {
       throw new Error(`content/artworks.json: artwork ${artwork.id ?? '(no id)'} is missing required field "${field}"`);
     }
@@ -91,7 +91,20 @@ for (const artwork of artworkCatalog.artworks) {
   if (!Number.isInteger(artwork.imageHeight) || artwork.imageHeight <= 0) {
     throw new Error(`content/artworks.json: artwork "${artwork.id}" imageHeight must be a positive integer`);
   }
+  // year is optional on purpose. Several works are unsigned and undated, and
+  // the catalogue records that rather than inventing a plausible year; those
+  // render as "n.d.", the standard notation for an undated work.
+  if (artwork.year !== undefined && !(Number.isInteger(artwork.year) && artwork.year >= 1000 && artwork.year <= 9999)) {
+    throw new Error(`content/artworks.json: artwork "${artwork.id}" year must be a four-digit integer or omitted`);
+  }
 }
+
+const UNDATED_EN = 'n.d.';
+const UNDATED_ZH = '年份不详';
+const yearLabel = (artwork) => ({
+  en: artwork.year === undefined ? UNDATED_EN : String(artwork.year),
+  zh: artwork.year === undefined ? UNDATED_ZH : String(artwork.year),
+});
 
 const partialsDir = path.join(repoRoot, 'templates', 'partials');
 const partials = new Map();
@@ -161,7 +174,9 @@ for (const page of galleryConfig.mediumPages) {
       dropdowns += '      </div>\n';
     }
 
-    const years = [...new Set(works.map((artwork) => Number(artwork.year)))].sort((a, b) => a - b);
+    const years = [...new Set(works.filter((artwork) => artwork.year !== undefined).map((artwork) => artwork.year))].sort(
+      (a, b) => a - b
+    );
     if (years.length > 1) {
       dropdowns += '      <div class="filter-dropdown">\n';
       dropdowns += '        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-year" aria-expanded="false">\n';
@@ -196,9 +211,10 @@ for (const page of galleryConfig.mediumPages) {
     artworkGrid += '    <div class="artwork-grid">\n';
     for (const artwork of works) {
       const colors = Array.isArray(artwork.colors) ? artwork.colors.join(' ') : '';
+      const year = yearLabel(artwork);
       artworkGrid += '      <div class="artwork-card"';
       artworkGrid += ` data-medium="${escapeHtml(artwork.medium)}"`;
-      artworkGrid += ` data-year="${escapeHtml(artwork.year)}"`;
+      artworkGrid += ` data-year="${escapeHtml(artwork.year ?? '')}"`;
       artworkGrid += ` data-size="${escapeHtml(artwork.sizeRange ?? '')}"`;
       artworkGrid += ` data-colors="${escapeHtml(colors)}"`;
       artworkGrid += ` data-style="${escapeHtml(artwork.style ?? '')}"`;
@@ -212,8 +228,8 @@ for (const page of galleryConfig.mediumPages) {
       artworkGrid += ` data-alt-en="${escapeHtml(artwork.altEn)}" data-alt-zh="${escapeHtml(artwork.altZh)}">\n`;
       artworkGrid += '        </div>\n';
       artworkGrid += '        <div class="artwork-artist">KAY</div>\n';
-      artworkGrid += `        <div class="artwork-title lang-en">${escapeHtml(artwork.titleEn)}, ${escapeHtml(artwork.year)}</div>\n`;
-      artworkGrid += `        <div class="artwork-title lang-zh">${escapeHtml(artwork.titleZh)}，${escapeHtml(artwork.year)}</div>\n`;
+      artworkGrid += `        <div class="artwork-title lang-en">${escapeHtml(artwork.titleEn)}, ${escapeHtml(year.en)}</div>\n`;
+      artworkGrid += `        <div class="artwork-title lang-zh">${escapeHtml(artwork.titleZh)}，${escapeHtml(year.zh)}</div>\n`;
       if (artwork.dimensionsEn && artwork.dimensionsZh) {
         artworkGrid += `        <div class="artwork-dimensions lang-en">${escapeHtml(artwork.dimensionsEn)}</div>\n`;
         artworkGrid += `        <div class="artwork-dimensions lang-zh">${escapeHtml(artwork.dimensionsZh)}</div>\n`;
@@ -275,8 +291,8 @@ const searchIndex = [
     href: `gallery-${page.slug}.html`,
   })),
   ...artworkCatalog.artworks.map((artwork) => ({
-    en: `${artwork.titleEn}, ${artwork.year}`,
-    zh: `${artwork.titleZh}，${artwork.year}`,
+    en: `${artwork.titleEn}, ${yearLabel(artwork).en}`,
+    zh: `${artwork.titleZh}，${yearLabel(artwork).zh}`,
     href: `gallery-${artwork.medium}.html`,
   })),
 ];
