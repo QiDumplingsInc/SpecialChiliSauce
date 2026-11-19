@@ -31,6 +31,8 @@ npm install
 npm test
 ```
 
+`.npmrc` pins the registry to `https://registry.npmjs.org/` so the committed `package-lock.json` records tarball URLs that CI can reach. An `NPM_CONFIG_REGISTRY` environment variable overrides `.npmrc`, so if your shell sets one to an internal mirror, unset it before you run `npm install` or the regenerated lockfile will pin hosts the GitHub Actions runner cannot resolve.
+
 ## Commit hooks
 
 This repository tracks a `commit-msg` hook in `.githooks/` that rejects any `Co-Authored-By:` trailer, as required by the commit-attribution standard in the `CLAUDE.md` one directory above this repository's checkout. Git does not read tracked hooks automatically, so a fresh clone needs this one-time command to activate them:
