@@ -31,6 +31,37 @@ npm install
 npm test
 ```
 
+`.npmrc` pins the registry to `https://registry.npmjs.org/` so the committed `package-lock.json` records tarball URLs that CI can reach. An `NPM_CONFIG_REGISTRY` environment variable overrides `.npmrc`, so if your shell sets one to an internal mirror, unset it before you run `npm install` or the regenerated lockfile will pin hosts the GitHub Actions runner cannot resolve.
+
+## Commit hooks
+
+This repository tracks a `commit-msg` hook in `.githooks/` that rejects any `Co-Authored-By:` trailer, as required by the commit-attribution standard in the `CLAUDE.md` one directory above this repository's checkout. Git does not read tracked hooks automatically, so a fresh clone needs this one-time command to activate them:
+
+```
+git config core.hooksPath .githooks
+```
+
+Repo-local config overrides the global hooks path, and all worktrees of a clone share `.git/config`, so one setting covers every worktree. Verify the hook with:
+
+```
+sh .githooks/commit-msg-test.sh
+```
+
+### What the guard does not cover
+
+Setting `core.hooksPath` to `.githooks` makes Git read hooks *only* from that directory for this repository, so any hooks installed at the global `core.hooksPath` stop running here. Check what you have there before you run the command:
+
+```
+git config --show-origin --get-all core.hooksPath
+```
+
+Git also skips the `commit-msg` hook entirely on some paths, so a trailer can still reach history through:
+
+- `git commit --no-verify`, which skips the hook by design.
+- `git cherry-pick`, `git rebase`, and `git am`, which reuse an existing message without running `commit-msg`.
+
+`git commit --amend` *is* covered. Treat the guard as a safety net for the ordinary commit path, not a proof that no trailer can ever land.
+
 ## Newsletter signups
 
 Both `index.html` and `gallery.html` post to the same Google Apps Script Web App endpoint, which writes each submission as a row in a Google Sheet. A hidden `source` field (`chili-sauce` or `gallery`) tells the two pages' signups apart in the Sheet.
@@ -43,9 +74,9 @@ The gallery pages include a client-side search box (`assets/js/gallery-search.js
 
 ## Admin edit mode: editing in the browser
 
-Open any gallery page with `?edit=1` to turn edit mode on, for example `gallery-painting.html?edit=1`. The mode stays on while you move between gallery pages and turns off from the **Exit edit mode** button.
+The way in is `edit.html` -- <https://qidumplingsinc.github.io/SpecialChiliSauce/edit.html>. Bookmark it. It has one button, **Turn on edit mode**, which puts you on the gallery with the mode on. The mode stays on while you move between gallery pages, and turns off from the **Exit edit mode** button in the toolbar or from `edit.html` again. Adding `?edit=1` to any gallery URL by hand still works and is what `edit.html` falls back to when a browser refuses site storage.
 
-Edit mode is a mode toggle, not a login. There is no password and none is needed: the site is static with no server, edit mode changes nothing on the live site, and its only output is a file you download. A password checked in browser JavaScript would protect nothing while implying it did.
+Edit mode is a mode toggle, not a login. There is no password and none is needed: the site is static with no server, edit mode changes nothing on the live site, and its only output is a file you download. A password checked in browser JavaScript would protect nothing while implying it did, so `edit.html` has no field to type into and says plainly that it is not a sign-in. `edit.html` is not linked from the public site -- not as a boundary, since it is none, but so the gallery does not advertise an admin screen that locks nothing.
 
 How an editor uses it:
 
@@ -54,16 +85,40 @@ How an editor uses it:
 3. Click **Review changes** to see every pending change as the old value next to the new one, and discard any single one.
 4. Click **Download edit-patch.json** and send that file to whoever maintains the repository.
 
-What is editable: the English and Chinese titles of a medium page, the titles and body copy of a section page, and the titles and dimensions of an artwork. Alt text, meta descriptions and the year are in the gate's whitelist but are not inline-editable yet, because none of them renders as visible text on the page.
+What is editable: the English and Chinese titles of a medium page, the titles and body copy of a section page, and the titles and dimensions of an artwork. That is the whole list, and the next section says why it stops there.
 
-Editing copy on a medium or section page produces a patch that the gate currently rejects, because `content/gallery.json` does not round-trip yet (see the gate section below). Artwork wording applies today.
+Editing copy on a medium or section page applies today, as does artwork wording: both `content/gallery.json` and `content/artworks.json` round-trip through the gate's formatter, and the build fails if either stops doing so.
 
 Implementation notes:
 
+- `edit.html` is hand-written and is the only HTML at the repo root that edit mode owns; the `gallery*.html` pages are generated. It links to `gallery.html?edit=1` in the markup, so the front door works with no JavaScript at all, and its script replaces that with a clean `gallery.html` once it has confirmed the browser will hold the `sessionStorage` flag that carries the mode between pages. Turning the mode off there leaves unsubmitted edits alone, the same promise the toolbar's **Exit edit mode** button makes.
 - `build.mjs` emits `data-edit-field="file|collection|key|field"` on every editable element, using the same address string the gate uses internally. The contract the overlay depends on is that such an element's `textContent` is exactly the raw value on disk, which is why an artwork title is rendered in its own span instead of being composed with the year. The build fails if any emitted address is malformed or names something the gate would refuse, so the whitelist is enforced rather than documented.
 - `assets/js/edit-mode-rules.js` is generated from `EDITABLE_CONTENT`, so the length limits the browser reports cannot drift from the ones the gate enforces. `npm run build:check` fails if it has.
 - `assets/js/edit-mode.js` and `assets/css/edit-mode.css` load only when edit mode is asked for, so an ordinary page view costs one conditional and no extra requests.
 - The overlay makes no network call and holds nothing durable. Pending edits live in `sessionStorage` so one patch can span several pages.
+
+## Admin edit mode: what it deliberately does not cover
+
+Edit mode reaches wording the build renders as the visible text of one element, and nothing else. Three content fields are wording but are not reachable, and that is a decision rather than unfinished work.
+
+| Field | Where it lives | Why it is out |
+| --- | --- | --- |
+| `altEn`, `altZh` | the `alt` and `data-alt-zh` attributes of each `<img>`, one pair per entry in a work's `images` array | Two values on one element, and `assets/js/language.js` owns `alt` and swaps it on a language change. No element can carry both addresses without breaking the `textContent` contract the overlay reads. They also sit inside an array, which the gate's `file\|collection\|key\|field` address cannot name at all. |
+| `metaDescription` | `<meta name="description">` in `<head>` | Renders nowhere on the page, so there is no "in place" to edit it in. |
+| `year` | composed into the title line, or `n.d.` when absent | An integer, and the displayed text is not the value when it is missing. Inline editing could correct a wrong year but never add a missing one or remove a wrong one, which are the cases that come up. |
+
+**The decision.** These three stay out of `EDITABLE_CONTENT`, and the build fails if a field is whitelisted that the overlay cannot edit, so the gate's whitelist and the pencils on the page are one set rather than two lists that drift. Changing them means editing `content/artworks.json` or `content/gallery.json` in a pull request.
+
+The reason is lifecycle, not difficulty. All three are authored when an artwork or a page record is created, and creating a record is already a repository operation: you add the image file to `assets/gallery/`, add the record, and commit. Alt text, the year and the meta description are written in that same sitting by the same person, next to the image path and the medium slug, which are deliberately not editable either. Edit mode exists for the other job, revising copy on a site that already exists, often by someone who spots the problem while browsing it. Reaching these three would not save a trip to the repository; it would add a second way to do something the author is already in the repository to do.
+
+**The rejected alternative** was a second editing surface: a small form panel in the overlay listing the fields on this page that have no visible element, with a labelled input for each. It was rejected for four reasons.
+
+- It makes one feature carry two mechanisms. The inline path is one contract -- an addressed element's `textContent` is its value on disk -- and a form panel cannot use it. It needs a new build output exposing on-disk values to the client outside that contract, a second value type through client validation, and a second commit path, roughly doubling the overlay for three fields.
+- The feedback that justifies editing in place does not apply. A meta description is judged against a search result, not against the page, so showing it in context buys nothing.
+- Every entry in the whitelist is reach the patch gate grants. Three entries no editor could use widened the write path for no product benefit, which is the least-privilege problem the narrowing fixes.
+- Alt text is an accessibility obligation, and a change to it is better reviewed by someone who knows what alt text should say than applied self-service. A pull request is the right shape for that change.
+
+**To reverse it** the work is bounded and known: build a panel surface in `assets/js/edit-mode.js` fed by on-disk values the build emits for the page, add a `year` rule type back to the validator in `scripts/content-patch.mjs` with its own client mirror, give alt text an address scheme that can reach a field inside a record's `images` array and does not collide with `language.js`, add the fields to `EDITABLE_CONTENT`, and add the rule type to `EDITABLE_RULE_TYPES`. `tests/content-patch.test.mjs` pins the current whitelist on purpose, so that test failing is the prompt to read this section first.
 
 ## Admin edit mode: the content patch gate
 
@@ -71,9 +126,10 @@ Implementation notes:
 
 The gate fails closed and is all or nothing. One bad edit rejects the whole submission and writes nothing.
 
-- `EDITABLE_CONTENT` in that file is the complete whitelist of what an editor can reach: titles, alt text, dimensions and year on an artwork, plus titles, meta descriptions and body copy on a gallery page. Ids, slugs, image paths, pixel dimensions and facet values are deliberately absent, so edit mode can change wording but cannot break a page or re-point an image.
+- `EDITABLE_CONTENT` in that file is the complete whitelist of what an editor can reach: titles and dimensions on an artwork, plus titles and body copy on a gallery page. Ids, slugs, image paths, pixel dimensions and facet values are deliberately absent, so edit mode can change wording but cannot break a page or re-point an image. Alt text, the year and meta descriptions are absent too, for the reasons in the section above.
+- `EDITABLE_RULE_TYPES` is the set of rule types the browser overlay can edit, and `build.mjs` fails the build if a whitelisted field uses anything else. That is what keeps the whitelist from granting reach no editor can use.
 - Records can only be updated, never created or deleted.
 - Values must be single-line plain text within a per-field length limit, with no control characters and no `<` or `>`.
-- A content file is refused unless it round-trips through `JSON.stringify(data, null, 4)` byte for byte. `content/artworks.json` does; `content/gallery.json` does not yet, because it is hand-formatted with compact single-line objects. That guard is what keeps the diff readable: a file the gate cannot reproduce exactly would be reformatted end to end, burying the real edit.
+- A content file is refused unless it round-trips through `JSON.stringify(data, null, 4)` byte for byte. Both content files do today, and `build.mjs` fails if either drifts, because a file the gate cannot reproduce exactly would be reformatted end to end and bury the real edit.
 
 `applyContentPatch(patch, { contentRoot, dryRun })` returns `{ ok, errors, changed, files, summary }`. Call it with `dryRun` to show an editor a review screen before they submit; `changed: false` means every edit already matched what is on disk, so no pull request should be opened. `tests/content-patch.test.mjs` covers the whitelist and every rejection case and runs as part of `npm test`.

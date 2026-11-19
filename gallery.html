@@ -14,10 +14,9 @@
   <link rel="stylesheet" href="assets/css/gallery.css">
 
   <style>
-    /* PLACEHOLDER carousel slides — swap each slide's background for
-       a real photo of Kay's work once available. Carousel styling
-       itself (.hero-carousel, .hero-carousel-slide, pager) lives in
-       assets/css/gallery.css since it's shared infrastructure. */
+    /* Hero carousel styling itself (.hero-carousel, .hero-carousel-slide,
+       .hero-carousel-image, pager) lives in assets/css/gallery.css since it's
+       shared infrastructure. */
 
     /* Alternating full-width image/text panels */
     .about-panel-row {
@@ -28,23 +27,16 @@
       padding: var(--spacing-xl) 0;
     }
 
-    .about-panel-row.reversed .about-panel-image {
+    .about-panel-row.reversed .about-panel-photo {
       order: 2;
     }
 
-    .about-panel-image {
+    .about-panel-photo {
+      width: 100%;
       aspect-ratio: 3 / 2;
-      background: var(--color-bg-lighter);
-      border: 2px dashed var(--color-text-lighter);
+      object-fit: cover;
       border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text-lighter);
-      font-family: var(--font-family-ui);
-      font-size: var(--font-size-sm);
-      text-align: center;
-      padding: var(--spacing-md);
+      background: var(--color-bg-lighter);
     }
 
     .about-panel-text h2 {
@@ -70,7 +62,7 @@
         grid-template-columns: 1fr;
       }
 
-      .about-panel-row.reversed .about-panel-image {
+      .about-panel-row.reversed .about-panel-photo {
         order: 0;
       }
     }
@@ -325,31 +317,34 @@
     </nav>
   </div>
 
-  <!-- PLACEHOLDER rolling hero carousel — swap each slide's content
-       for real photos/exhibition info once available -->
+  <!-- Rolling hero carousel. Slides, their photographs and the pager are all
+       generated from heroSlides in content/gallery.json. -->
   <section class="hero-carousel" id="heroCarousel">
     <div class="hero-carousel-slide active">
-      <div>
+      <img class="hero-carousel-image" src="assets/gallery/painting-014-1.jpg" alt="Painting of an orange rockfish with red fins against a deep blue ground mottled with green" width="1200" height="845" data-alt-en="Painting of an orange rockfish with red fins against a deep blue ground mottled with green" data-alt-zh="画作：橙色石斑鱼展开红色鳍条，背景为带绿色斑驳的深蓝">
+      <div class="hero-carousel-copy">
         <h1 class="lang-en">Paintings by Kay</h1>
         <h1 class="lang-zh">Kay的画作</h1>
-        <p class="lang-en">Photo coming soon</p>
-        <p class="lang-zh">图片即将上线</p>
+        <p class="lang-en">Rockfish, 2024</p>
+        <p class="lang-zh">石斑鱼，2024</p>
       </div>
     </div>
     <div class="hero-carousel-slide">
-      <div>
-        <h1 class="lang-en">New Work Coming Soon</h1>
-        <h1 class="lang-zh">新作品即将上线</h1>
-        <p class="lang-en">Photo coming soon</p>
-        <p class="lang-zh">图片即将上线</p>
+      <img class="hero-carousel-image" src="assets/gallery/painting-010-1.jpg" alt="Painting of a horned ram's head in profile, its curled fleece and dark face rendered in greys and white" width="1200" height="955" loading="lazy" data-alt-en="Painting of a horned ram's head in profile, its curled fleece and dark face rendered in greys and white" data-alt-zh="画作：带角公羊头部侧面，灰白卷毛与深色面部以灰白色调绘出">
+      <div class="hero-carousel-copy">
+        <h1 class="lang-en">Still Life and Animals</h1>
+        <h1 class="lang-zh">静物与动物</h1>
+        <p class="lang-en">Ram, n.d.</p>
+        <p class="lang-zh">公羊，年份不详</p>
       </div>
     </div>
     <div class="hero-carousel-slide">
-      <div>
+      <img class="hero-carousel-image" src="assets/gallery/painting-006-1.jpg" alt="Painting of two dark purple figs on a grey branch framed by large bright green fig leaves" width="927" height="1200" loading="lazy" data-alt-en="Painting of two dark purple figs on a grey branch framed by large bright green fig leaves" data-alt-zh="画作：两颗深紫色无花果生于灰色枝条，周围衬以宽大的鲜绿无花果叶">
+      <div class="hero-carousel-copy">
         <h1 class="lang-en">Explore the Collection</h1>
         <h1 class="lang-zh">探索作品系列</h1>
-        <p class="lang-en">Photo coming soon</p>
-        <p class="lang-zh">图片即将上线</p>
+        <p class="lang-en">Figs, 2023</p>
+        <p class="lang-zh">无花果，2023</p>
       </div>
     </div>
     <div class="hero-carousel-pager" role="tablist" aria-label="Carousel slides">
@@ -365,68 +360,53 @@
       <h2 class="medium-section-title lang-en">Explore by Medium</h2>
       <h2 class="medium-section-title lang-zh">按创作媒介浏览</h2>
 
-      <!--
-        PLACEHOLDER: replace each .medium-placeholder box with a real
-        <img> once photos exist, e.g.:
-        <a href="gallery-painting.html" class="medium-card">
-          <img src="assets/gallery/painting-cover.jpg" alt="Painting" loading="lazy">
-          <span class="medium-card-label lang-en">Painting</span>
-          <span class="medium-card-label lang-zh">绘画</span>
-        </a>
-      -->
       <div class="medium-grid">
         <a href="gallery-drawing.html" class="medium-card">
-          <div class="medium-placeholder">
-            <span class="lang-en">Image coming soon</span>
-            <span class="lang-zh">图片即将上线</span>
-          </div>
+          <img class="medium-card-image" src="assets/gallery/drawing-001-2.jpg" alt="Close detail of the drawing: two greyhounds pressed close together above a knitted collar, with pink cherry blossom across the foreground" width="750" height="1000" loading="lazy" data-alt-en="Close detail of the drawing: two greyhounds pressed close together above a knitted collar, with pink cherry blossom across the foreground" data-alt-zh="素描局部特写：两只灵缇犬紧紧相依，下方是针织围领，前景横过粉色樱花">
           <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|drawing|titleEn">Drawing</span>
           <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|drawing|titleZh">素描</span>
         </a>
         <a href="gallery-mixed-media.html" class="medium-card">
           <div class="medium-placeholder">
-            <span class="lang-en">Image coming soon</span>
-            <span class="lang-zh">图片即将上线</span>
+            <span class="lang-en">No works yet</span>
+            <span class="lang-zh">暂无作品</span>
           </div>
           <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|mixed-media|titleEn">Mixed Media</span>
           <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|mixed-media|titleZh">综合材料</span>
         </a>
         <a href="gallery-painting.html" class="medium-card">
-          <div class="medium-placeholder">
-            <span class="lang-en">Image coming soon</span>
-            <span class="lang-zh">图片即将上线</span>
-          </div>
+          <img class="medium-card-image" src="assets/gallery/painting-005-1.jpg" alt="Painting of a dense bunch of red and purple grapes beaded with water drops on a pale ground" width="931" height="1200" loading="lazy" data-alt-en="Painting of a dense bunch of red and purple grapes beaded with water drops on a pale ground" data-alt-zh="画作：一串密实的红紫色葡萄，果皮上凝着水珠，背景浅淡">
           <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|painting|titleEn">Painting</span>
           <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|painting|titleZh">绘画</span>
         </a>
         <a href="gallery-photography.html" class="medium-card">
           <div class="medium-placeholder">
-            <span class="lang-en">Image coming soon</span>
-            <span class="lang-zh">图片即将上线</span>
+            <span class="lang-en">No works yet</span>
+            <span class="lang-zh">暂无作品</span>
           </div>
           <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|photography|titleEn">Photography</span>
           <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|photography|titleZh">摄影</span>
         </a>
         <a href="gallery-printmaking.html" class="medium-card">
           <div class="medium-placeholder">
-            <span class="lang-en">Image coming soon</span>
-            <span class="lang-zh">图片即将上线</span>
+            <span class="lang-en">No works yet</span>
+            <span class="lang-zh">暂无作品</span>
           </div>
           <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|printmaking|titleEn">Printmaking</span>
           <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|printmaking|titleZh">版画</span>
         </a>
         <a href="gallery-sculpture.html" class="medium-card">
           <div class="medium-placeholder">
-            <span class="lang-en">Image coming soon</span>
-            <span class="lang-zh">图片即将上线</span>
+            <span class="lang-en">No works yet</span>
+            <span class="lang-zh">暂无作品</span>
           </div>
           <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|sculpture|titleEn">Sculpture</span>
           <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|sculpture|titleZh">雕塑</span>
         </a>
         <a href="gallery-work-on-paper.html" class="medium-card">
           <div class="medium-placeholder">
-            <span class="lang-en">Image coming soon</span>
-            <span class="lang-zh">图片即将上线</span>
+            <span class="lang-en">No works yet</span>
+            <span class="lang-zh">暂无作品</span>
           </div>
           <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|work-on-paper|titleEn">Work on Paper</span>
           <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|work-on-paper|titleZh">纸本作品</span>
@@ -438,10 +418,7 @@
   <!-- Alternating image/text panels -->
   <section class="container" id="about">
     <div class="about-panel-row">
-      <div class="about-panel-image">
-        <span class="lang-en">Photo coming soon</span>
-        <span class="lang-zh">图片即将上线</span>
-      </div>
+      <img class="about-panel-photo" src="assets/gallery/painting-007-1.jpg" alt="Painting of two full pink peony blooms on green stems against a graded green ground" width="942" height="1200" loading="lazy" data-alt-en="Painting of two full pink peony blooms on green stems against a graded green ground" data-alt-zh="画作：两朵盛开的粉色牡丹立于绿色花茎之上，背景为渐变绿色">
       <div class="about-panel-text">
         <h2 class="lang-en">About Kay's Gallery</h2>
         <h2 class="lang-zh">关于Kay的画廊</h2>
@@ -453,10 +430,7 @@
     </div>
 
     <div class="about-panel-row reversed">
-      <div class="about-panel-image">
-        <span class="lang-en">Photo coming soon</span>
-        <span class="lang-zh">图片即将上线</span>
-      </div>
+      <img class="about-panel-photo" src="assets/gallery/painting-008-2.jpg" alt="Close detail of the peacock's tail, filled with blue and green eye feathers touched with gold" width="750" height="1000" loading="lazy" data-alt-en="Close detail of the peacock's tail, filled with blue and green eye feathers touched with gold" data-alt-zh="孔雀尾羽特写，蓝绿色眼状羽片上点缀金色">
       <div class="about-panel-text">
         <h2 class="lang-en">Commissions &amp; Inquiries</h2>
         <h2 class="lang-zh">定制与咨询</h2>

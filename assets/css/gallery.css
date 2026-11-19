@@ -185,8 +185,8 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  min-height: 70vh;
   background: var(--color-bg-lighter);
-  border: 2px dashed var(--color-text-lighter);
   color: var(--color-text-light);
   opacity: 0;
   visibility: hidden;
@@ -197,6 +197,28 @@
   opacity: 1;
   visibility: visible;
   position: relative;
+}
+
+/* The photograph fills the slide and is cropped to it, so only a front or
+   detail view belongs here -- build.mjs refuses an in-situ one. The copy sits
+   on a translucent panel above it so the headline stays readable whatever the
+   photograph's tones are. */
+.hero-carousel-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.hero-carousel-copy {
+  position: relative;
+  z-index: 1;
+  max-width: min(90%, 36rem);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: var(--radius-md);
 }
 
 .hero-carousel-slide h1 {
@@ -297,6 +319,22 @@
 
 .medium-card:hover .medium-placeholder {
   border-color: var(--color-text);
+}
+
+/* The cover photograph of a medium that has published works. Square and
+   cropped to fit, so build.mjs refuses an in-situ view in this slot. */
+.medium-card-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-lighter);
+  transition: var(--transition-base);
+}
+
+.medium-card:hover .medium-card-image {
+  opacity: 0.85;
 }
 
 .medium-card-label {
@@ -511,6 +549,108 @@
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* ========================================
+   CATEGORY PAGE: artwork carousel
+   A work can have several photographs: the face-on view, the work where it
+   hangs, and close details. The strip is a scroll-snap row, so swiping works
+   on touch and trackpad with no script; gallery-carousel.js adds the arrows,
+   the dots and arrow-key support on top of that.
+   ======================================== */
+.artwork-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  background: var(--color-bg-lighter);
+  /* Firefox and the WebKit pseudo-element below: the strip is driven by the
+     arrows and the dots, so a scrollbar under every card is noise. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.artwork-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.artwork-slide {
+  flex: 0 0 100%;
+  height: 100%;
+  scroll-snap-align: center;
+}
+
+/* The carousel box takes its aspect ratio from the first photograph, so the
+   card reserves one stable height. A later slide of a different shape is
+   letterboxed inside that box rather than cropped, because an in-situ shot is
+   framed deliberately and must not lose its room. */
+.artwork-carousel .artwork-image {
+  height: 100%;
+  object-fit: contain;
+}
+
+.artwork-carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--color-text);
+  font-family: var(--font-family-ui);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.artwork-image-wrap:hover .artwork-carousel-nav,
+.artwork-carousel-nav:focus-visible {
+  opacity: 1;
+}
+
+/* A touch device has no hover to reveal a control with, so the arrows stay
+   visible there rather than being undiscoverable. */
+@media (hover: none) {
+  .artwork-carousel-nav {
+    opacity: 1;
+  }
+}
+
+.artwork-carousel-prev {
+  left: var(--spacing-xs);
+}
+
+.artwork-carousel-next {
+  right: var(--spacing-xs);
+}
+
+.artwork-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+  padding-top: var(--spacing-xs);
+}
+
+.artwork-carousel-dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-text-lighter);
+  cursor: pointer;
+}
+
+.artwork-carousel-dot[aria-current="true"] {
+  background: var(--color-text);
 }
 
 .artwork-empty-state,

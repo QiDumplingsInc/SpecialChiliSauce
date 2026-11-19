@@ -32,7 +32,7 @@ import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { EDITABLE_CONTENT } from './scripts/content-patch.mjs';
+import { EDITABLE_CONTENT, EDITABLE_RULE_TYPES, formatContentFile } from './scripts/content-patch.mjs';
 
 const repoRoot = dirname(fileURLToPath(import.meta.url));
 const checkOnly = process.argv.includes('--check');
@@ -76,14 +76,38 @@ for (const facet of galleryConfig.facets) {
 if (!galleryConfig.artworkEmptyState?.en || !galleryConfig.artworkEmptyState?.zh) {
   throw new Error('content/gallery.json: artworkEmptyState needs both en and zh copy');
 }
+if (!galleryConfig.mediumEmptyCover?.en || !galleryConfig.mediumEmptyCover?.zh) {
+  throw new Error('content/gallery.json: mediumEmptyCover needs both en and zh copy');
+}
+if (!Array.isArray(galleryConfig.heroSlides) || galleryConfig.heroSlides.length === 0) {
+  throw new Error('content/gallery.json: heroSlides must be a non-empty array');
+}
+for (const [index, slide] of galleryConfig.heroSlides.entries()) {
+  if (!slide.artworkId || !Number.isInteger(slide.imageIndex) || !slide.headlineEn || !slide.headlineZh) {
+    throw new Error(
+      `content/gallery.json: heroSlides entry ${index + 1} needs artworkId, imageIndex, headlineEn and headlineZh`
+    );
+  }
+}
+// The hub template has exactly two alternating about panels, so the config has
+// to supply exactly two photographs; a third would silently never render.
+if (!Array.isArray(galleryConfig.aboutPanels) || galleryConfig.aboutPanels.length !== 2) {
+  throw new Error('content/gallery.json: aboutPanels must be an array of exactly two entries');
+}
+for (const [index, panel] of galleryConfig.aboutPanels.entries()) {
+  if (!panel.artworkId || !Number.isInteger(panel.imageIndex)) {
+    throw new Error(`content/gallery.json: aboutPanels entry ${index + 1} needs artworkId and imageIndex`);
+  }
+}
 if (!Array.isArray(artworkCatalog.artworks)) {
   throw new Error('content/artworks.json: artworks must be an array');
 }
 
+const IMAGE_VIEWS = new Set(['front', 'in-situ', 'detail']);
 const mediumSlugs = new Set(galleryConfig.mediumPages.map((page) => page.slug));
 const seenArtworkIds = new Set();
 for (const artwork of artworkCatalog.artworks) {
-  for (const field of ['id', 'medium', 'titleEn', 'titleZh', 'image', 'imageWidth', 'imageHeight', 'altEn', 'altZh']) {
+  for (const field of ['id', 'medium', 'titleEn', 'titleZh']) {
     if (artwork[field] === undefined || artwork[field] === null || artwork[field] === '') {
       throw new Error(`content/artworks.json: artwork ${artwork.id ?? '(no id)'} is missing required field "${field}"`);
     }
@@ -97,11 +121,35 @@ for (const artwork of artworkCatalog.artworks) {
       `content/artworks.json: artwork "${artwork.id}" has medium "${artwork.medium}", which is not a slug in gallery.json mediumPages`
     );
   }
-  if (!Number.isInteger(artwork.imageWidth) || artwork.imageWidth <= 0) {
-    throw new Error(`content/artworks.json: artwork "${artwork.id}" imageWidth must be a positive integer`);
+  if (!Array.isArray(artwork.images) || artwork.images.length === 0) {
+    throw new Error(`content/artworks.json: artwork "${artwork.id}" needs a non-empty images array`);
   }
-  if (!Number.isInteger(artwork.imageHeight) || artwork.imageHeight <= 0) {
-    throw new Error(`content/artworks.json: artwork "${artwork.id}" imageHeight must be a positive integer`);
+  for (const [index, image] of artwork.images.entries()) {
+    for (const field of ['src', 'width', 'height', 'view', 'altEn', 'altZh']) {
+      if (image[field] === undefined || image[field] === null || image[field] === '') {
+        throw new Error(`content/artworks.json: artwork "${artwork.id}" image ${index + 1} is missing "${field}"`);
+      }
+    }
+    if (!IMAGE_VIEWS.has(image.view)) {
+      throw new Error(
+        `content/artworks.json: artwork "${artwork.id}" image ${index + 1} has view "${image.view}"; use front, in-situ or detail`
+      );
+    }
+    if (!Number.isInteger(image.width) || image.width <= 0) {
+      throw new Error(`content/artworks.json: artwork "${artwork.id}" image ${index + 1} width must be a positive integer`);
+    }
+    if (!Number.isInteger(image.height) || image.height <= 0) {
+      throw new Error(`content/artworks.json: artwork "${artwork.id}" image ${index + 1} height must be a positive integer`);
+    }
+  }
+  // The owner's rule for photograph order: the face-on shot leads when one
+  // exists, because that is what the grid shows. A work photographed only in
+  // the room it hangs in is deliberate -- there is no face-on shot to copy
+  // from -- so it leads with the in-situ view and the details follow.
+  if (artwork.images.some((image) => image.view === 'front') && artwork.images[0].view !== 'front') {
+    throw new Error(
+      `content/artworks.json: artwork "${artwork.id}" has a front photograph, so a front image must come first`
+    );
   }
   // year is optional on purpose. Several works are unsigned and undated, and
   // the catalogue records that rather than inventing a plausible year; those
@@ -117,6 +165,33 @@ const yearLabel = (artwork) => ({
   en: artwork.year === undefined ? UNDATED_EN : String(artwork.year),
   zh: artwork.year === undefined ? UNDATED_ZH : String(artwork.year),
 });
+
+const artworkById = new Map(artworkCatalog.artworks.map((artwork) => [artwork.id, artwork]));
+
+// Resolves one { artworkId, imageIndex } reference from gallery.json into the
+// image object it names, for the hub page's hero slides, medium-card covers and
+// about panels. Returns that image object. Throws with the referring config
+// path when the work or the index does not exist, or when the referenced
+// photograph is an in-situ view: every hub slot has a fixed aspect ratio and
+// crops the photograph to fill it, and an in-situ shot was framed deliberately
+// to show the work in its room, so cropping it away defeats the reason it was
+// taken. Front and detail views are already closed in on the work.
+const resolveHubImage = (reference, configPath) => {
+  const artwork = artworkById.get(reference.artworkId);
+  if (artwork === undefined) {
+    throw new Error(`${configPath}: no artwork with id "${reference.artworkId}" in content/artworks.json`);
+  }
+  const image = artwork.images[reference.imageIndex];
+  if (image === undefined) {
+    throw new Error(`${configPath}: artwork "${reference.artworkId}" has no image at index ${reference.imageIndex}`);
+  }
+  if (image.view === 'in-situ') {
+    throw new Error(
+      `${configPath}: artwork "${reference.artworkId}" image ${reference.imageIndex + 1} is an in-situ view; the hub crops to fit, so use a front or detail photograph`
+    );
+  }
+  return image;
+};
 
 // The chili sauce landing page (index.html) is generated from
 // templates/page-home.html and the copy in content/home.json, so admin edit
@@ -163,6 +238,12 @@ if (renderHome) {
 // not there would hand the editor a pencil whose submit can only ever be
 // rejected. Checking the rendered output against this set makes that a build
 // failure rather than something a reviewer has to notice.
+//
+// The same loop enforces the other direction: a field in the whitelist whose
+// rule type the overlay cannot edit is reach the gate grants that no editor
+// can use, so it widens the write path for nothing. Failing the build here is
+// what keeps the whitelist and the overlay's reach one set rather than two
+// lists that drift. See EDITABLE_RULE_TYPES in scripts/content-patch.mjs.
 const editableAddresses = new Set();
 const contentByFile = {
   'content/gallery.json': galleryConfig,
@@ -172,11 +253,38 @@ const contentByFile = {
 for (const [file, collections] of Object.entries(EDITABLE_CONTENT)) {
   const data = contentByFile[file];
   for (const [collection, spec] of Object.entries(collections)) {
+    for (const [field, rule] of Object.entries(spec.fields)) {
+      if (!EDITABLE_RULE_TYPES.includes(rule.type)) {
+        throw new Error(
+          `${file}/${collection}/${field} is whitelisted with rule type "${rule.type}", which the browser ` +
+            `overlay cannot edit (it handles ${EDITABLE_RULE_TYPES.join(', ')}). Either give the overlay a ` +
+            'mechanism for it or take the field out of EDITABLE_CONTENT in scripts/content-patch.mjs.'
+        );
+      }
+    }
     for (const record of data[collection] ?? []) {
       for (const field of Object.keys(spec.fields)) {
         editableAddresses.add(`${file}|${collection}|${record[spec.keyField]}|${field}`);
       }
     }
+  }
+}
+
+// Membership in that set is necessary but not sufficient: the gate also refuses
+// a whole patch when the content file's formatting does not round-trip, because
+// rewriting such a file would reformat it end to end and bury the real edit. A
+// correctly addressed pencil on a hand-compacted file is therefore still a
+// pencil that can only ever be rejected -- and that failure reaches the editor
+// at submit time, after they have done the work. Checking the formatting of
+// every file the pages address turns it into a build failure instead, at the
+// moment the file drifts.
+for (const file of Object.keys(EDITABLE_CONTENT)) {
+  const raw = readFileSync(path.join(repoRoot, file), 'utf8');
+  if (formatContentFile(JSON.parse(raw)) !== raw) {
+    throw new Error(
+      `${file}: formatting does not round-trip, so edit mode cannot patch it; ` +
+        'run pretty-format-json --indent=4 --no-sort-keys on it, or stop rendering data-edit-field attributes for it'
+    );
   }
 }
 
@@ -196,23 +304,92 @@ const languageSwitcherNote =
 
 let mediumGrid = '      <div class="medium-grid">\n';
 for (const page of galleryConfig.mediumPages) {
+  const works = artworkCatalog.artworks.filter((artwork) => artwork.medium === page.slug);
+  const cover = page.cover ?? (works.length > 0 ? { artworkId: works[0].id, imageIndex: 0 } : null);
   mediumGrid += `        <a href="gallery-${page.slug}.html" class="medium-card">\n`;
-  mediumGrid += '          <div class="medium-placeholder">\n';
-  mediumGrid += '            <span class="lang-en">Image coming soon</span>\n';
-  mediumGrid += '            <span class="lang-zh">图片即将上线</span>\n';
-  mediumGrid += '          </div>\n';
+  if (cover === null) {
+    // A medium with no works does not promise a photograph. "Image coming
+    // soon" on a card whose page says no works are published yet is a promise
+    // nobody made; this says the same thing the page says.
+    mediumGrid += '          <div class="medium-placeholder">\n';
+    mediumGrid += `            <span class="lang-en">${escapeHtml(galleryConfig.mediumEmptyCover.en)}</span>\n`;
+    mediumGrid += `            <span class="lang-zh">${escapeHtml(galleryConfig.mediumEmptyCover.zh)}</span>\n`;
+    mediumGrid += '          </div>\n';
+  } else {
+    const image = resolveHubImage(cover, `gallery.json mediumPages "${page.slug}" cover`);
+    mediumGrid += `          <img class="medium-card-image" src="${escapeHtml(image.src)}"`;
+    mediumGrid += ` alt="${escapeHtml(image.altEn)}"`;
+    mediumGrid += ` width="${image.width}" height="${image.height}" loading="lazy"`;
+    mediumGrid += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
+  }
   mediumGrid += `          <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|${escapeHtml(page.slug)}|titleEn">${escapeHtml(page.titleEn)}</span>\n`;
   mediumGrid += `          <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|${escapeHtml(page.slug)}|titleZh">${escapeHtml(page.titleZh)}</span>\n`;
   mediumGrid += '        </a>\n';
 }
 mediumGrid += '      </div>\n';
 
+let heroSlides = '';
+let heroPager = '';
+for (const [slideIndex, slide] of galleryConfig.heroSlides.entries()) {
+  const artwork = artworkById.get(slide.artworkId);
+  const image = resolveHubImage(slide, `gallery.json heroSlides entry ${slideIndex + 1}`);
+  const year = yearLabel(artwork);
+  const activeClass = slideIndex === 0 ? ' active' : '';
+  heroSlides += `    <div class="hero-carousel-slide${activeClass}">\n`;
+  heroSlides += `      <img class="hero-carousel-image" src="${escapeHtml(image.src)}"`;
+  heroSlides += ` alt="${escapeHtml(image.altEn)}"`;
+  heroSlides += ` width="${image.width}" height="${image.height}"`;
+  heroSlides += slideIndex === 0 ? '' : ' loading="lazy"';
+  heroSlides += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
+  heroSlides += '      <div class="hero-carousel-copy">\n';
+  heroSlides += `        <h1 class="lang-en">${escapeHtml(slide.headlineEn)}</h1>\n`;
+  heroSlides += `        <h1 class="lang-zh">${escapeHtml(slide.headlineZh)}</h1>\n`;
+  heroSlides += `        <p class="lang-en">${escapeHtml(artwork.titleEn)}, ${escapeHtml(year.en)}</p>\n`;
+  heroSlides += `        <p class="lang-zh">${escapeHtml(artwork.titleZh)}，${escapeHtml(year.zh)}</p>\n`;
+  heroSlides += '      </div>\n';
+  heroSlides += '    </div>\n';
+  heroPager += `      <button${slideIndex === 0 ? ' class="active"' : ''} data-slide="${slideIndex}"`;
+  heroPager += ` aria-label="Go to slide ${slideIndex + 1}"></button>\n`;
+}
+
+// The two alternating about panels. Each is one photograph beside its text; the
+// panel is decorative framing for the copy, so it takes a cropped-to-fit
+// photograph rather than a work's primary view.
+const aboutPanelImages = galleryConfig.aboutPanels.map((panel, panelIndex) => {
+  const image = resolveHubImage(panel, `gallery.json aboutPanels entry ${panelIndex + 1}`);
+  let markup = `      <img class="about-panel-photo" src="${escapeHtml(image.src)}"`;
+  markup += ` alt="${escapeHtml(image.altEn)}"`;
+  markup += ` width="${image.width}" height="${image.height}" loading="lazy"`;
+  markup += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
+  return markup;
+});
+
 const pages = [];
+// editableRecords names every whitelisted record a page renders in place,
+// derived from the same content arrays the markup above is built from, not from
+// the data-edit-field attributes themselves. The reverse guard at the end of the
+// render loop crosses it with the whitelist to prove each such record still
+// carries its pencils here. Deriving it from the data rather than from the
+// attribute strings is the point: a change that drops the attribute leaves the
+// record in this list, so the guard fails instead of the pencil going missing
+// unseen. The hub renders one medium card per mediumPages record.
 pages.push({
   fileName: 'gallery.html',
   templateName: 'page-gallery',
   activeTab: 'gallery.html',
-  tokens: { LANGUAGE_SWITCHER_NOTE: languageSwitcherNote, MEDIUM_GRID: mediumGrid },
+  tokens: {
+    LANGUAGE_SWITCHER_NOTE: languageSwitcherNote,
+    HERO_SLIDES: heroSlides,
+    HERO_PAGER: heroPager,
+    MEDIUM_GRID: mediumGrid,
+    ABOUT_PANEL_1: aboutPanelImages[0],
+    ABOUT_PANEL_2: aboutPanelImages[1],
+  },
+  editableRecords: galleryConfig.mediumPages.map((page) => ({
+    file: 'content/gallery.json',
+    collection: 'mediumPages',
+    key: page.slug,
+  })),
 });
 for (const page of galleryConfig.mediumPages) {
   const works = artworkCatalog.artworks.filter((artwork) => artwork.medium === page.slug);
@@ -296,10 +473,56 @@ for (const page of galleryConfig.mediumPages) {
       artworkGrid += ` data-title-zh="${escapeHtml(artwork.titleZh)}"`;
       artworkGrid += '>\n';
       artworkGrid += '        <div class="artwork-image-wrap">\n';
-      artworkGrid += `          <img class="artwork-image" src="${escapeHtml(artwork.image)}"`;
-      artworkGrid += ` alt="${escapeHtml(artwork.altEn)}"`;
-      artworkGrid += ` width="${artwork.imageWidth}" height="${artwork.imageHeight}" loading="lazy"`;
-      artworkGrid += ` data-alt-en="${escapeHtml(artwork.altEn)}" data-alt-zh="${escapeHtml(artwork.altZh)}">\n`;
+      // A work with one photograph renders a bare image: carousel controls on a
+      // single slide would be an affordance that does nothing. A work with
+      // several renders a scroll-snap strip, which already swipes on touch and
+      // scrolls with no script at all; the buttons and dots start hidden and the
+      // carousel script unhides them, so they never sit there inert.
+      const slides = artwork.images;
+      if (slides.length > 1) {
+        // The aspect ratio is per work, so it has to be an inline style rather
+        // than a stylesheet rule. It comes from the first photograph, which is
+        // the one the grid shows.
+        artworkGrid += `          <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="${slides.length}"`;
+        artworkGrid += ` style="aspect-ratio: ${slides[0].width} / ${slides[0].height}" tabindex="0">\n`;
+      }
+      const slideIndent = slides.length > 1 ? '            ' : '          ';
+      for (const [slideIndex, image] of slides.entries()) {
+        if (slides.length > 1) {
+          artworkGrid += `${slideIndent}<div class="artwork-slide" data-slide="${slideIndex}">\n`;
+        }
+        const imageIndent = slides.length > 1 ? `${slideIndent}  ` : slideIndent;
+        artworkGrid += `${imageIndent}<img class="artwork-image" src="${escapeHtml(image.src)}"`;
+        artworkGrid += ` alt="${escapeHtml(image.altEn)}"`;
+        artworkGrid += ` width="${image.width}" height="${image.height}" loading="lazy"`;
+        artworkGrid += ` data-view="${escapeHtml(image.view)}"`;
+        artworkGrid += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
+        if (slides.length > 1) {
+          artworkGrid += `${slideIndent}</div>\n`;
+        }
+      }
+      if (slides.length > 1) {
+        artworkGrid += '          </div>\n';
+        for (const direction of ['prev', 'next']) {
+          const glyph = direction === 'prev' ? '&#8249;' : '&#8250;';
+          const labelEn = direction === 'prev' ? 'Previous view' : 'Next view';
+          const labelZh = direction === 'prev' ? '上一张' : '下一张';
+          artworkGrid += `          <button type="button" class="artwork-carousel-nav artwork-carousel-${direction}" hidden>\n`;
+          artworkGrid += `            <span aria-hidden="true">${glyph}</span>\n`;
+          artworkGrid += `            <span class="visually-hidden lang-en">${labelEn}</span>\n`;
+          artworkGrid += `            <span class="visually-hidden lang-zh">${labelZh}</span>\n`;
+          artworkGrid += '          </button>\n';
+        }
+        artworkGrid += '          <div class="artwork-carousel-dots" hidden>\n';
+        for (const slideIndex of slides.keys()) {
+          artworkGrid += `            <button type="button" class="artwork-carousel-dot" data-slide="${slideIndex}"`;
+          artworkGrid += slideIndex === 0 ? ' aria-current="true">\n' : '>\n';
+          artworkGrid += `              <span class="visually-hidden lang-en">View ${slideIndex + 1}</span>\n`;
+          artworkGrid += `              <span class="visually-hidden lang-zh">第 ${slideIndex + 1} 张</span>\n`;
+          artworkGrid += '            </button>\n';
+        }
+        artworkGrid += '          </div>\n';
+      }
       artworkGrid += '        </div>\n';
       artworkGrid += '        <div class="artwork-artist">KAY</div>\n';
       // The title is wrapped in its own span rather than composed with the
@@ -337,6 +560,12 @@ for (const page of galleryConfig.mediumPages) {
       FILTER_BAR: filterBar,
       ARTWORK_GRID: artworkGrid,
     },
+    // The heading renders this medium's own title, and the grid renders every
+    // artwork of this medium, so each of those records must keep its pencils.
+    editableRecords: [
+      { file: 'content/gallery.json', collection: 'mediumPages', key: page.slug },
+      ...works.map((artwork) => ({ file: 'content/artworks.json', collection: 'artworks', key: artwork.id })),
+    ],
   });
 }
 for (const page of galleryConfig.sectionPages) {
@@ -356,6 +585,8 @@ for (const page of galleryConfig.sectionPages) {
       BODY_EN_EDIT_ATTR: ` data-edit-field="content/gallery.json|sectionPages|${escapeHtml(page.slug)}|bodyEn"`,
       BODY_ZH_EDIT_ATTR: ` data-edit-field="content/gallery.json|sectionPages|${escapeHtml(page.slug)}|bodyZh"`,
     },
+    // A section page renders its own title and body copy in place.
+    editableRecords: [{ file: 'content/gallery.json', collection: 'sectionPages', key: page.slug }],
   });
 }
 
@@ -368,6 +599,10 @@ if (renderHome) {
     templateName: 'page-home',
     activeTab: null,
     tokens: homeTokens,
+    // Empty because content/home.json is deliberately outside EDITABLE_CONTENT
+    // until the in-place pencil for this page ships: the page renders no
+    // whitelisted record, so the reverse pencil guard has nothing to require.
+    editableRecords: [],
   });
 }
 
@@ -469,6 +704,7 @@ for (const page of pages) {
   // becomes enforcement. An address that is malformed, names a field the gate
   // refuses, or points at a record that does not exist fails the build here
   // rather than becoming a pencil in the browser that cannot submit.
+  const emitted = new Set();
   for (const match of rendered.matchAll(/data-edit-field="([^"]*)"/g)) {
     const address = match[1];
     const parts = address.split('|');
@@ -482,6 +718,37 @@ for (const page of pages) {
         `${page.fileName}: data-edit-field "${address}" is not an editable address; ` +
           'it names a field missing from EDITABLE_CONTENT in scripts/content-patch.mjs, or a record that does not exist'
       );
+    }
+    emitted.add(address);
+  }
+
+  // The forward loop above proves every pencil is legitimate; this loop proves
+  // the reverse, per address rather than per collection.field. For each record
+  // this page renders, every whitelisted field the record actually carries must
+  // be rendered as a pencil here. Dropping the attribute from one page while
+  // another page still emits the same collection.field would pass a coarser
+  // check, but it is exactly the drift that hands an editor a page whose copy
+  // looks editable in one place and is silently frozen in another. An optional
+  // field a record leaves empty is a real absence, not drift, so it is expected
+  // only when the record carries a value -- the dimensions fields no catalogue
+  // record fills stay legitimately absent without a hand-kept exemption list.
+  for (const { file, collection, key } of page.editableRecords) {
+    const data = file === 'content/gallery.json' ? galleryConfig : artworkCatalog;
+    const spec = EDITABLE_CONTENT[file][collection];
+    const record = data[collection].find((item) => item[spec.keyField] === key);
+    for (const [field, rule] of Object.entries(spec.fields)) {
+      const value = record[field];
+      const hasValue = value !== undefined && value !== null && value !== '';
+      if (rule.optional && !hasValue) continue;
+      const address = `${file}|${collection}|${key}|${field}`;
+      if (!emitted.has(address)) {
+        throw new Error(
+          `${page.fileName}: ${file} ${collection} record "${key}" field "${field}" is whitelisted and ` +
+            'renders on this page, but no data-edit-field pencil carries it; a change dropped the attribute here ' +
+            'while another page may still cover the field. Restore the pencil or take the field out of ' +
+            'EDITABLE_CONTENT in scripts/content-patch.mjs.'
+        );
+      }
     }
   }
 

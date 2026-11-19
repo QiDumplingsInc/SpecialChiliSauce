@@ -35,6 +35,20 @@ const MAX_RAW_VALUE_LENGTH = 4096;
  * ids, slugs, image paths, pixel dimensions and facet values are deliberately
  * missing. `optional: true` means the field may be absent from a record and may
  * be cleared again; a required field can be rewritten but never emptied.
+ *
+ * Scope rule: a field belongs here only if the gallery build renders it as the
+ * visible text of one element, so the browser overlay can reach it with the
+ * single inline mechanism and the editor sees the result in context. That rule
+ * is what keeps this table and the overlay's reach the same set, and build.mjs
+ * fails the build if a field here is one the overlay cannot edit.
+ *
+ * Alt text, the artwork year and a page's meta description are deliberately
+ * absent even though they are wording. They are authored when an artwork or a
+ * page record is created, which is already a repository operation, and none of
+ * them renders as visible text. Reaching them would need a second editing
+ * surface, which the project rejected. README.md, under "Admin edit mode: what
+ * it deliberately does not cover", records that decision and what it would
+ * take to reverse it.
  */
 export const EDITABLE_CONTENT = {
   'content/artworks.json': {
@@ -43,11 +57,8 @@ export const EDITABLE_CONTENT = {
       fields: {
         titleEn: { type: 'text', maxLength: 200 },
         titleZh: { type: 'text', maxLength: 200 },
-        altEn: { type: 'text', maxLength: 500 },
-        altZh: { type: 'text', maxLength: 500 },
         dimensionsEn: { type: 'text', maxLength: 120, optional: true },
         dimensionsZh: { type: 'text', maxLength: 120, optional: true },
-        year: { type: 'year', optional: true },
       },
     },
   },
@@ -57,7 +68,6 @@ export const EDITABLE_CONTENT = {
       fields: {
         titleEn: { type: 'text', maxLength: 120 },
         titleZh: { type: 'text', maxLength: 120 },
-        metaDescription: { type: 'text', maxLength: 300 },
       },
     },
     sectionPages: {
@@ -65,13 +75,37 @@ export const EDITABLE_CONTENT = {
       fields: {
         titleEn: { type: 'text', maxLength: 120 },
         titleZh: { type: 'text', maxLength: 120 },
-        metaDescription: { type: 'text', maxLength: 300 },
         bodyEn: { type: 'text', maxLength: 500 },
         bodyZh: { type: 'text', maxLength: 500 },
       },
     },
   },
 };
+
+/**
+ * Render a parsed content file back to the exact bytes this gate writes.
+ *
+ * Input: `data`, the parsed contents of one content file. Output: the file text,
+ * 4-space indented with a trailing newline, matching the repo's
+ * `pretty-format-json --indent=4 --no-sort-keys` pre-commit convention.
+ *
+ * Process: a single `JSON.stringify`. It is exported because three callers have
+ * to agree on it byte for byte -- this gate's round-trip check, this gate's
+ * write, and the build's check that a page never offers a pencil on a file the
+ * gate would refuse. Were any caller to spell the format itself, the three could
+ * drift and the build would start promising an edit the gate rejects.
+ */
+export const formatContentFile = (data) => `${JSON.stringify(data, null, 4)}\n`;
+
+/**
+ * The rule types the browser overlay in assets/js/edit-mode.js can edit.
+ *
+ * Every field in EDITABLE_CONTENT must use one of these, because a whitelisted
+ * field the overlay cannot reach is reach the gate grants for no product use.
+ * build.mjs asserts it so widening the whitelist past the overlay fails the
+ * build instead of quietly widening the gate.
+ */
+export const EDITABLE_RULE_TYPES = ['text'];
 
 /**
  * Validate a submitted content patch and, unless `dryRun` is set, apply it to
@@ -233,18 +267,9 @@ export function applyContentPatch(patch, options = {}) {
       accepted.push({ file, collection, key, field, value: trimmed, spec, rule });
       continue;
     }
-    if (rule.type === 'year') {
-      if (value === null) {
-        accepted.push({ file, collection, key, field, value: null, spec, rule });
-        continue;
-      }
-      if (!Number.isInteger(value) || value < 1000 || value > 9999) {
-        errors.push(`${at}: value for ${field} must be a four-digit integer or null, got ${JSON.stringify(value)}`);
-        continue;
-      }
-      accepted.push({ file, collection, key, field, value, spec, rule });
-      continue;
-    }
+    // Fail closed on a rule type this module does not implement, so adding one
+    // to EDITABLE_CONTENT without a validator rejects the edit instead of
+    // letting an unchecked value through.
     errors.push(`${at}: field ${field} has unsupported rule type ${JSON.stringify(rule.type)}`);
   }
 
@@ -268,7 +293,7 @@ export function applyContentPatch(patch, options = {}) {
         loaded.set(entry.file, null);
         continue;
       }
-      if (`${JSON.stringify(data, null, 4)}\n` !== raw) {
+      if (formatContentFile(data) !== raw) {
         errors.push(
           `${entry.file}: formatting does not round-trip, so applying an edit would reformat the whole file; ` +
             'normalise the file to 4-space JSON formatting before enabling edit mode on it'
@@ -326,7 +351,7 @@ export function applyContentPatch(patch, options = {}) {
   const files = [...touched].sort();
   if (!dryRun) {
     for (const file of files) {
-      writeFileSync(path.join(contentRoot, file), `${JSON.stringify(loaded.get(file), null, 4)}\n`);
+      writeFileSync(path.join(contentRoot, file), formatContentFile(loaded.get(file)));
     }
   }
   return { ok: true, errors: [], changed: true, files, summary };

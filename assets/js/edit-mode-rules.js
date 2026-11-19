@@ -17,14 +17,6 @@ window.GALLERY_EDIT_RULES = {
           "type": "text",
           "maxLength": 200
         },
-        "altEn": {
-          "type": "text",
-          "maxLength": 500
-        },
-        "altZh": {
-          "type": "text",
-          "maxLength": 500
-        },
         "dimensionsEn": {
           "type": "text",
           "maxLength": 120,
@@ -33,10 +25,6 @@ window.GALLERY_EDIT_RULES = {
         "dimensionsZh": {
           "type": "text",
           "maxLength": 120,
-          "optional": true
-        },
-        "year": {
-          "type": "year",
           "optional": true
         }
       }
@@ -53,10 +41,6 @@ window.GALLERY_EDIT_RULES = {
         "titleZh": {
           "type": "text",
           "maxLength": 120
-        },
-        "metaDescription": {
-          "type": "text",
-          "maxLength": 300
         }
       }
     },
@@ -70,10 +54,6 @@ window.GALLERY_EDIT_RULES = {
         "titleZh": {
           "type": "text",
           "maxLength": 120
-        },
-        "metaDescription": {
-          "type": "text",
-          "maxLength": 300
         },
         "bodyEn": {
           "type": "text",

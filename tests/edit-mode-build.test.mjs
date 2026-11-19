@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { EDITABLE_CONTENT } from '../scripts/content-patch.mjs';
+import { EDITABLE_CONTENT, formatContentFile } from '../scripts/content-patch.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.join(__dirname, '..');
@@ -97,7 +97,13 @@ test('an artwork title is addressable on its own, not fused to the year', () => 
   );
 });
 
-test('the visible text fields are all reachable, and the unexposed ones are not', () => {
+test('every whitelisted field is one the build can render in place', () => {
+  // ARQ-14 made the whitelist and the overlay's reach one set: a field the gate
+  // allows but the build renders nowhere is reach granted for no product use.
+  // The emitted set can still be a subset of the whitelist, but only because a
+  // record is missing an optional value -- dimensionsEn and dimensionsZh are
+  // whitelisted and rendered, yet no work in the catalogue carries them, which
+  // the fixture test below covers. Anything else missing here is drift.
   const emitted = new Set();
   for (const name of generatedPages) {
     for (const address of addressesIn(readFileSync(path.join(repoRoot, name), 'utf8'))) {
@@ -105,20 +111,97 @@ test('the visible text fields are all reachable, and the unexposed ones are not'
       emitted.add(`${parts[1]}.${parts[3]}`);
     }
   }
+
+  const whitelisted = new Set();
+  for (const collections of Object.values(EDITABLE_CONTENT)) {
+    for (const [collection, spec] of Object.entries(collections)) {
+      for (const field of Object.keys(spec.fields)) whitelisted.add(`${collection}.${field}`);
+    }
+  }
+
+  const absentBecauseNoRecordHasAValue = new Set(['artworks.dimensionsEn', 'artworks.dimensionsZh']);
   assert.deepEqual(
     [...emitted].sort(),
-    [
-      'artworks.titleEn',
-      'artworks.titleZh',
-      'mediumPages.titleEn',
-      'mediumPages.titleZh',
-      'sectionPages.bodyEn',
-      'sectionPages.bodyZh',
-      'sectionPages.titleEn',
-      'sectionPages.titleZh',
-    ],
-    'altEn, altZh, metaDescription and year are deliberately not inline-editable yet; see the ARQ-10 plan'
+    [...whitelisted].filter((field) => !absentBecauseNoRecordHasAValue.has(field)).sort(),
+    'the whitelist and the pencils on the page must name the same fields'
   );
+  for (const field of [...emitted].sort()) {
+    assert.ok(whitelisted.has(field), `${field} carries a pencil but the gate would refuse it`);
+  }
+});
+
+test('the de-scoped fields are absent from the whitelist and from the pages', () => {
+  // ARQ-14 decided alt text, the artwork year and a page's meta description are
+  // authored when the record is created, which is already a repository
+  // operation, so edit mode does not reach them and does not grow a second
+  // surface to do it. See README.md, "Admin edit mode: what it deliberately
+  // does not cover", for the rejected alternative.
+  const deScoped = ['altEn', 'altZh', 'year', 'metaDescription'];
+  for (const [file, collections] of Object.entries(EDITABLE_CONTENT)) {
+    for (const [collection, spec] of Object.entries(collections)) {
+      for (const field of deScoped) {
+        assert.equal(
+          Object.prototype.hasOwnProperty.call(spec.fields, field),
+          false,
+          `${file}/${collection}: "${field}" is de-scoped and must not be in EDITABLE_CONTENT`
+        );
+      }
+    }
+  }
+  for (const name of generatedPages) {
+    for (const address of addressesIn(readFileSync(path.join(repoRoot, name), 'utf8'))) {
+      assert.equal(
+        deScoped.includes(address.split('|')[3]),
+        false,
+        `${name}: "${address}" addresses a de-scoped field`
+      );
+    }
+  }
+});
+
+test('the de-scoped values still render, they are just not editable', () => {
+  // De-scoping is about the write path only. Alt text, the year and the meta
+  // description are still built into the page from the content files, so this
+  // pins that the narrowing did not quietly drop them from the output.
+  const html = readFileSync(path.join(repoRoot, 'gallery-painting.html'), 'utf8');
+  const first = artworkCatalog.artworks.find((artwork) => artwork.medium === 'painting');
+  const page = galleryConfig.mediumPages.find((entry) => entry.slug === 'painting');
+
+  // Alt text lives on each entry of a work's images array, one pair per
+  // photograph in the card carousel. Every one is pinned, because a per-image
+  // field inside an array cannot be addressed by the gate's
+  // file|collection|key|field scheme at all -- a second reason the field is out
+  // of scope on top of the two in README.md.
+  assert.ok(first.images.length > 0, 'fixture expectation: a painting should carry at least one image');
+  for (const image of first.images) {
+    assert.ok(html.includes(`alt="${image.altEn}"`), `the English alt text for ${image.src} should still reach the img`);
+    assert.ok(
+      html.includes(`data-alt-zh="${image.altZh}"`),
+      `the Chinese alt text for ${image.src} should still reach the img`
+    );
+  }
+  assert.ok(
+    html.includes(`<meta name="description" content="${page.metaDescription}">`),
+    'the meta description should still reach the head'
+  );
+
+  // The year renders beside the title, which is why it has no address of its
+  // own: a dated work shows the number and an undated one shows n.d., so the
+  // displayed text is not the value. Both shapes are pinned because that
+  // difference is the whole reason the year is out of scope.
+  const dated = artworkCatalog.artworks.find((artwork) => artwork.medium === 'painting' && artwork.year !== undefined);
+  assert.ok(dated, 'fixture expectation: the catalogue should hold at least one dated painting');
+  assert.ok(
+    html.includes(`|${dated.id}|titleEn">${dated.titleEn}</span>, ${dated.year}`),
+    'a dated work should still render its year beside the title'
+  );
+  const undated = artworkCatalog.artworks.find((artwork) => artwork.medium === 'painting' && artwork.year === undefined);
+  if (undated) {
+    assert.ok(
+      html.includes(`|${undated.id}|titleEn">${undated.titleEn}</span>, n.d.`),
+      'an undated work should still render n.d. beside the title'
+    );
+  }
 });
 
 test('dimensions become editable as soon as an artwork has them', () => {
@@ -239,6 +322,90 @@ test('a hand-written address the gate would refuse fails the build', () => {
       () => execFileSync('node', ['build.mjs'], { cwd: fixtureRoot, stdio: 'pipe' }),
       /four-part file\|collection\|key\|field address/
     );
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
+test('a field that renders on some pages but loses its pencil on another fails the build', () => {
+  // ARQ-22: the forward guard only checks that every emitted address is
+  // whitelisted, and the collection.field reverse test treats a field as
+  // covered the moment one page anywhere still emits it. Neither catches a
+  // pencil being dropped from one page while another page keeps the field
+  // alive. The hub's medium-card labels and each medium page's heading both
+  // address mediumPages titleEn/titleZh, so dropping the hub attributes leaves
+  // the field "covered" by the headings. That exact partial drop must fail.
+  const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'edit-mode-partial-'));
+  try {
+    for (const name of ['content', 'templates', 'scripts']) {
+      cpSync(path.join(repoRoot, name), path.join(fixtureRoot, name), { recursive: true });
+    }
+    mkdirSync(path.join(fixtureRoot, 'assets', 'js'), { recursive: true });
+    cpSync(
+      path.join(repoRoot, 'assets', 'js', 'gallery-search-index.js'),
+      path.join(fixtureRoot, 'assets', 'js', 'gallery-search-index.js')
+    );
+
+    // Strip the data-edit-field attribute from the hub's medium-card labels
+    // only. String.replace hits the first occurrence, which is the hub grid;
+    // the identical substring in the medium-page TITLE_*_EDIT_ATTR tokens,
+    // emitted later in the file, is left untouched. That mirrors the proof in
+    // the ticket exactly.
+    const build = readFileSync(path.join(repoRoot, 'build.mjs'), 'utf8')
+      .replace(' data-edit-field="content/gallery.json|mediumPages|${escapeHtml(page.slug)}|titleEn"', '')
+      .replace(' data-edit-field="content/gallery.json|mediumPages|${escapeHtml(page.slug)}|titleZh"', '');
+    writeFileSync(path.join(fixtureRoot, 'build.mjs'), build);
+
+    assert.throws(
+      () => execFileSync('node', ['build.mjs'], { cwd: fixtureRoot, stdio: 'pipe' }),
+      (error) => {
+        const message = `${error.stderr ?? ''}${error.message}`;
+        assert.match(message, /gallery\.html/, 'the failure must name the hub page that lost the pencil');
+        assert.match(message, /mediumPages/, 'the failure must name the collection');
+        assert.match(message, /title(En|Zh)/, 'the failure must name the field whose pencil went missing');
+        return true;
+      },
+      'dropping the hub-card attributes while the headings keep the field must fail the build'
+    );
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
+test('a content file the gate could not rewrite cleanly fails the build', () => {
+  // The address whitelist is not the only thing that decides whether a pencil
+  // can submit. The gate refuses an entire patch when the target file's
+  // formatting does not round-trip, because rewriting it would reformat the
+  // file end to end and bury the edit. That rejection lands on the editor at
+  // submit time, after they have done the work, so the build has to catch the
+  // drift instead. This is the failure mode that actually happened: the gallery
+  // page titles shipped addressable while content/gallery.json was still
+  // hand-compacted, and nothing failed.
+  const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'edit-mode-format-'));
+  try {
+    for (const name of ['build.mjs', 'content', 'templates', 'scripts']) {
+      cpSync(path.join(repoRoot, name), path.join(fixtureRoot, name), { recursive: true });
+    }
+    mkdirSync(path.join(fixtureRoot, 'assets', 'js'), { recursive: true });
+    cpSync(
+      path.join(repoRoot, 'assets', 'js', 'gallery-search-index.js'),
+      path.join(fixtureRoot, 'assets', 'js', 'gallery-search-index.js')
+    );
+
+    const target = path.join(fixtureRoot, 'content', 'gallery.json');
+    const parsed = JSON.parse(readFileSync(target, 'utf8'));
+    writeFileSync(target, `${JSON.stringify(parsed)}\n`);
+
+    assert.throws(
+      () => execFileSync('node', ['build.mjs'], { cwd: fixtureRoot, stdio: 'pipe' }),
+      /formatting does not round-trip/,
+      'a content file edit mode addresses but the gate would refuse must fail the build'
+    );
+
+    // And the committed formatting is what the gate writes, so the same build
+    // passes the moment the file is normalised again.
+    writeFileSync(target, formatContentFile(parsed));
+    execFileSync('node', ['build.mjs'], { cwd: fixtureRoot, stdio: 'pipe' });
   } finally {
     rmSync(fixtureRoot, { recursive: true, force: true });
   }
