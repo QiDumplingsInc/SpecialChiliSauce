@@ -14,10 +14,9 @@
   <link rel="stylesheet" href="assets/css/gallery.css">
 
   <style>
-    /* PLACEHOLDER carousel slides — swap each slide's background for
-       a real photo of Kay's work once available. Carousel styling
-       itself (.hero-carousel, .hero-carousel-slide, pager) lives in
-       assets/css/gallery.css since it's shared infrastructure. */
+    /* Hero carousel styling itself (.hero-carousel, .hero-carousel-slide,
+       .hero-carousel-image, pager) lives in assets/css/gallery.css since it's
+       shared infrastructure. */
 
     /* Alternating full-width image/text panels */
     .about-panel-row {
@@ -28,23 +27,16 @@
       padding: var(--spacing-xl) 0;
     }
 
-    .about-panel-row.reversed .about-panel-image {
+    .about-panel-row.reversed .about-panel-photo {
       order: 2;
     }
 
-    .about-panel-image {
+    .about-panel-photo {
+      width: 100%;
       aspect-ratio: 3 / 2;
-      background: var(--color-bg-lighter);
-      border: 2px dashed var(--color-text-lighter);
+      object-fit: cover;
       border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text-lighter);
-      font-family: var(--font-family-ui);
-      font-size: var(--font-size-sm);
-      text-align: center;
-      padding: var(--spacing-md);
+      background: var(--color-bg-lighter);
     }
 
     .about-panel-text h2 {
@@ -70,7 +62,7 @@
         grid-template-columns: 1fr;
       }
 
-      .about-panel-row.reversed .about-panel-image {
+      .about-panel-row.reversed .about-panel-photo {
         order: 0;
       }
     }
@@ -281,37 +273,12 @@
 
 <body>
 {{> gallery-header}}
-  <!-- PLACEHOLDER rolling hero carousel — swap each slide's content
-       for real photos/exhibition info once available -->
+  <!-- Rolling hero carousel. Slides, their photographs and the pager are all
+       generated from heroSlides in content/gallery.json. -->
   <section class="hero-carousel" id="heroCarousel">
-    <div class="hero-carousel-slide active">
-      <div>
-        <h1 class="lang-en">Paintings by Kay</h1>
-        <h1 class="lang-zh">Kay的画作</h1>
-        <p class="lang-en">Photo coming soon</p>
-        <p class="lang-zh">图片即将上线</p>
-      </div>
-    </div>
-    <div class="hero-carousel-slide">
-      <div>
-        <h1 class="lang-en">New Work Coming Soon</h1>
-        <h1 class="lang-zh">新作品即将上线</h1>
-        <p class="lang-en">Photo coming soon</p>
-        <p class="lang-zh">图片即将上线</p>
-      </div>
-    </div>
-    <div class="hero-carousel-slide">
-      <div>
-        <h1 class="lang-en">Explore the Collection</h1>
-        <h1 class="lang-zh">探索作品系列</h1>
-        <p class="lang-en">Photo coming soon</p>
-        <p class="lang-zh">图片即将上线</p>
-      </div>
-    </div>
+{{HERO_SLIDES}}
     <div class="hero-carousel-pager" role="tablist" aria-label="Carousel slides">
-      <button class="active" data-slide="0" aria-label="Go to slide 1"></button>
-      <button data-slide="1" aria-label="Go to slide 2"></button>
-      <button data-slide="2" aria-label="Go to slide 3"></button>
+{{HERO_PAGER}}
     </div>
   </section>
 
@@ -321,15 +288,6 @@
       <h2 class="medium-section-title lang-en">Explore by Medium</h2>
       <h2 class="medium-section-title lang-zh">按创作媒介浏览</h2>
 
-      <!--
-        PLACEHOLDER: replace each .medium-placeholder box with a real
-        <img> once photos exist, e.g.:
-        <a href="gallery-painting.html" class="medium-card">
-          <img src="assets/gallery/painting-cover.jpg" alt="Painting" loading="lazy">
-          <span class="medium-card-label lang-en">Painting</span>
-          <span class="medium-card-label lang-zh">绘画</span>
-        </a>
-      -->
 {{MEDIUM_GRID}}
     </div>
   </section>
@@ -337,10 +295,7 @@
   <!-- Alternating image/text panels -->
   <section class="container" id="about">
     <div class="about-panel-row">
-      <div class="about-panel-image">
-        <span class="lang-en">Photo coming soon</span>
-        <span class="lang-zh">图片即将上线</span>
-      </div>
+{{ABOUT_PANEL_1}}
       <div class="about-panel-text">
         <h2 class="lang-en">About Kay's Gallery</h2>
         <h2 class="lang-zh">关于Kay的画廊</h2>
@@ -352,10 +307,7 @@
     </div>
 
     <div class="about-panel-row reversed">
-      <div class="about-panel-image">
-        <span class="lang-en">Photo coming soon</span>
-        <span class="lang-zh">图片即将上线</span>
-      </div>
+{{ABOUT_PANEL_2}}
       <div class="about-panel-text">
         <h2 class="lang-en">Commissions &amp; Inquiries</h2>
         <h2 class="lang-zh">定制与咨询</h2>
