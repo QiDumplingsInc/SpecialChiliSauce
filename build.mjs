@@ -64,6 +64,29 @@ for (const facet of galleryConfig.facets) {
 if (!galleryConfig.artworkEmptyState?.en || !galleryConfig.artworkEmptyState?.zh) {
   throw new Error('content/gallery.json: artworkEmptyState needs both en and zh copy');
 }
+if (!galleryConfig.mediumEmptyCover?.en || !galleryConfig.mediumEmptyCover?.zh) {
+  throw new Error('content/gallery.json: mediumEmptyCover needs both en and zh copy');
+}
+if (!Array.isArray(galleryConfig.heroSlides) || galleryConfig.heroSlides.length === 0) {
+  throw new Error('content/gallery.json: heroSlides must be a non-empty array');
+}
+for (const [index, slide] of galleryConfig.heroSlides.entries()) {
+  if (!slide.artworkId || !Number.isInteger(slide.imageIndex) || !slide.headlineEn || !slide.headlineZh) {
+    throw new Error(
+      `content/gallery.json: heroSlides entry ${index + 1} needs artworkId, imageIndex, headlineEn and headlineZh`
+    );
+  }
+}
+// The hub template has exactly two alternating about panels, so the config has
+// to supply exactly two photographs; a third would silently never render.
+if (!Array.isArray(galleryConfig.aboutPanels) || galleryConfig.aboutPanels.length !== 2) {
+  throw new Error('content/gallery.json: aboutPanels must be an array of exactly two entries');
+}
+for (const [index, panel] of galleryConfig.aboutPanels.entries()) {
+  if (!panel.artworkId || !Number.isInteger(panel.imageIndex)) {
+    throw new Error(`content/gallery.json: aboutPanels entry ${index + 1} needs artworkId and imageIndex`);
+  }
+}
 if (!Array.isArray(artworkCatalog.artworks)) {
   throw new Error('content/artworks.json: artworks must be an array');
 }
@@ -131,6 +154,33 @@ const yearLabel = (artwork) => ({
   zh: artwork.year === undefined ? UNDATED_ZH : String(artwork.year),
 });
 
+const artworkById = new Map(artworkCatalog.artworks.map((artwork) => [artwork.id, artwork]));
+
+// Resolves one { artworkId, imageIndex } reference from gallery.json into the
+// image object it names, for the hub page's hero slides, medium-card covers and
+// about panels. Returns that image object. Throws with the referring config
+// path when the work or the index does not exist, or when the referenced
+// photograph is an in-situ view: every hub slot has a fixed aspect ratio and
+// crops the photograph to fill it, and an in-situ shot was framed deliberately
+// to show the work in its room, so cropping it away defeats the reason it was
+// taken. Front and detail views are already closed in on the work.
+const resolveHubImage = (reference, configPath) => {
+  const artwork = artworkById.get(reference.artworkId);
+  if (artwork === undefined) {
+    throw new Error(`${configPath}: no artwork with id "${reference.artworkId}" in content/artworks.json`);
+  }
+  const image = artwork.images[reference.imageIndex];
+  if (image === undefined) {
+    throw new Error(`${configPath}: artwork "${reference.artworkId}" has no image at index ${reference.imageIndex}`);
+  }
+  if (image.view === 'in-situ') {
+    throw new Error(
+      `${configPath}: artwork "${reference.artworkId}" image ${reference.imageIndex + 1} is an in-situ view; the hub crops to fit, so use a front or detail photograph`
+    );
+  }
+  return image;
+};
+
 const partialsDir = path.join(repoRoot, 'templates', 'partials');
 const partials = new Map();
 for (const fileName of readdirSync(partialsDir)) {
@@ -147,23 +197,79 @@ const languageSwitcherNote =
 
 let mediumGrid = '      <div class="medium-grid">\n';
 for (const page of galleryConfig.mediumPages) {
+  const works = artworkCatalog.artworks.filter((artwork) => artwork.medium === page.slug);
+  const cover = page.cover ?? (works.length > 0 ? { artworkId: works[0].id, imageIndex: 0 } : null);
   mediumGrid += `        <a href="gallery-${page.slug}.html" class="medium-card">\n`;
-  mediumGrid += '          <div class="medium-placeholder">\n';
-  mediumGrid += '            <span class="lang-en">Image coming soon</span>\n';
-  mediumGrid += '            <span class="lang-zh">图片即将上线</span>\n';
-  mediumGrid += '          </div>\n';
+  if (cover === null) {
+    // A medium with no works does not promise a photograph. "Image coming
+    // soon" on a card whose page says no works are published yet is a promise
+    // nobody made; this says the same thing the page says.
+    mediumGrid += '          <div class="medium-placeholder">\n';
+    mediumGrid += `            <span class="lang-en">${escapeHtml(galleryConfig.mediumEmptyCover.en)}</span>\n`;
+    mediumGrid += `            <span class="lang-zh">${escapeHtml(galleryConfig.mediumEmptyCover.zh)}</span>\n`;
+    mediumGrid += '          </div>\n';
+  } else {
+    const image = resolveHubImage(cover, `gallery.json mediumPages "${page.slug}" cover`);
+    mediumGrid += `          <img class="medium-card-image" src="${escapeHtml(image.src)}"`;
+    mediumGrid += ` alt="${escapeHtml(image.altEn)}"`;
+    mediumGrid += ` width="${image.width}" height="${image.height}" loading="lazy"`;
+    mediumGrid += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
+  }
   mediumGrid += `          <span class="medium-card-label lang-en">${escapeHtml(page.titleEn)}</span>\n`;
   mediumGrid += `          <span class="medium-card-label lang-zh">${escapeHtml(page.titleZh)}</span>\n`;
   mediumGrid += '        </a>\n';
 }
 mediumGrid += '      </div>\n';
 
+let heroSlides = '';
+let heroPager = '';
+for (const [slideIndex, slide] of galleryConfig.heroSlides.entries()) {
+  const artwork = artworkById.get(slide.artworkId);
+  const image = resolveHubImage(slide, `gallery.json heroSlides entry ${slideIndex + 1}`);
+  const year = yearLabel(artwork);
+  const activeClass = slideIndex === 0 ? ' active' : '';
+  heroSlides += `    <div class="hero-carousel-slide${activeClass}">\n`;
+  heroSlides += `      <img class="hero-carousel-image" src="${escapeHtml(image.src)}"`;
+  heroSlides += ` alt="${escapeHtml(image.altEn)}"`;
+  heroSlides += ` width="${image.width}" height="${image.height}"`;
+  heroSlides += slideIndex === 0 ? '' : ' loading="lazy"';
+  heroSlides += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
+  heroSlides += '      <div class="hero-carousel-copy">\n';
+  heroSlides += `        <h1 class="lang-en">${escapeHtml(slide.headlineEn)}</h1>\n`;
+  heroSlides += `        <h1 class="lang-zh">${escapeHtml(slide.headlineZh)}</h1>\n`;
+  heroSlides += `        <p class="lang-en">${escapeHtml(artwork.titleEn)}, ${escapeHtml(year.en)}</p>\n`;
+  heroSlides += `        <p class="lang-zh">${escapeHtml(artwork.titleZh)}，${escapeHtml(year.zh)}</p>\n`;
+  heroSlides += '      </div>\n';
+  heroSlides += '    </div>\n';
+  heroPager += `      <button${slideIndex === 0 ? ' class="active"' : ''} data-slide="${slideIndex}"`;
+  heroPager += ` aria-label="Go to slide ${slideIndex + 1}"></button>\n`;
+}
+
+// The two alternating about panels. Each is one photograph beside its text; the
+// panel is decorative framing for the copy, so it takes a cropped-to-fit
+// photograph rather than a work's primary view.
+const aboutPanelImages = galleryConfig.aboutPanels.map((panel, panelIndex) => {
+  const image = resolveHubImage(panel, `gallery.json aboutPanels entry ${panelIndex + 1}`);
+  let markup = `      <img class="about-panel-photo" src="${escapeHtml(image.src)}"`;
+  markup += ` alt="${escapeHtml(image.altEn)}"`;
+  markup += ` width="${image.width}" height="${image.height}" loading="lazy"`;
+  markup += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
+  return markup;
+});
+
 const pages = [];
 pages.push({
   fileName: 'gallery.html',
   templateName: 'page-gallery',
   activeTab: 'gallery.html',
-  tokens: { LANGUAGE_SWITCHER_NOTE: languageSwitcherNote, MEDIUM_GRID: mediumGrid },
+  tokens: {
+    LANGUAGE_SWITCHER_NOTE: languageSwitcherNote,
+    HERO_SLIDES: heroSlides,
+    HERO_PAGER: heroPager,
+    MEDIUM_GRID: mediumGrid,
+    ABOUT_PANEL_1: aboutPanelImages[0],
+    ABOUT_PANEL_2: aboutPanelImages[1],
+  },
 });
 for (const page of galleryConfig.mediumPages) {
   const works = artworkCatalog.artworks.filter((artwork) => artwork.medium === page.slug);
