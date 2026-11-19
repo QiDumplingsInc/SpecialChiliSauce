@@ -1,0 +1,58 @@
+name: CI
+
+# Gates every pull request against main on the two commands that are the only
+# proof this site is safe to ship: the test suite, which is the sole enforcement
+# of edit mode's fail-closed patch gate, and build:check, which is the sole proof
+# that the committed gallery HTML still matches content/*.json and the templates.
+# Also runs on push to main so a merge result is checked even when the merge
+# introduces a combination no single pull request saw.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Read-only: this workflow verifies, it never writes to the repository.
+permissions:
+  contents: read
+
+# Supersede an in-flight run when a pull request is updated. Pushes to main are
+# never cancelled, so every commit on the default branch keeps its own result.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  verify:
+    name: test and build:check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the pull request head
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          # Pinned to the Node 26 line because jsdom 30 declares
+          # "node": "^22.22.2 || ^24.15.0 || >=26.0.0" and the development
+          # machine runs 26.13.1. Pinning the major, not the patch, keeps
+          # security fixes flowing without a manual bump.
+          node-version: '26'
+          cache: npm
+
+      # --ignore-scripts because no package in package-lock.json declares an
+      # install script. If one ever does, this fails loudly instead of silently
+      # executing dependency code on a runner that can read the repository.
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: npm test
+        run: npm test
+
+      # Runs even when the tests fail, so one CI run answers both questions
+      # instead of forcing a second round trip.
+      - name: npm run build:check
+        if: ${{ !cancelled() }}
+        run: npm run build:check
