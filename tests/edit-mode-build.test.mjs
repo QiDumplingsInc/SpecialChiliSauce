@@ -327,6 +327,51 @@ test('a hand-written address the gate would refuse fails the build', () => {
   }
 });
 
+test('a field that renders on some pages but loses its pencil on another fails the build', () => {
+  // ARQ-22: the forward guard only checks that every emitted address is
+  // whitelisted, and the collection.field reverse test treats a field as
+  // covered the moment one page anywhere still emits it. Neither catches a
+  // pencil being dropped from one page while another page keeps the field
+  // alive. The hub's medium-card labels and each medium page's heading both
+  // address mediumPages titleEn/titleZh, so dropping the hub attributes leaves
+  // the field "covered" by the headings. That exact partial drop must fail.
+  const fixtureRoot = mkdtempSync(path.join(tmpdir(), 'edit-mode-partial-'));
+  try {
+    for (const name of ['content', 'templates', 'scripts']) {
+      cpSync(path.join(repoRoot, name), path.join(fixtureRoot, name), { recursive: true });
+    }
+    mkdirSync(path.join(fixtureRoot, 'assets', 'js'), { recursive: true });
+    cpSync(
+      path.join(repoRoot, 'assets', 'js', 'gallery-search-index.js'),
+      path.join(fixtureRoot, 'assets', 'js', 'gallery-search-index.js')
+    );
+
+    // Strip the data-edit-field attribute from the hub's medium-card labels
+    // only. String.replace hits the first occurrence, which is the hub grid;
+    // the identical substring in the medium-page TITLE_*_EDIT_ATTR tokens,
+    // emitted later in the file, is left untouched. That mirrors the proof in
+    // the ticket exactly.
+    const build = readFileSync(path.join(repoRoot, 'build.mjs'), 'utf8')
+      .replace(' data-edit-field="content/gallery.json|mediumPages|${escapeHtml(page.slug)}|titleEn"', '')
+      .replace(' data-edit-field="content/gallery.json|mediumPages|${escapeHtml(page.slug)}|titleZh"', '');
+    writeFileSync(path.join(fixtureRoot, 'build.mjs'), build);
+
+    assert.throws(
+      () => execFileSync('node', ['build.mjs'], { cwd: fixtureRoot, stdio: 'pipe' }),
+      (error) => {
+        const message = `${error.stderr ?? ''}${error.message}`;
+        assert.match(message, /gallery\.html/, 'the failure must name the hub page that lost the pencil');
+        assert.match(message, /mediumPages/, 'the failure must name the collection');
+        assert.match(message, /title(En|Zh)/, 'the failure must name the field whose pencil went missing');
+        return true;
+      },
+      'dropping the hub-card attributes while the headings keep the field must fail the build'
+    );
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
 test('a content file the gate could not rewrite cleanly fails the build', () => {
   // The address whitelist is not the only thing that decides whether a pencil
   // can submit. The gate refuses an entire patch when the target file's

@@ -81,6 +81,34 @@ test('every class the section-page template renders has a CSS rule', () => {
   }
 });
 
+test('every class the hub page renders has a CSS rule', () => {
+  // Same defect class as the section-page test above, applied to the hub, which
+  // is the page a visitor lands on. The hub's own <style> block counts as a
+  // stylesheet here because its layout rules are page-specific by design.
+  const hub = readFileSync(path.join(repoRoot, 'gallery.html'), 'utf8');
+  const stylesheets =
+    readFileSync(path.join(repoRoot, 'assets', 'css', 'site.css'), 'utf8') +
+    readFileSync(path.join(repoRoot, 'assets', 'css', 'gallery.css'), 'utf8') +
+    hub.slice(hub.indexOf('<style>'), hub.indexOf('</style>'));
+  const classNames = new Set();
+  for (const match of hub.matchAll(/class="([^"{<>]+)"/g)) {
+    for (const name of match[1].trim().split(/\s+/)) classNames.add(name);
+  }
+  assert.ok(classNames.has('hero-carousel-image'), 'sanity check: expected the hero photograph class on the hub');
+  // .lang-btn is a script hook, not a styled class: assets/js/language.js
+  // selects the language buttons by it, and their appearance comes from
+  // .language-switcher button. Anything else unstyled is the defect above.
+  const scriptHookClasses = new Set(['lang-btn']);
+  for (const name of classNames) {
+    if (scriptHookClasses.has(name)) continue;
+    assert.match(
+      stylesheets,
+      new RegExp(`\\.${name}([\\s,:{]|$)`, 'm'),
+      `.${name} is rendered by gallery.html but has no CSS rule`
+    );
+  }
+});
+
 test('an unknown medium on an artwork fails the build instead of rendering a broken page', () => {
   const brokenCatalog = JSON.stringify({
     artworks: [

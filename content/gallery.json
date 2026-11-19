@@ -1,5 +1,5 @@
 {
-    "comment": "Structure of the gallery section: nav tabs, medium pages, section pages and the artwork filter facets. Edited by hand; consumed by build.mjs to render gallery*.html. Bilingual site copy lives here as literal UTF-8 because this is localized content, not code.",
+    "comment": "Structure of the gallery section: nav tabs, medium pages, section pages, the artwork filter facets and the hub page's photographs. Edited by hand; consumed by build.mjs to render gallery*.html. Bilingual site copy lives here as literal UTF-8 because this is localized content, not code. heroSlides, aboutPanels and a medium page's optional cover each point at one photograph in content/artworks.json by artworkId plus imageIndex; the build refuses an in-situ view in any of those slots because the hub crops a photograph to fit its slot and an in-situ shot must keep the framing it was taken with. A medium page with no cover falls back to the first photograph of its first work; a medium page with no works renders mediumEmptyCover instead of promising an image.",
     "searchPages": [
         {
             "href": "index.html",
@@ -102,6 +102,40 @@
         "en": "No works in this medium are published yet.",
         "zh": "本媒介暂无已发布作品。"
     },
+    "mediumEmptyCover": {
+        "en": "No works yet",
+        "zh": "暂无作品"
+    },
+    "heroSlides": [
+        {
+            "artworkId": "painting-014",
+            "imageIndex": 0,
+            "headlineEn": "Paintings by Kay",
+            "headlineZh": "Kay的画作"
+        },
+        {
+            "artworkId": "painting-010",
+            "imageIndex": 0,
+            "headlineEn": "Still Life and Animals",
+            "headlineZh": "静物与动物"
+        },
+        {
+            "artworkId": "painting-006",
+            "imageIndex": 0,
+            "headlineEn": "Explore the Collection",
+            "headlineZh": "探索作品系列"
+        }
+    ],
+    "aboutPanels": [
+        {
+            "artworkId": "painting-007",
+            "imageIndex": 0
+        },
+        {
+            "artworkId": "painting-008",
+            "imageIndex": 1
+        }
+    ],
     "navTabs": [
         {
             "href": "gallery-new-arrivals.html",
@@ -144,7 +178,11 @@
             "slug": "drawing",
             "titleEn": "Drawing",
             "titleZh": "素描",
-            "metaDescription": "Drawings by Kay."
+            "metaDescription": "Drawings by Kay.",
+            "cover": {
+                "artworkId": "drawing-001",
+                "imageIndex": 1
+            }
         },
         {
             "slug": "mixed-media",
@@ -156,7 +194,11 @@
             "slug": "painting",
             "titleEn": "Painting",
             "titleZh": "绘画",
-            "metaDescription": "Paintings by Kay."
+            "metaDescription": "Paintings by Kay.",
+            "cover": {
+                "artworkId": "painting-005",
+                "imageIndex": 0
+            }
         },
         {
             "slug": "photography",

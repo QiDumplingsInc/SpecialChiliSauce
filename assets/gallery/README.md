@@ -18,6 +18,8 @@ Order inside `images` is the order the carousel shows, and the first image is wh
 - A work with no face-on photograph leads with its `in-situ` shot, then details. This is deliberate for a work the owner does not want a clean face-on reference image of.
 - An `in-situ` photograph that shows several works at once is referenced by each of those works.
 
+The hub page (`gallery.html`) picks photographs out of this folder too, through `heroSlides`, `aboutPanels` and a medium page's `cover` in `content/gallery.json`. Every hub slot has a fixed aspect ratio and crops the photograph to fill it, so only a `front` or `detail` view belongs in one; the build fails on an `in-situ` reference there. A medium with no published work renders `mediumEmptyCover` copy instead of a photograph, and never promises one.
+
 > ## 三种视图与裁切规则
 >
 > 每张图片都声明一个 `view`，而该视图决定这张照片是否可以裁切。
@@ -31,6 +33,8 @@ Order inside `images` is the order the carousel shows, and the first image is wh
 > - 有正面照的作品以正面照为首。若 `front` 图片不在首位，构建会失败。
 > - 没有正面照的作品以 `in-situ` 实景照为首，随后是细节图。对于不希望存在清晰正面参考图的作品，这是刻意安排。
 > - 同时拍到多件作品的 `in-situ` 照片，会被其中每一件作品引用。
+>
+> 首页（`gallery.html`）也从本目录挑选照片，通过 `content/gallery.json` 中的 `heroSlides`、`aboutPanels` 以及各媒介页的 `cover` 指定。首页的每个图片位都有固定的宽高比，会把照片裁切填满该位置，因此只能放 `front` 或 `detail` 视图；若在此引用 `in-situ`，构建会失败。没有已发布作品的媒介渲染 `mediumEmptyCover` 文案，而不是照片，也绝不承诺会有照片。
 
 ## File contract
 
