@@ -380,56 +380,56 @@
             <span class="lang-en">Image coming soon</span>
             <span class="lang-zh">图片即将上线</span>
           </div>
-          <span class="medium-card-label lang-en">Drawing</span>
-          <span class="medium-card-label lang-zh">素描</span>
+          <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|drawing|titleEn">Drawing</span>
+          <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|drawing|titleZh">素描</span>
         </a>
         <a href="gallery-mixed-media.html" class="medium-card">
           <div class="medium-placeholder">
             <span class="lang-en">Image coming soon</span>
             <span class="lang-zh">图片即将上线</span>
           </div>
-          <span class="medium-card-label lang-en">Mixed Media</span>
-          <span class="medium-card-label lang-zh">综合材料</span>
+          <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|mixed-media|titleEn">Mixed Media</span>
+          <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|mixed-media|titleZh">综合材料</span>
         </a>
         <a href="gallery-painting.html" class="medium-card">
           <div class="medium-placeholder">
             <span class="lang-en">Image coming soon</span>
             <span class="lang-zh">图片即将上线</span>
           </div>
-          <span class="medium-card-label lang-en">Painting</span>
-          <span class="medium-card-label lang-zh">绘画</span>
+          <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|painting|titleEn">Painting</span>
+          <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|painting|titleZh">绘画</span>
         </a>
         <a href="gallery-photography.html" class="medium-card">
           <div class="medium-placeholder">
             <span class="lang-en">Image coming soon</span>
             <span class="lang-zh">图片即将上线</span>
           </div>
-          <span class="medium-card-label lang-en">Photography</span>
-          <span class="medium-card-label lang-zh">摄影</span>
+          <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|photography|titleEn">Photography</span>
+          <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|photography|titleZh">摄影</span>
         </a>
         <a href="gallery-printmaking.html" class="medium-card">
           <div class="medium-placeholder">
             <span class="lang-en">Image coming soon</span>
             <span class="lang-zh">图片即将上线</span>
           </div>
-          <span class="medium-card-label lang-en">Printmaking</span>
-          <span class="medium-card-label lang-zh">版画</span>
+          <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|printmaking|titleEn">Printmaking</span>
+          <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|printmaking|titleZh">版画</span>
         </a>
         <a href="gallery-sculpture.html" class="medium-card">
           <div class="medium-placeholder">
             <span class="lang-en">Image coming soon</span>
             <span class="lang-zh">图片即将上线</span>
           </div>
-          <span class="medium-card-label lang-en">Sculpture</span>
-          <span class="medium-card-label lang-zh">雕塑</span>
+          <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|sculpture|titleEn">Sculpture</span>
+          <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|sculpture|titleZh">雕塑</span>
         </a>
         <a href="gallery-work-on-paper.html" class="medium-card">
           <div class="medium-placeholder">
             <span class="lang-en">Image coming soon</span>
             <span class="lang-zh">图片即将上线</span>
           </div>
-          <span class="medium-card-label lang-en">Work on Paper</span>
-          <span class="medium-card-label lang-zh">纸本作品</span>
+          <span class="medium-card-label lang-en" data-edit-field="content/gallery.json|mediumPages|work-on-paper|titleEn">Work on Paper</span>
+          <span class="medium-card-label lang-zh" data-edit-field="content/gallery.json|mediumPages|work-on-paper|titleZh">纸本作品</span>
         </a>
       </div>
     </div>
@@ -633,6 +633,45 @@
       }
 
       resetTimer();
+    })();
+  </script>
+  <!-- Admin edit mode, loaded on demand.
+       A visitor who never asks for edit mode pays only for this check: no
+       stylesheet, no overlay script, no extra request. Edit mode is a mode
+       toggle and nothing more -- there is no credential here and there is
+       none to find, because on a static site a browser-side check protects
+       nothing, and the only thing edit mode produces is a file the editor
+       downloads and hands to a reviewer. -->
+  <script>
+    (function () {
+      var wanted = false;
+      try {
+        wanted =
+          new URLSearchParams(window.location.search).get('edit') === '1' ||
+          window.sessionStorage.getItem('galleryEditMode') === 'on';
+      } catch (error) {
+        // A browser that blocks storage or lacks URLSearchParams simply does
+        // not get edit mode. Failing quiet here keeps the public page working.
+        wanted = false;
+      }
+      if (!wanted) return;
+
+      var stylesheet = document.createElement('link');
+      stylesheet.rel = 'stylesheet';
+      stylesheet.href = 'assets/css/edit-mode.css';
+      document.head.appendChild(stylesheet);
+
+      // The overlay reads window.GALLERY_EDIT_RULES, so the generated rules
+      // have to be in place before it runs. Chaining on load rather than
+      // relying on append order is what makes that ordering actually hold.
+      var rules = document.createElement('script');
+      rules.src = 'assets/js/edit-mode-rules.js';
+      rules.onload = function () {
+        var overlay = document.createElement('script');
+        overlay.src = 'assets/js/edit-mode.js';
+        document.body.appendChild(overlay);
+      };
+      document.body.appendChild(rules);
     })();
   </script>
 </body>
