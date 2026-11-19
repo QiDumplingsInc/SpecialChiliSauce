@@ -62,6 +62,12 @@ Git also skips the `commit-msg` hook entirely on some paths, so a trailer can st
 
 `git commit --amend` *is* covered. Treat the guard as a safety net for the ordinary commit path, not a proof that no trailer can ever land.
 
+## Pull requests
+
+`.github/PULL_REQUEST_TEMPLATE.md` is the body every pull request here uses. GitHub prefills it, so fill the sections in place and do not delete a heading: a section that does not apply gets `None`, and a missing heading shows up in the diff instead of surfacing in review.
+
+Three sections are the author's alone and carry refusal text until a human replaces them -- **Motivation**, **Design decisions**, and **Notes to reviewers**. The template also carries the `pre-pr-check` line and the requirement that manual testing is either provided with screenshots or declined with a written reason. A body still holding any of that refusal text is a draft, not a review request.
+
 ## Newsletter signups
 
 Both `index.html` and `gallery.html` post to the same Google Apps Script Web App endpoint, which writes each submission as a row in a Google Sheet. A hidden `source` field (`chili-sauce` or `gallery`) tells the two pages' signups apart in the Sheet.
