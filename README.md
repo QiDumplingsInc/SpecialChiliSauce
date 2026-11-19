@@ -33,16 +33,22 @@ npm test
 
 ## Commit hooks
 
-This repository tracks a `commit-msg` hook in `.githooks/` that rejects any `Co-Authored-By:` trailer, as required by the commit-attribution standard in the `CLAUDE.md` one directory above this repository's checkout. Git does not read tracked hooks automatically, so a fresh clone needs this one-time command to activate them:
+This repository tracks hooks in `.githooks/`:
+
+- `commit-msg` rejects any `Co-Authored-By:` trailer, as required by the commit-attribution standard in the `CLAUDE.md` one directory above this repository's checkout.
+- `pre-commit` rejects a staged `package-lock.json` (repo root or nested) whose `resolved` URLs point at a non-public registry host, to stop an internal mirror leaking into this public repository.
+
+Git does not read tracked hooks automatically, so a fresh clone needs this one-time command to activate them:
 
 ```
 git config core.hooksPath .githooks
 ```
 
-Repo-local config overrides the global hooks path, and all worktrees of a clone share `.git/config`, so one setting covers every worktree. Verify the hook with:
+Repo-local config overrides the global hooks path, and all worktrees of a clone share `.git/config`, so one setting covers every worktree. Until you run that command the hooks are inert: the `pre-commit` lockfile guard is active only after `git config core.hooksPath .githooks`. Verify the hooks with:
 
 ```
 sh .githooks/commit-msg-test.sh
+sh .githooks/pre-commit-test.sh
 ```
 
 ### What the guard does not cover
@@ -59,6 +65,8 @@ Git also skips the `commit-msg` hook entirely on some paths, so a trailer can st
 - `git cherry-pick`, `git rebase`, and `git am`, which reuse an existing message without running `commit-msg`.
 
 `git commit --amend` *is* covered. Treat the guard as a safety net for the ordinary commit path, not a proof that no trailer can ever land.
+
+The `pre-commit` lockfile guard has the same install requirement and the same `--no-verify` escape hatch. It inspects only the staged content of `package-lock.json` and only plain `http(s)` `resolved` URLs (the shape npm uses for registry tarballs), so it does not police `git+https` or other VCS `resolved` forms. The allowlist lives in `ALLOWED_HOSTS` at the top of `.githooks/pre-commit` and defaults to `registry.npmjs.org`; add a host there only for a registry this repository deliberately uses. The guard blocks new leaks at commit time but does not clean hosts already present in committed history.
 
 ## Newsletter signups
 
