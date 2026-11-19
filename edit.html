@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Edit mode - Kay's Gallery</title>
+  <meta name="description" content="Turn gallery edit mode on or off in this browser.">
+  <!-- Kept out of search results. That is housekeeping, not a control: this
+       page locks nothing, so it is unlisted rather than protected. -->
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="icon" type="image/png" href="assets/logo/favicon.png">
+  <link rel="stylesheet" href="assets/css/site.css">
+
+  <!-- The admin overlay's own stylesheet and script are deliberately absent
+       here. This page only flips a sessionStorage flag and links to the
+       gallery, where templates/partials/edit-mode-bootstrap.html loads the
+       overlay on demand. So the front door costs one small page and no extra
+       request, and an ordinary gallery visit still costs nothing.
+
+       There is no sign-in field on this page and there is none to add. The
+       site is static with no server, so a check written in browser JavaScript
+       would be readable by anyone who opens the page source and would stop
+       nobody. What edit mode produces is a file on the editor's own computer,
+       which a reviewer reads before anything reaches the live site. That
+       review is the real control; a box on this page would only imply a
+       boundary that is not there. See README.md and the ARQ-13 review. -->
+
+  <style>
+    body {
+      background: var(--color-bg-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: var(--spacing-md) 0;
+    }
+
+    .edit-entry {
+      max-width: 44rem;
+      background: var(--color-white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      padding: var(--spacing-md);
+      text-align: center;
+    }
+
+    /* The two controls carry .cta-button, which sets its own display, and a
+       class beats the browser's own [hidden] rule on specificity. Without
+       this, hiding a control would leave it on screen -- the same cascade
+       trap the language classes in site.css call out. */
+    .edit-entry [hidden] {
+      display: none !important;
+    }
+
+    .edit-entry h1 {
+      font-size: var(--font-size-3xl);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .edit-entry p {
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text-light);
+    }
+
+    .edit-entry [lang="zh"] {
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    .edit-entry-what {
+      font-size: var(--font-size-lg);
+      color: var(--color-text);
+    }
+
+    .edit-entry-state {
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+    }
+
+    .edit-entry-note {
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-lighter);
+      border-top: 1px solid var(--color-bg-lighter);
+      padding-top: var(--spacing-sm);
+      margin-bottom: 0;
+    }
+
+    .edit-entry-back {
+      display: inline-block;
+      margin-top: var(--spacing-sm);
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container edit-entry">
+    <!-- Every string on this page is hand-written here and absent from
+         content/*.json, so edit mode cannot reach this page's own copy and no
+         element here carries data-edit-field. If that ever changes, the edit
+         still has to travel through scripts/content-patch.mjs, and the value
+         still has to be written back with textContent, never innerHTML.
+         Hand-adding an editable field here and rendering it as markup is the
+         one way to turn this page into an injection sink, so both layers are
+         load-bearing, not incidental. Recorded from the ARQ-17 security review
+         as a future-regression guard. -->
+    <h1>
+      Edit mode
+      <span lang="zh">编辑模式</span>
+    </h1>
+
+    <p class="edit-entry-what">
+      Edit mode lets you reword gallery text in this browser and download a file for a reviewer to apply; on its own it
+      changes nothing on the live site.
+      <span lang="zh">编辑模式让你在本浏览器中修改画廊文字并下载补丁文件交给审核者；它本身不会改动线上网站。</span>
+    </p>
+
+    <p class="edit-entry-state" id="edit-mode-state-off">
+      Edit mode is off in this browser.
+      <span lang="zh">编辑模式在本浏览器中处于关闭状态。</span>
+    </p>
+
+    <p class="edit-entry-state" id="edit-mode-state-on" hidden>
+      Edit mode is on in this browser. Turning it off keeps any edits you have not submitted yet.
+      <span lang="zh">编辑模式在本浏览器中已开启。关闭它不会丢失你尚未提交的修改。</span>
+    </p>
+
+    <p class="edit-entry-state" id="edit-mode-state-blocked" hidden>
+      This browser blocks site storage, so edit mode will cover only the page this link opens.
+      <span lang="zh">此浏览器阻止了站点存储，因此编辑模式只在此链接打开的那一页有效。</span>
+    </p>
+
+    <!-- A link rather than a scripted button, carrying ?edit=1 in the markup,
+         so the front door still works if the script below never runs. The
+         script removes the query string when storage is available, because
+         then the mode can follow the editor from page to page instead. -->
+    <a id="edit-mode-enter" class="cta-button" href="gallery.html?edit=1">
+      Turn on edit mode
+      <span lang="zh">开启编辑模式</span>
+    </a>
+
+    <button type="button" id="edit-mode-leave" class="cta-button" hidden>
+      Turn off edit mode
+      <span lang="zh">关闭编辑模式</span>
+    </button>
+
+    <p class="edit-entry-back">
+      <a href="gallery.html">Back to the gallery</a>
+      <span lang="zh"><a href="gallery.html">返回画廊</a></span>
+    </p>
+
+    <p class="edit-entry-note">
+      This page is not a sign-in. It switches a setting in this browser only, and gives nobody access to the live site.
+      <span lang="zh">本页面不是登录入口。它只改变当前浏览器中的一个设置，不会让任何人获得线上网站的访问权限。</span>
+    </p>
+  </main>
+
+  <script>
+    (function () {
+      var storageWorks = true;
+      var editing = false;
+      try {
+        // Probe with a real write, then clear it. Reading alone is not enough:
+        // a browser can allow a read and still refuse the write this page
+        // needs, and the link below has to be correct either way.
+        window.sessionStorage.setItem('galleryEditModeProbe', '1');
+        window.sessionStorage.removeItem('galleryEditModeProbe');
+        editing = window.sessionStorage.getItem('galleryEditMode') === 'on';
+      } catch (error) {
+        // A browser that blocks site storage cannot carry the mode from page
+        // to page. The link still works, because its href keeps ?edit=1, but
+        // it only reaches the page it opens -- so the page says that instead
+        // of promising something it cannot deliver.
+        storageWorks = false;
+      }
+
+      var enter = document.getElementById('edit-mode-enter');
+      var leave = document.getElementById('edit-mode-leave');
+      if (storageWorks) enter.href = 'gallery.html';
+
+      document.getElementById('edit-mode-state-blocked').hidden = storageWorks;
+      document.getElementById('edit-mode-state-off').hidden = editing;
+      document.getElementById('edit-mode-state-on').hidden = !editing;
+      enter.hidden = editing;
+      leave.hidden = !editing;
+
+      enter.addEventListener('click', function () {
+        try {
+          window.sessionStorage.setItem('galleryEditMode', 'on');
+        } catch (error) {
+          // Only reachable if storage started refusing writes between the
+          // probe above and this click. The href still carries ?edit=1 in
+          // that case, so the click reaches edit mode anyway.
+        }
+      });
+
+      leave.addEventListener('click', function () {
+        try {
+          window.sessionStorage.removeItem('galleryEditMode');
+        } catch (error) {
+          // Nothing was ever stored, so there is nothing to undo.
+        }
+        // Unsubmitted edits stay in storage on purpose, matching the overlay's
+        // own Exit edit mode button: leaving the mode should not throw away
+        // work. Discard all, inside the overlay, is the deliberate way to
+        // drop it.
+        editing = false;
+        document.getElementById('edit-mode-state-off').hidden = false;
+        document.getElementById('edit-mode-state-on').hidden = true;
+        enter.hidden = false;
+        leave.hidden = true;
+      });
+    })();
+  </script>
+</body>
+
+</html>

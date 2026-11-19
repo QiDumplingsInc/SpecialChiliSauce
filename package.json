@@ -4,6 +4,8 @@
     "version": "1.0.0",
     "description": "Static site for Kay's Special Chili Oil Sauce",
     "scripts": {
+        "build": "node build.mjs",
+        "build:check": "node build.mjs --check",
         "test": "node --test"
     },
     "devDependencies": {

@@ -1,6 +1,8 @@
-// Site search for gallery pages. Static site, no backend — this
-// searches a small hardcoded index of known page titles (bilingual)
-// and links to them. Not a full-text search of page content.
+// Site search for gallery pages. Static site, no backend — this searches
+// assets/js/gallery-search-index.js, which build.mjs generates from
+// content/gallery.json and content/artworks.json. It matches page titles and
+// artwork titles (bilingual) and links to them. Not a full-text search of page
+// content.
 
 document.addEventListener('DOMContentLoaded', function () {
   const searchRoot = document.querySelector('.gallery-search');
@@ -12,23 +14,14 @@ document.addEventListener('DOMContentLoaded', function () {
   const form = searchRoot.querySelector('.gallery-search-form');
   if (!toggle || !input || !results || !form) return;
 
-  const PAGES = [
-    { en: 'Special Chili Sauce', zh: '特制辣椒酱', href: 'index.html' },
-    { en: 'Home', zh: '首页', href: 'home.html' },
-    { en: 'New Arrivals', zh: '新品上架', href: 'gallery-new-arrivals.html' },
-    { en: 'Portfolio', zh: '作品集', href: 'gallery-portfolio.html' },
-    { en: 'Artists', zh: '艺术家', href: 'gallery-artists.html' },
-    { en: 'Artworks', zh: '作品', href: 'gallery.html' },
-    { en: 'Exhibitions', zh: '展览', href: 'gallery-exhibitions.html' },
-    { en: 'Collections', zh: '系列', href: 'gallery-collections.html' },
-    { en: 'Painting', zh: '绘画', href: 'gallery-painting.html' },
-    { en: 'Drawing', zh: '素描', href: 'gallery-drawing.html' },
-    { en: 'Mixed Media', zh: '综合材料', href: 'gallery-mixed-media.html' },
-    { en: 'Photography', zh: '摄影', href: 'gallery-photography.html' },
-    { en: 'Printmaking', zh: '版画', href: 'gallery-printmaking.html' },
-    { en: 'Sculpture', zh: '雕塑', href: 'gallery-sculpture.html' },
-    { en: 'Work on Paper', zh: '纸本作品', href: 'gallery-work-on-paper.html' },
-  ];
+  const PAGES = Array.isArray(window.GALLERY_SEARCH_INDEX) ? window.GALLERY_SEARCH_INDEX : [];
+  if (PAGES.length === 0) {
+    // The generated index failed to load. Say so rather than silently
+    // presenting a search box that can never return a result.
+    console.error('gallery-search: assets/js/gallery-search-index.js did not load; search is unavailable.');
+    toggle.hidden = true;
+    return;
+  }
 
   function isZh() {
     return document.body.classList.contains('chinese');

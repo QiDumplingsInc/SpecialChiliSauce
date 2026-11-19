@@ -1,0 +1,233 @@
+/* assets/css/edit-mode.css -- styling for admin edit mode.
+ *
+ * Loaded only when edit mode is asked for, so none of this reaches an
+ * ordinary page view. Every rule here is scoped under .edit-mode-on, which
+ * assets/js/edit-mode.js puts on the body, so a stale cached copy of this
+ * file still cannot change how the public gallery looks.
+ *
+ * The pencil affordance is a ::after pseudo-element rather than a real button.
+ * That is deliberate: generated content is not part of textContent, and the
+ * contract the overlay depends on is that an element carrying data-edit-field
+ * has a textContent exactly equal to the value on disk. A pencil made of
+ * markup inside the element would break that contract; a pencil made of CSS
+ * cannot.
+ */
+
+.edit-mode-on [data-edit-field] {
+  position: relative;
+  cursor: text;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px rgba(139, 0, 0, 0.35);
+  transition: box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.edit-mode-on [data-edit-field]:hover,
+.edit-mode-on [data-edit-field]:focus {
+  background-color: rgba(255, 107, 53, 0.12);
+  box-shadow: inset 0 0 0 1px var(--color-primary, #8b0000);
+  outline: none;
+}
+
+.edit-mode-on [data-edit-field]:not(.edit-mode-editing)::after {
+  content: '\270E';
+  margin-left: 0.3em;
+  font-family: var(--font-family-ui, sans-serif);
+  font-size: 0.85em;
+  line-height: 1;
+  color: var(--color-primary, #8b0000);
+  opacity: 0.75;
+}
+
+.edit-mode-on [data-edit-field].edit-mode-editing {
+  background-color: var(--color-white, #ffffff);
+  box-shadow: inset 0 0 0 2px var(--color-secondary, #ff6b35);
+  cursor: text;
+}
+
+.edit-mode-on [data-edit-field].edit-mode-changed {
+  background-color: rgba(255, 107, 53, 0.18);
+  box-shadow: inset 0 0 0 1px var(--color-secondary, #ff6b35);
+}
+
+.edit-mode-toolbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9000;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-xs, 0.5rem);
+  padding: 0.6rem var(--spacing-sm, 1rem);
+  background-color: var(--color-primary-dark, #5c0000);
+  color: var(--color-white, #ffffff);
+  font-family: var(--font-family-ui, sans-serif);
+  font-size: 0.9rem;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.edit-mode-badge {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.edit-mode-status {
+  flex: 1 1 14rem;
+  min-width: 0;
+  opacity: 0.9;
+}
+
+.edit-mode-status-problem {
+  font-weight: 700;
+  color: #ffd9c2;
+  opacity: 1;
+}
+
+.edit-mode-button {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--color-white, #ffffff);
+  border-radius: 3px;
+  background-color: transparent;
+  color: var(--color-white, #ffffff);
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+.edit-mode-button:hover:not(:disabled) {
+  background-color: var(--color-white, #ffffff);
+  color: var(--color-primary-dark, #5c0000);
+}
+
+.edit-mode-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.edit-mode-count {
+  font-variant-numeric: tabular-nums;
+}
+
+.edit-mode-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 9100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm, 1rem);
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+.edit-mode-panel[hidden] {
+  display: none;
+}
+
+.edit-mode-panel-inner {
+  width: min(42rem, 100%);
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: var(--spacing-md, 2rem);
+  background-color: var(--color-bg-light, #fdf6e9);
+  border-radius: 4px;
+  font-family: var(--font-family-ui, sans-serif);
+  color: var(--color-text, #333);
+}
+
+.edit-mode-panel-inner h2 {
+  margin: 0 0 var(--spacing-sm, 1rem);
+  font-family: var(--font-family-primary, Georgia, serif);
+  font-size: 1.4rem;
+}
+
+.edit-mode-empty {
+  margin: 0;
+  color: var(--color-text-light, #666);
+}
+
+.edit-mode-review-row {
+  padding: var(--spacing-xs, 0.5rem) 0;
+  border-top: 1px solid var(--color-bg-lighter, #f5ecd9);
+}
+
+.edit-mode-review-where {
+  margin: 0 0 0.3rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-text-lighter, #999);
+}
+
+.edit-mode-review-before,
+.edit-mode-review-after {
+  display: flex;
+  gap: var(--spacing-xs, 0.5rem);
+  margin: 0 0 0.2rem;
+  line-height: 1.4;
+}
+
+.edit-mode-review-label {
+  flex: 0 0 4.5rem;
+  font-weight: 700;
+  color: var(--color-text-light, #666);
+}
+
+.edit-mode-review-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.edit-mode-review-before .edit-mode-review-value {
+  color: var(--color-text-light, #666);
+  text-decoration: line-through;
+}
+
+.edit-mode-review-after .edit-mode-review-value {
+  font-weight: 700;
+  color: var(--color-primary, #8b0000);
+}
+
+.edit-mode-review-row .edit-mode-button {
+  margin-top: 0.3rem;
+  border-color: var(--color-primary, #8b0000);
+  color: var(--color-primary, #8b0000);
+}
+
+.edit-mode-review-row .edit-mode-button:hover {
+  background-color: var(--color-primary, #8b0000);
+  color: var(--color-white, #ffffff);
+}
+
+.edit-mode-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs, 0.5rem);
+  margin-top: var(--spacing-sm, 1rem);
+  padding-top: var(--spacing-sm, 1rem);
+  border-top: 1px solid var(--color-bg-lighter, #f5ecd9);
+}
+
+.edit-mode-panel-actions .edit-mode-button {
+  border-color: var(--color-primary, #8b0000);
+  color: var(--color-primary, #8b0000);
+}
+
+.edit-mode-panel-actions .edit-mode-button:hover:not(:disabled) {
+  background-color: var(--color-primary, #8b0000);
+  color: var(--color-white, #ffffff);
+}
+
+/* The toolbar is fixed to the bottom of the viewport, so without this the
+ * last row of artwork cards sits underneath it and cannot be clicked. */
+.edit-mode-on {
+  padding-bottom: 4.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edit-mode-on [data-edit-field] {
+    transition: none;
+  }
+}
