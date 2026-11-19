@@ -223,11 +223,24 @@ for (const page of galleryConfig.mediumPages) {
 mediumGrid += '      </div>\n';
 
 const pages = [];
+// editableRecords names every whitelisted record a page renders in place,
+// derived from the same content arrays the markup above is built from, not from
+// the data-edit-field attributes themselves. The reverse guard at the end of the
+// render loop crosses it with the whitelist to prove each such record still
+// carries its pencils here. Deriving it from the data rather than from the
+// attribute strings is the point: a change that drops the attribute leaves the
+// record in this list, so the guard fails instead of the pencil going missing
+// unseen. The hub renders one medium card per mediumPages record.
 pages.push({
   fileName: 'gallery.html',
   templateName: 'page-gallery',
   activeTab: 'gallery.html',
   tokens: { LANGUAGE_SWITCHER_NOTE: languageSwitcherNote, MEDIUM_GRID: mediumGrid },
+  editableRecords: galleryConfig.mediumPages.map((page) => ({
+    file: 'content/gallery.json',
+    collection: 'mediumPages',
+    key: page.slug,
+  })),
 });
 for (const page of galleryConfig.mediumPages) {
   const works = artworkCatalog.artworks.filter((artwork) => artwork.medium === page.slug);
@@ -398,6 +411,12 @@ for (const page of galleryConfig.mediumPages) {
       FILTER_BAR: filterBar,
       ARTWORK_GRID: artworkGrid,
     },
+    // The heading renders this medium's own title, and the grid renders every
+    // artwork of this medium, so each of those records must keep its pencils.
+    editableRecords: [
+      { file: 'content/gallery.json', collection: 'mediumPages', key: page.slug },
+      ...works.map((artwork) => ({ file: 'content/artworks.json', collection: 'artworks', key: artwork.id })),
+    ],
   });
 }
 for (const page of galleryConfig.sectionPages) {
@@ -417,6 +436,8 @@ for (const page of galleryConfig.sectionPages) {
       BODY_EN_EDIT_ATTR: ` data-edit-field="content/gallery.json|sectionPages|${escapeHtml(page.slug)}|bodyEn"`,
       BODY_ZH_EDIT_ATTR: ` data-edit-field="content/gallery.json|sectionPages|${escapeHtml(page.slug)}|bodyZh"`,
     },
+    // A section page renders its own title and body copy in place.
+    editableRecords: [{ file: 'content/gallery.json', collection: 'sectionPages', key: page.slug }],
   });
 }
 
@@ -518,6 +539,7 @@ for (const page of pages) {
   // becomes enforcement. An address that is malformed, names a field the gate
   // refuses, or points at a record that does not exist fails the build here
   // rather than becoming a pencil in the browser that cannot submit.
+  const emitted = new Set();
   for (const match of rendered.matchAll(/data-edit-field="([^"]*)"/g)) {
     const address = match[1];
     const parts = address.split('|');
@@ -531,6 +553,37 @@ for (const page of pages) {
         `${page.fileName}: data-edit-field "${address}" is not an editable address; ` +
           'it names a field missing from EDITABLE_CONTENT in scripts/content-patch.mjs, or a record that does not exist'
       );
+    }
+    emitted.add(address);
+  }
+
+  // The forward loop above proves every pencil is legitimate; this loop proves
+  // the reverse, per address rather than per collection.field. For each record
+  // this page renders, every whitelisted field the record actually carries must
+  // be rendered as a pencil here. Dropping the attribute from one page while
+  // another page still emits the same collection.field would pass a coarser
+  // check, but it is exactly the drift that hands an editor a page whose copy
+  // looks editable in one place and is silently frozen in another. An optional
+  // field a record leaves empty is a real absence, not drift, so it is expected
+  // only when the record carries a value -- the dimensions fields no catalogue
+  // record fills stay legitimately absent without a hand-kept exemption list.
+  for (const { file, collection, key } of page.editableRecords) {
+    const data = file === 'content/gallery.json' ? galleryConfig : artworkCatalog;
+    const spec = EDITABLE_CONTENT[file][collection];
+    const record = data[collection].find((item) => item[spec.keyField] === key);
+    for (const [field, rule] of Object.entries(spec.fields)) {
+      const value = record[field];
+      const hasValue = value !== undefined && value !== null && value !== '';
+      if (rule.optional && !hasValue) continue;
+      const address = `${file}|${collection}|${key}|${field}`;
+      if (!emitted.has(address)) {
+        throw new Error(
+          `${page.fileName}: ${file} ${collection} record "${key}" field "${field}" is whitelisted and ` +
+            'renders on this page, but no data-edit-field pencil carries it; a change dropped the attribute here ' +
+            'while another page may still cover the field. Restore the pencil or take the field out of ' +
+            'EDITABLE_CONTENT in scripts/content-patch.mjs.'
+        );
+      }
     }
   }
 
