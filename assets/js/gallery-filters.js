@@ -4,9 +4,8 @@
 // dropdown option here corresponds to at least one artwork on the page. This
 // script reads the selected options plus the optional year range, hides the
 // cards that do not match, and shows a no-matches message when nothing is left.
-// It also keeps each artwork image's alt text in the language the page is
-// currently showing, which CSS cannot do because alt is an attribute rather
-// than text content.
+// Image alt text is kept in the current language by assets/js/language.js,
+// which every gallery page loads.
 
 document.addEventListener('DOMContentLoaded', function () {
   const grid = document.querySelector('.artwork-grid');
@@ -15,16 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const clearButton = document.querySelector('.filter-clear');
   const yearFrom = document.querySelector('.filter-year-from');
   const yearTo = document.querySelector('.filter-year-to');
-
-  function syncImageAltLanguage() {
-    const zh = document.body.classList.contains('chinese');
-    document.querySelectorAll('.artwork-image').forEach((image) => {
-      const alt = zh ? image.dataset.altZh : image.dataset.altEn;
-      if (alt) image.setAttribute('alt', alt);
-    });
-  }
-  syncImageAltLanguage();
-  document.querySelectorAll('.lang-btn').forEach((button) => button.addEventListener('click', syncImageAltLanguage));
 
   function closeDropdown(dropdown) {
     // If focus is currently inside the panel being closed, move it
