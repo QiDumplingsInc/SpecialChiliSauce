@@ -497,6 +497,51 @@ test('the hub shows a photograph for every medium that has works, and promises n
   }
 });
 
+test('a hub medium card carries its photograph and its editable title together', () => {
+  // This is the invariant the hub-card markup has to hold on both sides at
+  // once. The photograph and the title pencil are emitted by the same loop,
+  // and a change that rewrites that loop for one of them can silently drop the
+  // other: a card can show the right photograph with a title nobody can edit,
+  // or keep its pencil and go back to a placeholder. Asserting both on the
+  // same element is what makes either loss a test failure rather than
+  // something a reviewer has to spot in generated HTML.
+  const dom = committedHub();
+  try {
+    const cards = [...dom.window.document.querySelectorAll('.medium-card')];
+    assert.equal(cards.length, galleryConfig.mediumPages.length, 'one card per medium page');
+    for (const [index, page] of galleryConfig.mediumPages.entries()) {
+      const card = cards[index];
+      const works = catalogue.artworks.filter((artwork) => artwork.medium === page.slug);
+      for (const [language, field] of [
+        ['en', 'titleEn'],
+        ['zh', 'titleZh'],
+      ]) {
+        const label = card.querySelector(`.medium-card-label.lang-${language}`);
+        assert.ok(label, `${page.slug} card must render its ${language} title`);
+        assert.equal(
+          label.getAttribute('data-edit-field'),
+          `content/gallery.json|mediumPages|${page.slug}|${field}`,
+          `${page.slug} card's ${language} title must stay editable in place`
+        );
+        assert.equal(label.textContent, page[field], `${page.slug} card's ${language} title must be the value on disk`);
+      }
+      if (works.length > 0) {
+        assert.ok(
+          card.querySelector('img.medium-card-image'),
+          `${page.slug} has published work, so its card must show a photograph alongside its pencils`
+        );
+      } else {
+        assert.ok(
+          card.querySelector('.medium-placeholder'),
+          `${page.slug} has no published work, so its card must show the empty-cover wording alongside its pencils`
+        );
+      }
+    }
+  } finally {
+    dom.window.close();
+  }
+});
+
 test('every photograph the hub renders is a real catalogue file, and never an in-situ view', () => {
   // Every hub slot has a fixed aspect ratio and crops the photograph to fill
   // it. An in-situ shot was framed deliberately to show the work in its room,
