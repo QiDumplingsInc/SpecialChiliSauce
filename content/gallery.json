@@ -1,0 +1,228 @@
+{
+    "comment": "Structure of the gallery section: nav tabs, medium pages, section pages and the artwork filter facets. Edited by hand; consumed by build.mjs to render gallery*.html. Bilingual site copy lives here as literal UTF-8 because this is localized content, not code.",
+    "searchPages": [
+        {
+            "href": "index.html",
+            "en": "Special Chili Sauce",
+            "zh": "特制辣椒酱"
+        },
+        {
+            "href": "home.html",
+            "en": "Home",
+            "zh": "首页"
+        }
+    ],
+    "facets": [
+        {
+            "key": "size",
+            "field": "sizeRange",
+            "labelEn": "Size Range",
+            "labelZh": "尺寸范围",
+            "values": [
+                {
+                    "value": "small",
+                    "en": "Small",
+                    "zh": "小"
+                },
+                {
+                    "value": "medium",
+                    "en": "Medium",
+                    "zh": "中"
+                },
+                {
+                    "value": "large",
+                    "en": "Large",
+                    "zh": "大"
+                },
+                {
+                    "value": "very-large",
+                    "en": "Very large",
+                    "zh": "特大"
+                }
+            ]
+        },
+        {
+            "key": "colors",
+            "field": "colors",
+            "labelEn": "Color",
+            "labelZh": "颜色",
+            "values": [
+                {
+                    "value": "blacks-whites",
+                    "en": "Blacks & Whites",
+                    "zh": "黑白"
+                },
+                {
+                    "value": "blues",
+                    "en": "Blues",
+                    "zh": "蓝色"
+                },
+                {
+                    "value": "browns",
+                    "en": "Browns",
+                    "zh": "棕色"
+                },
+                {
+                    "value": "greens",
+                    "en": "Greens",
+                    "zh": "绿色"
+                },
+                {
+                    "value": "reds",
+                    "en": "Reds",
+                    "zh": "红色"
+                }
+            ]
+        },
+        {
+            "key": "style",
+            "field": "style",
+            "labelEn": "Style",
+            "labelZh": "风格",
+            "values": [
+                {
+                    "value": "abstract",
+                    "en": "Abstract",
+                    "zh": "抽象"
+                },
+                {
+                    "value": "figurative",
+                    "en": "Figurative",
+                    "zh": "具象"
+                },
+                {
+                    "value": "realist",
+                    "en": "Realist",
+                    "zh": "写实"
+                }
+            ]
+        }
+    ],
+    "artworkEmptyState": {
+        "en": "No works in this medium are published yet.",
+        "zh": "本媒介暂无已发布作品。"
+    },
+    "navTabs": [
+        {
+            "href": "gallery-new-arrivals.html",
+            "en": "New Arrivals",
+            "zh": "新品上架"
+        },
+        {
+            "href": "gallery-portfolio.html",
+            "en": "Portfolio",
+            "zh": "作品集"
+        },
+        {
+            "href": "gallery-artists.html",
+            "en": "Artists",
+            "zh": "艺术家"
+        },
+        {
+            "href": "gallery.html",
+            "en": "Artworks",
+            "zh": "作品"
+        },
+        {
+            "href": "gallery-exhibitions.html",
+            "en": "Exhibitions",
+            "zh": "展览"
+        },
+        {
+            "href": "gallery-collections.html",
+            "en": "Collections",
+            "zh": "系列"
+        },
+        {
+            "href": "gallery.html#about",
+            "en": "About",
+            "zh": "关于"
+        }
+    ],
+    "mediumPages": [
+        {
+            "slug": "drawing",
+            "titleEn": "Drawing",
+            "titleZh": "素描",
+            "metaDescription": "Drawings by Kay."
+        },
+        {
+            "slug": "mixed-media",
+            "titleEn": "Mixed Media",
+            "titleZh": "综合材料",
+            "metaDescription": "Mixed media artwork by Kay."
+        },
+        {
+            "slug": "painting",
+            "titleEn": "Painting",
+            "titleZh": "绘画",
+            "metaDescription": "Paintings by Kay."
+        },
+        {
+            "slug": "photography",
+            "titleEn": "Photography",
+            "titleZh": "摄影",
+            "metaDescription": "Photography by Kay."
+        },
+        {
+            "slug": "printmaking",
+            "titleEn": "Printmaking",
+            "titleZh": "版画",
+            "metaDescription": "Printmaking artwork by Kay."
+        },
+        {
+            "slug": "sculpture",
+            "titleEn": "Sculpture",
+            "titleZh": "雕塑",
+            "metaDescription": "Sculptures by Kay."
+        },
+        {
+            "slug": "work-on-paper",
+            "titleEn": "Work on Paper",
+            "titleZh": "纸本作品",
+            "metaDescription": "Works on paper by Kay."
+        }
+    ],
+    "sectionPages": [
+        {
+            "slug": "new-arrivals",
+            "titleEn": "New Arrivals",
+            "titleZh": "新品上架",
+            "metaDescription": "New arrivals at Kay's Gallery.",
+            "bodyEn": "New work coming soon",
+            "bodyZh": "新作品即将上线"
+        },
+        {
+            "slug": "portfolio",
+            "titleEn": "Portfolio",
+            "titleZh": "作品集",
+            "metaDescription": "Portfolio at Kay's Gallery.",
+            "bodyEn": "Content coming soon",
+            "bodyZh": "内容即将上线"
+        },
+        {
+            "slug": "artists",
+            "titleEn": "Artists",
+            "titleZh": "艺术家",
+            "metaDescription": "Artists at Kay's Gallery.",
+            "bodyEn": "Content coming soon",
+            "bodyZh": "内容即将上线"
+        },
+        {
+            "slug": "exhibitions",
+            "titleEn": "Exhibitions",
+            "titleZh": "展览",
+            "metaDescription": "Exhibitions at Kay's Gallery.",
+            "bodyEn": "Content coming soon",
+            "bodyZh": "内容即将上线"
+        },
+        {
+            "slug": "collections",
+            "titleEn": "Collections",
+            "titleZh": "系列",
+            "metaDescription": "Collections at Kay's Gallery.",
+            "bodyEn": "Content coming soon",
+            "bodyZh": "内容即将上线"
+        }
+    ]
+}
