@@ -70,6 +70,12 @@ Git also skips the `commit-msg` hook entirely on some paths, so a trailer can st
 
 The `pre-commit` lockfile guard has the same install requirement and the same `--no-verify` escape hatch. It inspects only the staged content of `package-lock.json` and only plain `http(s)` `resolved` URLs (the shape npm uses for registry tarballs), so it does not police `git+https` or other VCS `resolved` forms. The allowlist lives in `ALLOWED_HOSTS` at the top of `.githooks/pre-commit` and defaults to `registry.npmjs.org`; add a host there only for a registry this repository deliberately uses. The guard blocks new leaks at commit time but does not clean hosts already present in committed history.
 
+## Pull requests
+
+`.github/PULL_REQUEST_TEMPLATE.md` is the body every pull request here uses. GitHub prefills it, so fill the sections in place and do not delete a heading: a section that does not apply gets `None`, and a missing heading shows up in the diff instead of surfacing in review.
+
+Three sections are the author's alone and carry refusal text until a human replaces them -- **Motivation**, **Design decisions**, and **Notes to reviewers**. The template also carries the `pre-pr-check` line and the requirement that manual testing is either provided with screenshots or declined with a written reason. A body still holding any of that refusal text is a draft, not a review request.
+
 ## Newsletter signups
 
 Both `index.html` and `gallery.html` post to the same Google Apps Script Web App endpoint, which writes each submission as a row in a Google Sheet. A hidden `source` field (`chili-sauce` or `gallery`) tells the two pages' signups apart in the Sheet.
