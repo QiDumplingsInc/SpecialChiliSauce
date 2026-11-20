@@ -48,12 +48,12 @@ poisoned_lock=$(cat <<'JSON'
   "packages": {
     "node_modules/left-pad": {
       "version": "1.3.0",
-      "resolved": "https://artifacts.apple.com/left-pad/-/left-pad-1.3.0.tgz",
+      "resolved": "https://internal-mirror.invalid/left-pad/-/left-pad-1.3.0.tgz",
       "integrity": "sha512-placeholder"
     },
     "node_modules/right-pad": {
       "version": "1.0.0",
-      "resolved": "https://npm.apple.com/right-pad/-/right-pad-1.0.0.tgz"
+      "resolved": "https://registry.internal.invalid/right-pad/-/right-pad-1.0.0.tgz"
     }
   }
 }
