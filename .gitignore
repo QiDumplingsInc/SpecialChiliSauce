@@ -1,0 +1,6 @@
+/node_modules
+docs/
+
+# Local-only sensitive-term denylist (names what we keep out of a public repo).
+# Never commit: see CLAUDE.md and .githooks/pre-commit.
+.sensitive-terms.local

@@ -1,0 +1,70 @@
+#!/bin/sh
+# pre-commit: block any staged change that adds a sensitive term.
+#
+# Reads the local, git-ignored denylist (.sensitive-terms.local) and scans the
+# ADDED lines of the staged diff. A line that matches a DENY pattern blocks the
+# commit, unless the same line also matches an ALLOW pattern. This script holds
+# NO sensitive literals itself; all terms live in the git-ignored denylist so
+# the guard is safe to commit to a public repository.
+#
+# Fail-open by design when the denylist is absent (fresh clone / CI): this is a
+# local authoring aid, not the authoritative control. The committed lockfile
+# registry guard and CI checks remain the source of truth for pushed history.
+
+set -eu
+
+repo_root=$(git rev-parse --show-toplevel 2>/dev/null || echo ".")
+denylist="$repo_root/.sensitive-terms.local"
+
+if [ ! -f "$denylist" ]; then
+    printf '%s\n' "pre-commit: .sensitive-terms.local not found; sensitive-term scan SKIPPED." >&2
+    printf '%s\n' "pre-commit: restore the local denylist to re-enable this guard." >&2
+    exit 0
+fi
+
+allow_file=$(mktemp)
+deny_file=$(mktemp)
+trap 'rm -f "$allow_file" "$deny_file"' EXIT INT TERM
+
+while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in
+        ''|'#'*) continue ;;
+        '!'*) printf '%s\n' "${line#!}" >> "$allow_file" ;;
+        *) printf '%s\n' "$line" >> "$deny_file" ;;
+    esac
+done < "$denylist"
+
+if [ ! -s "$deny_file" ]; then
+    exit 0
+fi
+
+# Collect added lines from the staged diff, tagged with their target file.
+staged_added=$(mktemp)
+trap 'rm -f "$allow_file" "$deny_file" "$staged_added"' EXIT INT TERM
+git diff --cached --no-color -U0 --diff-filter=ACMR \
+    -- . ":(exclude).sensitive-terms.local" \
+    | awk '
+        /^\+\+\+ b\// { file = substr($0, 7); next }
+        /^\+/ && !/^\+\+\+/ { print file "\t" substr($0, 2) }
+    ' > "$staged_added"
+
+violations=0
+# For each added line, deny-match wins unless an allow pattern exempts the line.
+while IFS="$(printf '\t')" read -r file content; do
+    [ -n "$content" ] || continue
+    if printf '%s' "$content" | grep -iqE -f "$deny_file"; then
+        if [ -s "$allow_file" ] && printf '%s' "$content" | grep -iqE -f "$allow_file"; then
+            continue
+        fi
+        violations=$((violations + 1))
+        printf 'pre-commit: BLOCKED sensitive term in %s\n' "$file" >&2
+    fi
+done < "$staged_added"
+
+if [ "$violations" -gt 0 ]; then
+    printf '\npre-commit: %d sensitive-term violation(s) found. Commit rejected.\n' "$violations" >&2
+    printf '%s\n' "pre-commit: remove the flagged content, or update .sensitive-terms.local if it is a false positive." >&2
+    exit 1
+fi
+
+exit 0
