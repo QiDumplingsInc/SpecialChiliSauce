@@ -193,6 +193,44 @@ const resolveHubImage = (reference, configPath) => {
   return image;
 };
 
+// The chili sauce landing page (index.html) is generated from
+// templates/page-home.html and the copy in content/home.json, so admin edit
+// mode can change a word or a price without anyone touching the markup.
+// content/home.json is a flat list of editable strings; each one becomes a
+// {{HOME_STRINGS_<KEY>_TEXT}} token in the template. The values are substituted
+// verbatim, not HTML-escaped: the page's body copy legitimately holds literal
+// quotation marks and ampersands in text context, so escaping here would corrupt
+// copy that must round-trip byte for byte. Markup injection is not the risk it
+// would be for an escaped value, because the gate (scripts/content-patch.mjs)
+// already rejects the characters < > { and } in any editable value.
+// A --fixture run renders a sample gallery into a temp directory and never the
+// chili sauce page, so the home copy is loaded and index.html is generated only
+// in the real build (workRoot === repoRoot).
+const renderHome = workRoot === repoRoot;
+const homeContent = renderHome
+  ? JSON.parse(readFileSync(path.join(workRoot, 'content', 'home.json'), 'utf8'))
+  : { strings: [] };
+const homeTokens = {};
+if (renderHome) {
+  if (!Array.isArray(homeContent.strings) || homeContent.strings.length === 0) {
+    throw new Error('content/home.json: strings must be a non-empty array');
+  }
+  const seenHomeKeys = new Set();
+  for (const entry of homeContent.strings) {
+    if (entry === null || typeof entry !== 'object' || typeof entry.key !== 'string' || entry.key === '') {
+      throw new Error('content/home.json: every string needs a non-empty "key"');
+    }
+    if (seenHomeKeys.has(entry.key)) {
+      throw new Error(`content/home.json: duplicate string key "${entry.key}"`);
+    }
+    seenHomeKeys.add(entry.key);
+    if (typeof entry.text !== 'string' || entry.text === '') {
+      throw new Error(`content/home.json: string "${entry.key}" needs non-empty "text"`);
+    }
+    homeTokens[`HOME_STRINGS_${entry.key.replace(/-/g, '_').toUpperCase()}_TEXT`] = entry.text;
+  }
+}
+
 // Every patch address the generated pages are allowed to carry, derived from
 // the gate's own whitelist crossed with the records that actually exist. The
 // browser overlay turns a data-edit-field attribute straight into a patch
@@ -207,8 +245,13 @@ const resolveHubImage = (reference, configPath) => {
 // what keeps the whitelist and the overlay's reach one set rather than two
 // lists that drift. See EDITABLE_RULE_TYPES in scripts/content-patch.mjs.
 const editableAddresses = new Set();
+const contentByFile = {
+  'content/gallery.json': galleryConfig,
+  'content/artworks.json': artworkCatalog,
+  'content/home.json': homeContent,
+};
 for (const [file, collections] of Object.entries(EDITABLE_CONTENT)) {
-  const data = file === 'content/gallery.json' ? galleryConfig : artworkCatalog;
+  const data = contentByFile[file];
   for (const [collection, spec] of Object.entries(collections)) {
     for (const [field, rule] of Object.entries(spec.fields)) {
       if (!EDITABLE_RULE_TYPES.includes(rule.type)) {
@@ -544,6 +587,22 @@ for (const page of galleryConfig.sectionPages) {
     },
     // A section page renders its own title and body copy in place.
     editableRecords: [{ file: 'content/gallery.json', collection: 'sectionPages', key: page.slug }],
+  });
+}
+
+// The chili sauce page carries its own header and markup, so it is rendered
+// from its own template with the home.json copy substituted in. It has no
+// gallery nav tabs or language-switcher note placeholders of its own.
+if (renderHome) {
+  pages.push({
+    fileName: 'index.html',
+    templateName: 'page-home',
+    activeTab: null,
+    tokens: homeTokens,
+    // Empty because content/home.json is deliberately outside EDITABLE_CONTENT
+    // until the in-place pencil for this page ships: the page renders no
+    // whitelisted record, so the reverse pencil guard has nothing to require.
+    editableRecords: [],
   });
 }
 

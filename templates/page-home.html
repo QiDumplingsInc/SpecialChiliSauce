@@ -1,0 +1,2360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- Primary Meta Tags -->
+  <title>Kay's Special Chili Oil Sauce - Handcrafted Artisan Chili Sauce | Taste of Home</title>
+  <meta name="title" content="Kay's Special Chili Oil Sauce - Handcrafted Artisan Chili Sauce">
+  <meta name="description" content="Handcrafted chili sauce made with traditional Chinese oil chili technique. Natural ingredients, no preservatives. Made with premium avocado oil. Available in Original, Smoky, and Extra Hot.">
+  <meta name="keywords" content="chili sauce, chili oil, handcrafted sauce, Chinese chili oil, artisan sauce, avocado oil, Kay's sauce">
+  <meta name="author" content="Kay's Special Chili Oil Sauce">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://qidumplingsinc.github.io/SpecialChiliSauce/">
+  <meta property="og:title" content="Kay's Special Chili Oil Sauce - Taste of Home">
+  <meta property="og:description" content="Handcrafted chili sauce made with traditional Chinese technique. Natural ingredients, premium avocado oil.">
+  <meta property="og:image" content="https://qidumplingsinc.github.io/SpecialChiliSauce/assets/Chili-Sauce.jpg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://qidumplingsinc.github.io/SpecialChiliSauce/">
+  <meta property="twitter:title" content="Kay's Special Chili Oil Sauce">
+  <meta property="twitter:description" content="Handcrafted chili sauce made with traditional Chinese technique.">
+  <meta property="twitter:image" content="https://qidumplingsinc.github.io/SpecialChiliSauce/assets/Chili-Sauce.jpg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/logo/favicon.png">
+
+  <style>
+    /* ========================================
+       CSS CUSTOM PROPERTIES (VARIABLES)
+       ======================================== */
+    :root {
+      /* Color Palette */
+      --color-primary: #8B0000;
+      --color-primary-light: #DC143C;
+      --color-primary-dark: #5C0000;
+      --color-secondary: #FF6B35;
+      --color-text: #333;
+      --color-text-light: #666;
+      --color-text-lighter: #999;
+      --color-white: #ffffff;
+      --color-bg-light: #FDF6E9;
+      --color-bg-lighter: #F5ECD9;
+
+      /* Spacing */
+      --spacing-xs: 0.5rem;
+      --spacing-sm: 1rem;
+      --spacing-md: 2rem;
+      --spacing-lg: 3rem;
+      --spacing-xl: 4rem;
+
+      /* Typography */
+      --font-family-primary: 'Georgia', serif;
+      --font-family-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-size-base: 1rem;
+      --font-size-sm: 0.9rem;
+      --font-size-lg: 1.1rem;
+      --font-size-xl: 1.2rem;
+      --font-size-2xl: 1.5rem;
+      --font-size-3xl: 2rem;
+      --font-size-4xl: 2.5rem;
+      --font-size-5xl: 3.5rem;
+      --line-height-base: 1.6;
+      --line-height-relaxed: 1.8;
+
+      /* Effects */
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 8px 25px rgba(0, 0, 0, 0.15);
+      --shadow-button: 0 4px 15px rgba(220, 20, 60, 0.3);
+      --shadow-button-hover: 0 6px 20px rgba(220, 20, 60, 0.4);
+
+      /* Transitions */
+      --transition-fast: 0.2s ease;
+      --transition-base: 0.3s ease;
+      --transition-slow: 0.5s ease;
+
+      /* Border Radius */
+      --radius-sm: 5px;
+      --radius-md: 10px;
+      --radius-lg: 25px;
+
+      /* Layout */
+      --container-max-width: 1200px;
+      --container-padding: 20px;
+    }
+
+    /* ========================================
+       RESET & BASE STYLES
+       ======================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-family-primary);
+      line-height: var(--line-height-base);
+      color: var(--color-text);
+      background: var(--color-bg-light);
+      overflow-x: hidden;
+    }
+
+    /* UI elements (buttons, prices, nav, badges) use a clean sans-serif
+       for a more modern feel and better legibility at small mobile sizes */
+    .cta-button,
+    .buy-button,
+    .product-order-btn,
+    .scroll-to-top,
+    .order-shortcut,
+    .language-switcher button,
+    .social-links a,
+    .social-links button,
+    .heat-level,
+    .size-label,
+    .size-price,
+    .size-per-oz,
+    .sizes-title,
+    .qr-modal-title,
+    .qr-modal-subtitle,
+    nav {
+      font-family: var(--font-family-ui);
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      transition: var(--transition-base);
+    }
+
+    /* ========================================
+       UTILITY CLASSES
+       ======================================== */
+    .container {
+      max-width: var(--container-max-width);
+      margin: 0 auto;
+      padding: 0 var(--container-padding);
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========================================
+       SCROLL TO TOP BUTTON
+       ======================================== */
+    .scroll-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: var(--color-primary-light);
+      color: var(--color-white);
+      border: none;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition-base);
+      z-index: 1000;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scroll-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .order-shortcut {
+      position: fixed;
+      bottom: 90px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: var(--color-primary-light);
+      color: var(--color-white);
+      border: none;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      cursor: pointer;
+      opacity: 1;
+      visibility: visible;
+      transition: var(--transition-base);
+      z-index: 1000;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .order-shortcut:hover {
+      background: var(--color-primary);
+      transform: translateY(-3px);
+    }
+
+    .scroll-to-top:hover {
+      background: var(--color-primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* ========================================
+       LANGUAGE SWITCHER
+       ======================================== */
+    .language-switcher {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      z-index: 1000;
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .language-switcher button {
+      background: transparent;
+      border: none;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      cursor: pointer;
+      font-size: var(--font-size-base);
+      font-weight: bold;
+      transition: var(--transition-base);
+      color: var(--color-primary);
+    }
+
+    .language-switcher button:hover {
+      background: var(--color-bg-lighter);
+    }
+
+    .language-switcher button.active {
+      background: var(--color-primary-light);
+      color: var(--color-white);
+    }
+
+    /* ========================================
+       HEADER
+       ======================================== */
+    header {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+      color: var(--color-white);
+      padding: var(--spacing-sm) 0;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      transition: var(--transition-base);
+    }
+
+    header.scrolled {
+      padding: 0.5rem 0;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .logo {
+      font-size: var(--font-size-3xl);
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      transition: var(--transition-base);
+    }
+
+    .social-links {
+      display: flex;
+      gap: var(--spacing-sm);
+      flex-wrap: wrap;
+      font-family: var(--font-family-ui);
+    }
+
+    .social-links a {
+      color: var(--color-white);
+      text-decoration: none;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border: 2px solid var(--color-white);
+      border-radius: var(--radius-sm);
+      transition: var(--transition-base);
+      font-weight: 500;
+    }
+
+    .social-links a:hover,
+    .social-links button:hover {
+      background: var(--color-white);
+      color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+
+    .social-links button {
+      color: var(--color-white);
+      background: transparent;
+      border: 2px solid var(--color-white);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    /* ========================================
+       QR CODE MODAL
+       ======================================== */
+    .qr-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-modal-overlay.active {
+      display: flex;
+    }
+
+    .qr-modal {
+      background: var(--color-white);
+      border-radius: var(--radius-md);
+      padding: 2rem 2rem 1.5rem;
+      text-align: center;
+      position: relative;
+      box-shadow: var(--shadow-xl);
+      width: 260px;
+    }
+
+    .qr-modal-close {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.75rem;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      color: var(--color-text-lighter);
+      padding: 0.2rem 0.4rem;
+    }
+
+    .qr-modal-close:hover {
+      color: var(--color-primary);
+    }
+
+    .qr-modal-title {
+      font-size: var(--font-size-xl);
+      font-weight: bold;
+      color: var(--color-primary);
+      margin-bottom: 1rem;
+    }
+
+    .qr-modal img {
+      width: 180px;
+      height: 180px;
+      object-fit: contain;
+      border-radius: var(--radius-sm);
+    }
+
+    .qr-modal-subtitle {
+      margin-top: 0.75rem;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
+    }
+
+    /* ========================================
+       HERO SECTION
+       ======================================== */
+    .hero {
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('assets/Chili-Sauce.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      color: var(--color-white);
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      animation: heroFadeIn 1s ease-out;
+    }
+
+    @keyframes heroFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-content h1 {
+      font-size: var(--font-size-5xl);
+      margin-bottom: var(--spacing-sm);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .tagline {
+      font-size: var(--font-size-2xl);
+      margin-bottom: var(--spacing-md);
+      font-style: italic;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: var(--color-primary-light);
+      color: var(--color-white);
+      padding: var(--spacing-sm) var(--spacing-md);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-xl);
+      font-weight: bold;
+      transition: var(--transition-base);
+      box-shadow: var(--shadow-button);
+      cursor: pointer;
+    }
+
+    .cta-button:hover {
+      background: var(--color-primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-button-hover);
+    }
+
+    /* ========================================
+       SECTIONS
+       ======================================== */
+    .section {
+      padding: var(--spacing-xl) 0;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: var(--font-size-4xl);
+      margin-bottom: var(--spacing-lg);
+      color: var(--color-primary);
+      position: relative;
+      padding-bottom: var(--spacing-sm);
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: var(--color-primary-light);
+      border-radius: 2px;
+    }
+
+    /* ========================================
+       PRODUCT GALLERY
+       ======================================== */
+    .product-gallery {
+      padding: var(--spacing-lg) 0;
+      background: var(--color-white);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-sm);
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-base);
+      cursor: pointer;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+      transition: var(--transition-slow);
+    }
+
+    .gallery-item:hover .gallery-image {
+      transform: scale(1.1);
+    }
+
+    /* ========================================
+       BRAND STORY IMAGE
+       ======================================== */
+    .brand-story-image {
+      padding: var(--spacing-md) 0;
+      background: var(--color-white);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .story-image-container {
+      width: 100%;
+      max-width: var(--container-max-width);
+      margin: 0 auto;
+      text-align: center;
+      padding: 0 var(--container-padding);
+    }
+
+    .story-image {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      max-height: 80vh;
+      display: block;
+      object-fit: contain;
+      margin: 0 auto;
+    }
+
+    /* ========================================
+       BRAND STORY
+       ======================================== */
+    .brand-story {
+      background: var(--color-bg-light);
+    }
+
+    .story-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: var(--font-size-lg);
+      line-height: var(--line-height-relaxed);
+    }
+
+    .story-content p {
+      margin-bottom: var(--spacing-sm);
+    }
+
+    /* ========================================
+       CUSTOMER FEEDBACK GALLERY
+       ======================================== */
+    .customer-feedback {
+      background: var(--color-white);
+    }
+
+    .feedback-intro {
+      max-width: 800px;
+      margin: 0 auto var(--spacing-lg);
+      text-align: center;
+      font-size: var(--font-size-lg);
+      color: var(--color-text-light);
+    }
+
+    .feedback-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
+    }
+
+    .feedback-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-base);
+      background: var(--color-white);
+    }
+
+    .feedback-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .feedback-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .feedback-caption {
+      padding: var(--spacing-sm) var(--spacing-sm) 0;
+      text-align: center;
+      font-style: italic;
+      color: var(--color-text-light);
+      font-size: var(--font-size-sm);
+      background: var(--color-bg-light);
+    }
+
+    .feedback-rating {
+      text-align: center;
+      color: var(--color-primary);
+      font-size: 1.1rem;
+      letter-spacing: 0.15rem;
+      background: var(--color-bg-light);
+      padding-top: var(--spacing-sm);
+    }
+
+    .feedback-attribution {
+      text-align: center;
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--color-text);
+      background: var(--color-bg-light);
+      padding: 0.2rem var(--spacing-sm) var(--spacing-sm);
+    }
+
+    /* ========================================
+       PRODUCTS
+       ======================================== */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
+    }
+
+    .product-card {
+      background: var(--color-white);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-base);
+      text-align: center;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 200px;
+      background: var(--color-bg-lighter);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--spacing-sm);
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+
+    .product-name {
+      font-size: var(--font-size-xl);
+      font-weight: bold;
+      margin-bottom: var(--spacing-xs);
+      color: var(--color-primary);
+    }
+
+    .product-description {
+      color: var(--color-text-light);
+      margin-bottom: var(--spacing-sm);
+      line-height: var(--line-height-relaxed);
+    }
+
+    .heat-level {
+      display: inline-block;
+      background: var(--color-primary-light);
+      color: var(--color-white);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: var(--font-size-sm);
+      margin-bottom: var(--spacing-sm);
+      font-weight: 500;
+    }
+
+    .product-sizes {
+      margin-top: var(--spacing-md);
+      padding-top: var(--spacing-md);
+      border-top: 2px solid var(--color-bg-lighter);
+    }
+
+    .product-order-btn {
+      display: block;
+      width: 100%;
+      margin-top: var(--spacing-sm);
+      padding: 0.6rem var(--spacing-sm);
+      background: var(--color-primary-light);
+      color: var(--color-white);
+      border: none;
+      border-radius: var(--radius-lg);
+      font-size: var(--font-size-base);
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: var(--transition-base);
+      box-shadow: var(--shadow-button);
+    }
+
+    .product-order-btn:hover {
+      background: var(--color-primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-button-hover);
+    }
+
+    .sizes-title {
+      font-size: var(--font-size-base);
+      font-weight: bold;
+      color: var(--color-text);
+      margin-bottom: var(--spacing-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .size-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+      margin-top: var(--spacing-sm);
+    }
+
+    .size-option {
+      background: var(--color-bg-light);
+      border: 2px solid var(--color-bg-lighter);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-sm);
+      transition: var(--transition-base);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .size-option:hover {
+      border-color: var(--color-primary-light);
+      background: white;
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .size-label {
+      font-size: var(--font-size-sm);
+      font-weight: bold;
+      color: var(--color-text);
+      display: block;
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+    }
+
+    .size-price {
+      font-size: var(--font-size-xl);
+      font-weight: bold;
+      color: var(--color-primary);
+      display: block;
+    }
+
+    .size-price-currency {
+      font-size: var(--font-size-base);
+    }
+
+    .size-per-oz {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-lighter);
+      display: block;
+      margin-top: 0.2rem;
+      font-style: italic;
+    }
+
+    /* Popular badge for middle size */
+    .size-option.popular {
+      border-color: var(--color-primary-light);
+      background: #fff5f5;
+    }
+
+    .size-option.popular::before {
+      content: '⭐ POPULAR';
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: var(--color-primary-light);
+      color: white;
+      font-size: 0.65rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0 var(--radius-sm) 0 var(--radius-sm);
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    body.chinese .size-option.popular::before {
+      content: '⭐ 热销';
+    }
+
+    /* ========================================
+       FEATURES
+       ======================================== */
+    .features {
+      background: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
+    }
+
+    .feature {
+      text-align: center;
+      padding: var(--spacing-md);
+      transition: var(--transition-base);
+      border-radius: var(--radius-md);
+    }
+
+    .feature:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-5px);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-sm);
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    .feature h3 {
+      margin-bottom: var(--spacing-sm);
+      font-size: var(--font-size-xl);
+    }
+
+    .feature p {
+      line-height: var(--line-height-relaxed);
+    }
+
+    /* ========================================
+       CONTACT SECTION
+       ======================================== */
+    .contact-section {
+      background: var(--color-bg-light);
+    }
+
+    .contact-intro {
+      max-width: 800px;
+      margin: 0 auto var(--spacing-lg);
+      text-align: center;
+      font-size: var(--font-size-lg);
+      color: var(--color-text-light);
+    }
+
+    .contact-content {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-lg);
+    }
+
+    .contact-item {
+      text-align: center;
+      background: var(--color-white);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-base);
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .contact-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .contact-item h3 {
+      color: var(--color-primary);
+      font-size: var(--font-size-2xl);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .contact-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-primary-light);
+    }
+
+    .qr-code {
+      max-width: 150px;
+      width: 100%;
+      height: auto;
+      border: 2px solid var(--color-primary-light);
+      border-radius: var(--radius-md);
+      padding: 8px;
+      background: var(--color-white);
+      margin: var(--spacing-sm) auto;
+    }
+
+    .contact-info {
+      font-size: var(--font-size-lg);
+      color: var(--color-text-light);
+      margin-top: var(--spacing-sm);
+      word-wrap: break-word;
+    }
+
+    .contact-info a {
+      color: var(--color-primary-light);
+      text-decoration: none;
+      font-weight: bold;
+      word-break: break-all;
+      overflow-wrap: break-word;
+    }
+
+    .contact-info a:hover {
+      text-decoration: underline;
+    }
+
+    .contact-note {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-lighter);
+      margin-top: var(--spacing-sm);
+      font-style: italic;
+    }
+
+    /* ========================================
+       BUY NOW SECTION
+       ======================================== */
+    .buy-now {
+      background: var(--color-white);
+      text-align: center;
+    }
+
+    .buy-section-divider {
+      margin-top: var(--spacing-lg);
+      padding-top: var(--spacing-lg);
+      border-top: 2px solid #e0e0e0;
+    }
+
+    .buy-section-title {
+      text-align: center;
+      color: var(--color-primary);
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .buy-section-subtitle {
+      text-align: center;
+      color: var(--color-text-light);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .buy-options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-md);
+    }
+
+    .buy-option-card {
+      text-align: center;
+      background: var(--color-white);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-base);
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .buy-option-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .buy-option-icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .buy-option-card h4 {
+      color: var(--color-primary);
+      margin-bottom: var(--spacing-sm);
+      font-size: var(--font-size-xl);
+    }
+
+    .buy-buttons {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
+    }
+
+    .buy-buttons .buy-button {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .buy-button {
+      display: inline-block;
+      background: var(--color-secondary);
+      color: var(--color-white);
+      padding: var(--spacing-sm) var(--spacing-md);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-lg);
+      font-weight: bold;
+      transition: var(--transition-base);
+      min-width: 200px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .buy-button:hover {
+      background: #E55A2B;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .buy-button.disabled {
+      background: #ccc;
+      color: #888;
+      cursor: not-allowed;
+      box-shadow: none;
+      pointer-events: none;
+    }
+
+    /* ========================================
+       NEWSLETTER SIGNUP SECTION
+       ======================================== */
+    .newsletter-section {
+      background: var(--color-white);
+      text-align: center;
+    }
+
+    .newsletter-intro {
+      max-width: 600px;
+      margin: 0 auto var(--spacing-md);
+      color: var(--color-text-light);
+      font-size: var(--font-size-lg);
+    }
+
+    .newsletter-form {
+      max-width: 560px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      justify-content: center;
+      font-family: var(--font-family-ui);
+    }
+
+    .newsletter-honeypot {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .newsletter-field {
+      flex: 1 1 180px;
+      padding: 0.7rem var(--spacing-sm);
+      border: 2px solid var(--color-bg-lighter);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-base);
+      color: var(--color-text);
+    }
+
+    .newsletter-field:focus {
+      outline: none;
+      border-color: var(--color-primary-light);
+    }
+
+    .newsletter-submit {
+      flex: 1 1 140px;
+      padding: 0.7rem var(--spacing-sm);
+      background: var(--color-primary-light);
+      color: var(--color-white);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-family-ui);
+      font-size: var(--font-size-base);
+      font-weight: bold;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .newsletter-submit:hover {
+      background: var(--color-primary);
+      transform: translateY(-2px);
+    }
+
+    .newsletter-submit:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .newsletter-status {
+      max-width: 560px;
+      margin: var(--spacing-sm) auto 0;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
+      font-style: italic;
+      display: none;
+    }
+
+    .newsletter-status.visible {
+      display: block;
+    }
+
+    /* ========================================
+       FOOTER
+       ======================================== */
+    footer {
+      background: #333;
+      color: var(--color-white);
+      text-align: center;
+      padding: var(--spacing-md) 0;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--spacing-md);
+      flex-wrap: wrap;
+    }
+
+    .footer-social a {
+      color: var(--color-white);
+      text-decoration: none;
+      margin: 0 var(--spacing-sm);
+      font-size: var(--font-size-lg);
+      transition: var(--transition-base);
+    }
+
+    .footer-social a:hover {
+      color: var(--color-primary-light);
+      transform: translateY(-2px);
+    }
+
+    /* ========================================
+       LANGUAGE HIDDEN CLASSES
+       ======================================== */
+    /* !important is deliberate: this class of bug (a component class
+       sharing the element also sets `display`, winning the cascade tie
+       by declaration order) has broken language switching on other
+       pages in this site. Language visibility must always win. */
+    .lang-en {
+      display: block !important;
+    }
+
+    .lang-zh {
+      display: none !important;
+    }
+
+    body.chinese .lang-en {
+      display: none !important;
+    }
+
+    body.chinese .lang-zh {
+      display: block !important;
+    }
+
+    /* ========================================
+       RESPONSIVE DESIGN
+       ======================================== */
+    @media (max-width: 768px) {
+      /* Typography */
+      .hero-content h1 {
+        font-size: var(--font-size-4xl);
+      }
+
+      .tagline {
+        font-size: var(--font-size-xl);
+      }
+
+      .section-title {
+        font-size: var(--font-size-3xl);
+      }
+
+      /* Header */
+      .header-content {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+
+      .logo {
+        font-size: var(--font-size-2xl);
+      }
+
+      .social-links {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-xs);
+        width: 100%;
+      }
+
+      .social-links a,
+      .social-links button {
+        width: 100%;
+        text-align: center;
+      }
+
+      /* Language Switcher: positioned absolutely within the header
+         (its nearest positioned ancestor) so it can never render as
+         a separate row above the header or overlap the logo. */
+      .language-switcher {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+      }
+
+      /* Scroll to Top Button */
+      .scroll-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+      }
+
+      .order-shortcut {
+        bottom: 75px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+      }
+
+      /* Hero Section */
+      .hero {
+        background-attachment: scroll;
+        min-height: 60vh;
+      }
+
+      /* Grids */
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .products-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+      }
+
+      .feedback-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .contact-content {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+      }
+
+      .buy-options-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+      }
+
+      .contact-item,
+      .buy-option-card {
+        padding: var(--spacing-xs);
+      }
+
+      .contact-item h3,
+      .buy-option-card h4 {
+        font-size: var(--font-size-sm);
+      }
+
+      .product-card {
+        padding: var(--spacing-sm);
+      }
+
+      /* Product size options - stack vertically on mobile */
+      .size-options {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+      }
+
+      /* Buttons */
+      .buy-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .buy-button {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      /* Footer */
+      .footer-content {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-content h1 {
+        font-size: var(--font-size-3xl);
+      }
+
+      .section-title {
+        font-size: var(--font-size-3xl);
+      }
+
+      .gallery-image {
+        height: 200px;
+      }
+
+      .product-card .product-name {
+        font-size: var(--font-size-base);
+      }
+
+      .product-card .product-description {
+        font-size: var(--font-size-sm);
+      }
+
+      .heat-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.6rem;
+      }
+    }
+
+    /* ========================================
+       PRINT STYLES
+       ======================================== */
+    @media print {
+      .language-switcher,
+      .scroll-to-top,
+      .order-shortcut,
+      .social-links,
+      .buy-now,
+      footer {
+        display: none;
+      }
+    }
+
+    /* ========================================
+       ACCESSIBILITY
+       ======================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Focus styles for keyboard navigation */
+    a:focus,
+    button:focus {
+      outline: 3px solid var(--color-primary-light);
+      outline-offset: 2px;
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      :root {
+        --color-text: #000;
+        --color-white: #fff;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FoodEstablishment",
+    "name": "Kay's Special Chili Oil Sauce",
+    "description": "Handcrafted chili sauce made with traditional Chinese oil chili technique",
+    "image": "assets/Chili-Sauce.jpg",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "US"
+    },
+    "servesCuisine": "Chinese",
+    "priceRange": "$$"
+  }
+  </script>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
+    <span aria-hidden="true">&#8593;</span>
+  </button>
+
+  <!-- Order Shortcut Button -->
+  <a href="#buy-now" class="order-shortcut" aria-label="Go to Order Directly">
+    <span aria-hidden="true">&#128722;</span>
+  </a>
+
+  <!-- QR Code Modal -->
+  <div class="qr-modal-overlay" id="qrModalOverlay" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
+    <div class="qr-modal">
+      <button class="qr-modal-close" id="qrModalClose" aria-label="Close">&#x2715;</button>
+      <div class="qr-modal-title" id="qrModalTitle"></div>
+      <img id="qrModalImg" src="" alt="QR Code" width="180" height="180">
+      <div class="qr-modal-subtitle" id="qrModalSubtitle"></div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header role="banner">
+    <!-- Language Switcher: nested inside header so mobile positioning
+         is relative to the header box, never above/overlapping it -->
+    <div class="language-switcher" role="navigation" aria-label="Language switcher">
+      <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+      <button class="lang-btn" data-lang="zh" aria-label="切换到中文">中文</button>
+    </div>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo lang-en">{{HOME_STRINGS_LOGO_EN_TEXT}}</div>
+        <div class="logo lang-zh">{{HOME_STRINGS_LOGO_ZH_TEXT}}</div>
+        <nav class="social-links" role="navigation" aria-label="Social media links">
+          <a href="home.html">
+            <span class="lang-en"><span aria-hidden="true">🏠</span> Home</span><span class="lang-zh"><span aria-hidden="true">🏠</span> 首页</span>
+          </a>
+          <button class="social-btn" data-qr="wechat" aria-label="WeChat QR Code">
+            <span class="lang-en">WeChat</span><span class="lang-zh">微信</span>
+          </button>
+          <button class="social-btn" data-qr="xhs" aria-label="Xiaohongshu QR Code">
+            <span class="lang-en">Rednote</span><span class="lang-zh">小红书</span>
+          </button>
+          <a href="https://instagram.com/your-instagram-handle" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://www.facebook.com/share/1EFRRZNRMs/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">Facebook</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" role="banner">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="lang-en">{{HOME_STRINGS_HERO_H1_EN_TEXT}}</h1>
+        <h1 class="lang-zh">{{HOME_STRINGS_HERO_H1_ZH_TEXT}}</h1>
+        <p class="tagline lang-en">{{HOME_STRINGS_HERO_TAGLINE_EN_TEXT}}</p>
+        <p class="tagline lang-zh">{{HOME_STRINGS_HERO_TAGLINE_ZH_TEXT}}</p>
+        <a href="#buy-now" class="cta-button lang-en">{{HOME_STRINGS_HERO_CTA_EN_TEXT}}</a>
+        <a href="#buy-now" class="cta-button lang-zh">{{HOME_STRINGS_HERO_CTA_ZH_TEXT}}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Brand Story Image -->
+  <section class="brand-story-image">
+    <div class="story-image-container">
+      <img src="assets/product/photo/chili_sauce_v1_2.JPG"
+           alt="Kay's Special Chili Oil with fresh ingredients"
+           class="story-image fade-in"
+           loading="lazy">
+    </div>
+  </section>
+
+  <!-- Brand Story -->
+  <section class="section brand-story" id="story">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in">{{HOME_STRINGS_STORY_TITLE_EN_TEXT}}</h2>
+      <h2 class="section-title lang-zh fade-in">{{HOME_STRINGS_STORY_TITLE_ZH_TEXT}}</h2>
+      <div class="story-content lang-en fade-in">
+        <p>{{HOME_STRINGS_STORY_EN_1_TEXT}}</p>
+        <br>
+        <p>{{HOME_STRINGS_STORY_EN_2_TEXT}}</p>
+        <br>
+        <p>{{HOME_STRINGS_STORY_EN_3_TEXT}}</p>
+        <br>
+        <p>{{HOME_STRINGS_STORY_EN_4_TEXT}}</p>
+        <br>
+        <p>{{HOME_STRINGS_STORY_EN_5_TEXT}}</p>
+      </div>
+      <div class="story-content lang-zh fade-in">
+        <p>{{HOME_STRINGS_STORY_ZH_1_TEXT}}</p>
+        <br>
+        <p>{{HOME_STRINGS_STORY_ZH_2_TEXT}}</p>
+        <br>
+        <p>{{HOME_STRINGS_STORY_ZH_3_TEXT}}</p>
+        <br>
+        <p>{{HOME_STRINGS_STORY_ZH_4_TEXT}}</p>
+      </div>
+    </div>
+
+      <img src="assets/product/3_jar_with_ingredient3.png"
+           alt="Kay's Special Chili Oil with fresh ingredients"
+           class="story-image fade-in"
+           loading="lazy">
+
+  </section>
+
+  <!-- Product Gallery -->
+  <section class="section product-gallery" id="gallery">
+    <div class="container">
+      <div class="gallery-grid">  
+ 
+        <div class="gallery-item fade-in">
+          <img src="assets/product/1_jar_with_ingredient3.jpg"
+               alt="Kay's Chili Sauce collection with labels"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+ 
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/0_full_merchan_3.4.png"
+               alt="Kay's Chili Sauce merchandise display"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/0_full_merchan_3.5.png"
+               alt="Kay's Chili Sauce product line"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/0_full_merchan_3.1.png"
+               alt="Traditional Chinese oil chili preparation"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/0_full_merchan_3.2.png"
+               alt="Kay's kitchen and cooking process"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/postcard2.png"
+               alt="Kay's Chili Sauce branded postcard"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/postcard.png"
+               alt="Kay's Chili Sauce promotional postcard"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/0_store_5.png"
+               alt="Kay's Chili Sauce store display"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/apron.png"
+               alt="Kay's Chili Sauce branded apron"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/bag.png"
+               alt="Kay's Chili Sauce tote bag"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/cup.png"
+               alt="Kay's Chili Sauce branded cup"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/hat.png"
+               alt="Kay's Chili Sauce branded hat"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/pings.png"
+               alt="Kay's Chili Sauce pins collection"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/rug.png"
+               alt="Kay's Chili Sauce branded rug"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+        <div class="gallery-item fade-in">
+          <img src="assets/merchandise/scoop.png"
+               alt="Kay's Chili Sauce branded scoop"
+               class="gallery-image"
+               loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Customer Feedback Gallery -->
+  <!-- PLACEHOLDER CONTENT: reviewer names/locations below are fabricated for
+       layout purposes (per design-review PII discussion). Replace with real,
+       permission-obtained customer names/locations and actual review text
+       before this goes live. -->
+  <section class="section customer-feedback" id="feedback">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in">{{HOME_STRINGS_FEEDBACK_TITLE_EN_TEXT}}</h2>
+      <h2 class="section-title lang-zh fade-in">{{HOME_STRINGS_FEEDBACK_TITLE_ZH_TEXT}}</h2>
+      <p class="feedback-intro lang-en fade-in">{{HOME_STRINGS_FEEDBACK_INTRO_EN_TEXT}}</p>
+      <p class="feedback-intro lang-zh fade-in">{{HOME_STRINGS_FEEDBACK_INTRO_ZH_TEXT}}</p>
+
+      <div class="feedback-grid">
+        <div class="feedback-item fade-in">
+          <img src="assets/customer-feedback/customer-feedback1.png"
+               alt="Customer enjoying Kay's Chili Sauce with dumplings"
+               class="feedback-image"
+               loading="lazy">
+          <div class="feedback-rating lang-en" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-zh" role="img" aria-label="5星好评">★★★★★</div>
+          <div class="feedback-caption lang-en">{{HOME_STRINGS_FEEDBACK_1_CAPTION_EN_TEXT}}</div>
+          <div class="feedback-caption lang-zh">{{HOME_STRINGS_FEEDBACK_1_CAPTION_ZH_TEXT}}</div>
+          <div class="feedback-attribution lang-en">&mdash; {{HOME_STRINGS_FEEDBACK_1_ATTR_EN_TEXT}}</div>
+          <div class="feedback-attribution lang-zh">&mdash; {{HOME_STRINGS_FEEDBACK_1_ATTR_ZH_TEXT}}</div>
+        </div>
+        <div class="feedback-item fade-in">
+          <img src="assets/customer-feedback/customer-feedback2.png"
+               alt="Customer testimonial for Kay's Chili Sauce"
+               class="feedback-image"
+               loading="lazy">
+          <div class="feedback-rating lang-en" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-zh" role="img" aria-label="5星好评">★★★★★</div>
+          <div class="feedback-caption lang-en">{{HOME_STRINGS_FEEDBACK_2_CAPTION_EN_TEXT}}</div>
+          <div class="feedback-caption lang-zh">{{HOME_STRINGS_FEEDBACK_2_CAPTION_ZH_TEXT}}</div>
+          <div class="feedback-attribution lang-en">&mdash; {{HOME_STRINGS_FEEDBACK_2_ATTR_EN_TEXT}}</div>
+          <div class="feedback-attribution lang-zh">&mdash; {{HOME_STRINGS_FEEDBACK_2_ATTR_ZH_TEXT}}</div>
+        </div>
+        <div class="feedback-item fade-in">
+          <img src="assets/customer-feedback/customer-feedback3.png"
+               alt="Customer review of Kay's Chili Sauce"
+               class="feedback-image"
+               loading="lazy">
+          <div class="feedback-rating lang-en" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-zh" role="img" aria-label="5星好评">★★★★★</div>
+          <div class="feedback-caption lang-en">{{HOME_STRINGS_FEEDBACK_3_CAPTION_EN_TEXT}}</div>
+          <div class="feedback-caption lang-zh">{{HOME_STRINGS_FEEDBACK_3_CAPTION_ZH_TEXT}}</div>
+          <div class="feedback-attribution lang-en">&mdash; {{HOME_STRINGS_FEEDBACK_3_ATTR_EN_TEXT}}</div>
+          <div class="feedback-attribution lang-zh">&mdash; {{HOME_STRINGS_FEEDBACK_3_ATTR_ZH_TEXT}}</div>
+        </div>
+        <div class="feedback-item fade-in">
+          <img src="assets/customer-feedback/customer-feedback4.png"
+               alt="Happy customer with Kay's Chili Sauce"
+               class="feedback-image"
+               loading="lazy">
+          <div class="feedback-rating lang-en" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="feedback-rating lang-zh" role="img" aria-label="5星好评">★★★★★</div>
+          <div class="feedback-caption lang-en">{{HOME_STRINGS_FEEDBACK_4_CAPTION_EN_TEXT}}</div>
+          <div class="feedback-caption lang-zh">{{HOME_STRINGS_FEEDBACK_4_CAPTION_ZH_TEXT}}</div>
+          <div class="feedback-attribution lang-en">&mdash; {{HOME_STRINGS_FEEDBACK_4_ATTR_EN_TEXT}}</div>
+          <div class="feedback-attribution lang-zh">&mdash; {{HOME_STRINGS_FEEDBACK_4_ATTR_ZH_TEXT}}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Brand Story Image -->
+  <section class="brand-story-image">
+    <div class="story-image-container">
+      <img src="assets/logo/Kay's Special Chili Sauce Label.png"
+           alt="Kay's Special Chili Sauce official label design"
+           class="story-image fade-in"
+           loading="lazy">
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section class="section" id="products">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in">{{HOME_STRINGS_PRODUCTS_TITLE_EN_TEXT}}</h2>
+      <h2 class="section-title lang-zh fade-in">{{HOME_STRINGS_PRODUCTS_TITLE_ZH_TEXT}}</h2>
+      <div class="products-grid">
+        <div class="product-card fade-in">
+          <div class="product-image">
+            <img src="assets/product/3_jar_with_ingredient3.png"
+              alt="Kay's Original First Flame Chili Sauce">
+          </div>
+          <h3 class="product-name lang-en">{{HOME_STRINGS_PRODUCT_FIRST_FLAME_NAME_EN_TEXT}}</h3>
+          <h3 class="product-name lang-zh">{{HOME_STRINGS_PRODUCT_FIRST_FLAME_NAME_ZH_TEXT}}</h3>
+          <div class="heat-level"> <span class="lang-en"><span aria-hidden="true">🌶️</span> {{HOME_STRINGS_PRODUCT_FIRST_FLAME_HEAT_EN_TEXT}}</span><span class="lang-zh"><span aria-hidden="true">🌶️</span> {{HOME_STRINGS_PRODUCT_FIRST_FLAME_HEAT_ZH_TEXT}}</span></div>
+          <p class="product-description lang-en">{{HOME_STRINGS_PRODUCT_FIRST_FLAME_DESC_EN_TEXT}}</p>
+          <p class="product-description lang-zh">{{HOME_STRINGS_PRODUCT_FIRST_FLAME_DESC_ZH_TEXT}}</p>
+
+          <div class="product-sizes">
+            <div class="sizes-title lang-en">{{HOME_STRINGS_SIZES_HEADING_EN_TEXT}}</div>
+            <div class="sizes-title lang-zh">{{HOME_STRINGS_SIZES_HEADING_ZH_TEXT}}</div>
+
+            <div class="size-options">
+              <div class="size-option">
+                <span class="size-label lang-en">{{HOME_STRINGS_SIZE_8OZ_LABEL_EN_TEXT}}</span>
+                <span class="size-label lang-zh">{{HOME_STRINGS_SIZE_8OZ_LABEL_ZH_TEXT}}</span>
+                <span class="size-price lang-en">{{HOME_STRINGS_SIZE_8OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_8OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-price lang-zh">{{HOME_STRINGS_SIZE_8OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_8OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-per-oz lang-en">{{HOME_STRINGS_SIZE_8OZ_PER_OZ_TEXT}}</span>
+                <span class="size-per-oz lang-zh">{{HOME_STRINGS_SIZE_8OZ_PER_OZ_TEXT}}</span>
+              </div>
+
+              <div class="size-option popular">
+                <span class="size-label lang-en">{{HOME_STRINGS_SIZE_16OZ_LABEL_EN_TEXT}}</span>
+                <span class="size-label lang-zh">{{HOME_STRINGS_SIZE_16OZ_LABEL_ZH_TEXT}}</span>
+                <span class="size-price lang-en">{{HOME_STRINGS_SIZE_16OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_16OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-price lang-zh">{{HOME_STRINGS_SIZE_16OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_16OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-per-oz lang-en">{{HOME_STRINGS_SIZE_16OZ_PER_OZ_TEXT}}</span>
+                <span class="size-per-oz lang-zh">{{HOME_STRINGS_SIZE_16OZ_PER_OZ_TEXT}}</span>
+              </div>
+
+              <div class="size-option">
+                <span class="size-label lang-en">{{HOME_STRINGS_SIZE_32OZ_LABEL_EN_TEXT}}</span>
+                <span class="size-label lang-zh">{{HOME_STRINGS_SIZE_32OZ_LABEL_ZH_TEXT}}</span>
+                <span class="size-price lang-en">{{HOME_STRINGS_SIZE_32OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_32OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-price lang-zh">{{HOME_STRINGS_SIZE_32OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_32OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-per-oz lang-en">{{HOME_STRINGS_SIZE_32OZ_PER_OZ_TEXT}}</span>
+                <span class="size-per-oz lang-zh">{{HOME_STRINGS_SIZE_32OZ_PER_OZ_TEXT}}</span>
+              </div>
+            </div>
+          </div>
+          <a href="#buy-now" class="product-order-btn lang-en">{{HOME_STRINGS_ORDER_NOW_EN_TEXT}}</a>
+          <a href="#buy-now" class="product-order-btn lang-zh">{{HOME_STRINGS_ORDER_NOW_ZH_TEXT}}</a>
+
+        </div>
+        <div class="product-card fade-in">
+          <div class="product-image">
+            <img src="assets/product/3_jar_with_ingredient3.png"
+              alt="Kay's Smoky Flavor Rush Chili Sauce">
+          </div>
+          <h3 class="product-name lang-en">{{HOME_STRINGS_PRODUCT_FLAVOR_RUSH_NAME_EN_TEXT}}</h3>
+          <h3 class="product-name lang-zh">{{HOME_STRINGS_PRODUCT_FLAVOR_RUSH_NAME_ZH_TEXT}}</h3>
+          <div class="heat-level"><span class="lang-en"><span aria-hidden="true">🌶️🌶️</span> {{HOME_STRINGS_PRODUCT_FLAVOR_RUSH_HEAT_EN_TEXT}}</span><span class="lang-zh"><span aria-hidden="true">🌶️🌶️</span> {{HOME_STRINGS_PRODUCT_FLAVOR_RUSH_HEAT_ZH_TEXT}}</span></div>
+          <p class="product-description lang-en">{{HOME_STRINGS_PRODUCT_FLAVOR_RUSH_DESC_EN_TEXT}}</p>
+          <p class="product-description lang-zh">{{HOME_STRINGS_PRODUCT_FLAVOR_RUSH_DESC_ZH_TEXT}}</p>
+
+          <div class="product-sizes">
+            <div class="sizes-title lang-en">{{HOME_STRINGS_SIZES_HEADING_EN_TEXT}}</div>
+            <div class="sizes-title lang-zh">{{HOME_STRINGS_SIZES_HEADING_ZH_TEXT}}</div>
+            <div class="size-options">
+              <div class="size-option">
+                <span class="size-label lang-en">{{HOME_STRINGS_SIZE_8OZ_LABEL_EN_TEXT}}</span>
+                <span class="size-label lang-zh">{{HOME_STRINGS_SIZE_8OZ_LABEL_ZH_TEXT}}</span>
+                <span class="size-price lang-en">{{HOME_STRINGS_SIZE_8OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_8OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-price lang-zh">{{HOME_STRINGS_SIZE_8OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_8OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-per-oz lang-en">{{HOME_STRINGS_SIZE_8OZ_PER_OZ_TEXT}}</span>
+                <span class="size-per-oz lang-zh">{{HOME_STRINGS_SIZE_8OZ_PER_OZ_TEXT}}</span>
+              </div>
+
+              <div class="size-option popular">
+                <span class="size-label lang-en">{{HOME_STRINGS_SIZE_16OZ_LABEL_EN_TEXT}}</span>
+                <span class="size-label lang-zh">{{HOME_STRINGS_SIZE_16OZ_LABEL_ZH_TEXT}}</span>
+                <span class="size-price lang-en">{{HOME_STRINGS_SIZE_16OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_16OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-price lang-zh">{{HOME_STRINGS_SIZE_16OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_16OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-per-oz lang-en">{{HOME_STRINGS_SIZE_16OZ_PER_OZ_TEXT}}</span>
+                <span class="size-per-oz lang-zh">{{HOME_STRINGS_SIZE_16OZ_PER_OZ_TEXT}}</span>
+              </div>
+
+              <div class="size-option">
+                <span class="size-label lang-en">{{HOME_STRINGS_SIZE_32OZ_LABEL_EN_TEXT}}</span>
+                <span class="size-label lang-zh">{{HOME_STRINGS_SIZE_32OZ_LABEL_ZH_TEXT}}</span>
+                <span class="size-price lang-en">{{HOME_STRINGS_SIZE_32OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_32OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-price lang-zh">{{HOME_STRINGS_SIZE_32OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_32OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-per-oz lang-en">{{HOME_STRINGS_SIZE_32OZ_PER_OZ_TEXT}}</span>
+                <span class="size-per-oz lang-zh">{{HOME_STRINGS_SIZE_32OZ_PER_OZ_TEXT}}</span>
+              </div>
+            </div>
+          </div>
+          <a href="#buy-now" class="product-order-btn lang-en">{{HOME_STRINGS_ORDER_NOW_EN_TEXT}}</a>
+          <a href="#buy-now" class="product-order-btn lang-zh">{{HOME_STRINGS_ORDER_NOW_ZH_TEXT}}</a>
+
+        </div>
+        <div class="product-card fade-in">
+          <div class="product-image">
+            <img src="assets/product/3_jar_with_ingredient3.png"
+              alt="Kay's Extra Hot Dragon Burn Chili Sauce">
+          </div>
+          <h3 class="product-name lang-en">{{HOME_STRINGS_PRODUCT_DRAGON_BURN_NAME_EN_TEXT}}</h3>
+          <h3 class="product-name lang-zh">{{HOME_STRINGS_PRODUCT_DRAGON_BURN_NAME_ZH_TEXT}}</h3>
+          <div class="heat-level"><span class="lang-en"><span aria-hidden="true">🌶️🌶️🌶️</span> {{HOME_STRINGS_PRODUCT_DRAGON_BURN_HEAT_EN_TEXT}}</span><span class="lang-zh"><span aria-hidden="true">🌶️🌶️🌶️</span> {{HOME_STRINGS_PRODUCT_DRAGON_BURN_HEAT_ZH_TEXT}}</span></div>
+          <p class="product-description lang-en">{{HOME_STRINGS_PRODUCT_DRAGON_BURN_DESC_EN_TEXT}}</p>
+          <p class="product-description lang-zh">{{HOME_STRINGS_PRODUCT_DRAGON_BURN_DESC_ZH_TEXT}}</p>
+
+          <div class="product-sizes">
+            <div class="sizes-title lang-en">{{HOME_STRINGS_SIZES_HEADING_EN_TEXT}}</div>
+            <div class="sizes-title lang-zh">{{HOME_STRINGS_SIZES_HEADING_ZH_TEXT}}</div>
+
+            <div class="size-options">
+              <div class="size-option">
+                <span class="size-label lang-en">{{HOME_STRINGS_SIZE_8OZ_LABEL_EN_TEXT}}</span>
+                <span class="size-label lang-zh">{{HOME_STRINGS_SIZE_8OZ_LABEL_ZH_TEXT}}</span>
+                <span class="size-price lang-en">{{HOME_STRINGS_SIZE_8OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_8OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-price lang-zh">{{HOME_STRINGS_SIZE_8OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_8OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-per-oz lang-en">{{HOME_STRINGS_SIZE_8OZ_PER_OZ_TEXT}}</span>
+                <span class="size-per-oz lang-zh">{{HOME_STRINGS_SIZE_8OZ_PER_OZ_TEXT}}</span>
+              </div>
+
+              <div class="size-option popular">
+                <span class="size-label lang-en">{{HOME_STRINGS_SIZE_16OZ_LABEL_EN_TEXT}}</span>
+                <span class="size-label lang-zh">{{HOME_STRINGS_SIZE_16OZ_LABEL_ZH_TEXT}}</span>
+                <span class="size-price lang-en">{{HOME_STRINGS_SIZE_16OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_16OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-price lang-zh">{{HOME_STRINGS_SIZE_16OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_16OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-per-oz lang-en">{{HOME_STRINGS_SIZE_16OZ_PER_OZ_TEXT}}</span>
+                <span class="size-per-oz lang-zh">{{HOME_STRINGS_SIZE_16OZ_PER_OZ_TEXT}}</span>
+              </div>
+
+              <div class="size-option">
+                <span class="size-label lang-en">{{HOME_STRINGS_SIZE_32OZ_LABEL_EN_TEXT}}</span>
+                <span class="size-label lang-zh">{{HOME_STRINGS_SIZE_32OZ_LABEL_ZH_TEXT}}</span>
+                <span class="size-price lang-en">{{HOME_STRINGS_SIZE_32OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_32OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-price lang-zh">{{HOME_STRINGS_SIZE_32OZ_PRICE_WHOLE_TEXT}}<span class="size-price-currency">{{HOME_STRINGS_SIZE_32OZ_PRICE_FRACTION_TEXT}}</span></span>
+                <span class="size-per-oz lang-en">{{HOME_STRINGS_SIZE_32OZ_PER_OZ_TEXT}}</span>
+                <span class="size-per-oz lang-zh">{{HOME_STRINGS_SIZE_32OZ_PER_OZ_TEXT}}</span>
+              </div>
+            </div>
+          </div>
+          <a href="#buy-now" class="product-order-btn lang-en">{{HOME_STRINGS_ORDER_NOW_EN_TEXT}}</a>
+          <a href="#buy-now" class="product-order-btn lang-zh">{{HOME_STRINGS_ORDER_NOW_ZH_TEXT}}</a>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section features" id="features">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in" style="color: white;">{{HOME_STRINGS_FEATURES_TITLE_EN_TEXT}}</h2>
+      <h2 class="section-title lang-zh fade-in" style="color: white;">{{HOME_STRINGS_FEATURES_TITLE_ZH_TEXT}}</h2>
+      <div class="features-grid">
+        <div class="feature fade-in">
+          <div class="feature-icon" aria-hidden="true">🥄</div>
+          <h3 class="lang-en">{{HOME_STRINGS_FEATURE_1_TITLE_EN_TEXT}}</h3>
+          <h3 class="lang-zh">{{HOME_STRINGS_FEATURE_1_TITLE_ZH_TEXT}}</h3>
+          <p class="lang-en">{{HOME_STRINGS_FEATURE_1_DESC_EN_TEXT}}</p>
+          <p class="lang-zh">{{HOME_STRINGS_FEATURE_1_DESC_ZH_TEXT}}</p>
+        </div>
+        <div class="feature fade-in">
+          <div class="feature-icon" aria-hidden="true">🌿</div>
+          <h3 class="lang-en">{{HOME_STRINGS_FEATURE_2_TITLE_EN_TEXT}}</h3>
+          <h3 class="lang-zh">{{HOME_STRINGS_FEATURE_2_TITLE_ZH_TEXT}}</h3>
+          <p class="lang-en">{{HOME_STRINGS_FEATURE_2_DESC_EN_TEXT}}</p>
+          <p class="lang-zh">{{HOME_STRINGS_FEATURE_2_DESC_ZH_TEXT}}</p>
+        </div>
+        <div class="feature fade-in">
+          <div class="feature-icon" aria-hidden="true">🏮</div>
+          <h3 class="lang-en">{{HOME_STRINGS_FEATURE_3_TITLE_EN_TEXT}}</h3>
+          <h3 class="lang-zh">{{HOME_STRINGS_FEATURE_3_TITLE_ZH_TEXT}}</h3>
+          <p class="lang-en">{{HOME_STRINGS_FEATURE_3_DESC_EN_TEXT}}</p>
+          <p class="lang-zh">{{HOME_STRINGS_FEATURE_3_DESC_ZH_TEXT}}</p>
+        </div>
+        <div class="feature fade-in">
+          <div class="feature-icon" aria-hidden="true">🍽️</div>
+          <h3 class="lang-en">{{HOME_STRINGS_FEATURE_4_TITLE_EN_TEXT}}</h3>
+          <h3 class="lang-zh">{{HOME_STRINGS_FEATURE_4_TITLE_ZH_TEXT}}</h3>
+          <p class="lang-en">{{HOME_STRINGS_FEATURE_4_DESC_EN_TEXT}}</p>
+          <p class="lang-zh">{{HOME_STRINGS_FEATURE_4_DESC_ZH_TEXT}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Buy Now -->
+  <section class="section buy-now" id="buy-now">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in">{{HOME_STRINGS_BUYNOW_TITLE_EN_TEXT}}</h2>
+      <h2 class="section-title lang-zh fade-in">{{HOME_STRINGS_BUYNOW_TITLE_ZH_TEXT}}</h2>
+      <p class="lang-en fade-in">{{HOME_STRINGS_BUYNOW_SUBTITLE_EN_TEXT}}</p>
+      <p class="lang-zh fade-in">{{HOME_STRINGS_BUYNOW_SUBTITLE_ZH_TEXT}}</p>
+
+      <!-- Direct Order Options -->
+      <div class="buy-section-divider fade-in">
+        <h3 class="buy-section-title lang-en">{{HOME_STRINGS_BUY_ORDER_DIRECTLY_TITLE_EN_TEXT}}</h3>
+        <h3 class="buy-section-title lang-zh">{{HOME_STRINGS_BUY_ORDER_DIRECTLY_TITLE_ZH_TEXT}}</h3>
+        <p class="buy-section-subtitle lang-en">{{HOME_STRINGS_BUY_ORDER_DIRECTLY_SUBTITLE_EN_TEXT}}</p>
+        <p class="buy-section-subtitle lang-zh">{{HOME_STRINGS_BUY_ORDER_DIRECTLY_SUBTITLE_ZH_TEXT}}</p>
+
+        <div class="buy-options-grid">
+          <!-- WeChat Order -->
+          <div class="buy-option-card">
+            <div class="buy-option-icon" aria-hidden="true">💬</div>
+            <h4 class="lang-en">{{HOME_STRINGS_BUY_WECHAT_TITLE_EN_TEXT}}</h4>
+            <h4 class="lang-zh">{{HOME_STRINGS_BUY_WECHAT_TITLE_ZH_TEXT}}</h4>
+            <div>
+              <img src="assets/contact/qr-wechat.jpg"
+                   alt="WeChat QR Code for ordering"
+                   class="qr-code"
+                   loading="lazy"
+                   onerror="this.style.display='none'">
+            </div>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-en">{{HOME_STRINGS_BUY_WECHAT_NOTE_EN_TEXT}}</p>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">{{HOME_STRINGS_BUY_WECHAT_NOTE_ZH_TEXT}}</p>
+          </div>
+
+          <!-- 小红书 Order -->
+          <div class="buy-option-card">
+            <div class="buy-option-icon" aria-hidden="true">📕</div>
+            <h4 class="lang-en">{{HOME_STRINGS_BUY_REDNOTE_TITLE_EN_TEXT}}</h4>
+            <h4 class="lang-zh">{{HOME_STRINGS_BUY_REDNOTE_TITLE_ZH_TEXT}}</h4>
+            <div>
+              <img src="assets/contact/qr-xhs.jpg"
+                   alt="Rednote QR Code for ordering"
+                   class="qr-code"
+                   loading="lazy">
+            </div>
+            <div style="margin: 1rem 0;">
+              <a href="http://xhslink.com/m/41QoyH8K49O" target="_blank" rel="noopener noreferrer">Contact via Rednote</a>
+            </div>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-en">{{HOME_STRINGS_NOTE_CATERING_EN_TEXT}}</p>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">{{HOME_STRINGS_NOTE_CATERING_ZH_TEXT}}</p>
+          </div>
+
+          <!-- Email Order -->
+          <div class="buy-option-card">
+            <div class="buy-option-icon" aria-hidden="true">📧</div>
+            <h4 class="lang-en">{{HOME_STRINGS_BUY_EMAIL_TITLE_EN_TEXT}}</h4>
+            <h4 class="lang-zh">{{HOME_STRINGS_BUY_EMAIL_TITLE_ZH_TEXT}}</h4>
+            <div style="margin: 2rem 0;">
+              <a href="mailto:QiDumplingsINC@gmail.com">QiDumplingsINC@gmail.com</a>
+            </div>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-en">{{HOME_STRINGS_NOTE_CATERING_EN_TEXT}}</p>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">{{HOME_STRINGS_NOTE_CATERING_ZH_TEXT}}</p>
+          </div>
+
+          <!-- Phone Order -->
+          <div class="buy-option-card">
+            <div class="buy-option-icon" aria-hidden="true">&#128222;</div>
+            <h4 class="lang-en">{{HOME_STRINGS_BUY_PHONE_TITLE_EN_TEXT}}</h4>
+            <h4 class="lang-zh">{{HOME_STRINGS_BUY_PHONE_TITLE_ZH_TEXT}}</h4>
+            <div style="margin: 2rem 0;">
+              <a href="tel:+17033458016">(703) 345-8016</a>
+            </div>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-en">{{HOME_STRINGS_NOTE_CALL_TEXT_EN_TEXT}}</p>
+            <p style="font-size: 0.9rem; color: #666;" class="lang-zh">{{HOME_STRINGS_NOTE_CALL_TEXT_ZH_TEXT}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Online Purchase Options -->
+      <div class="buy-section-divider fade-in">
+        <h3 class="buy-section-title lang-en">{{HOME_STRINGS_BUY_COMING_SOON_TITLE_EN_TEXT}}</h3>
+        <h3 class="buy-section-title lang-zh">{{HOME_STRINGS_BUY_COMING_SOON_TITLE_ZH_TEXT}}</h3>
+        <div class="buy-buttons">
+          <span class="buy-button disabled lang-en">{{HOME_STRINGS_BUY_AMAZON_COMING_SOON_EN_TEXT}}</span>
+          <span class="buy-button disabled lang-zh">{{HOME_STRINGS_BUY_AMAZON_COMING_SOON_ZH_TEXT}}</span>
+          <span class="buy-button disabled lang-en">{{HOME_STRINGS_BUY_INSTAGRAM_COMING_SOON_EN_TEXT}}</span>
+          <span class="buy-button disabled lang-zh">{{HOME_STRINGS_BUY_INSTAGRAM_COMING_SOON_ZH_TEXT}}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="section contact-section" id="contact">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in">{{HOME_STRINGS_CONTACT_TITLE_EN_TEXT}}</h2>
+      <h2 class="section-title lang-zh fade-in">{{HOME_STRINGS_CONTACT_TITLE_ZH_TEXT}}</h2>
+      <p class="contact-intro lang-en fade-in">{{HOME_STRINGS_CONTACT_INTRO_EN_TEXT}}</p>
+      <p class="contact-intro lang-zh fade-in">{{HOME_STRINGS_CONTACT_INTRO_ZH_TEXT}}</p>
+
+      <div class="contact-content">
+        <div class="contact-item fade-in">
+          <div class="contact-icon" aria-hidden="true">💬</div>
+          <h3 class="lang-en">{{HOME_STRINGS_CONTACT_WECHAT_TITLE_EN_TEXT}}</h3>
+          <h3 class="lang-zh">{{HOME_STRINGS_CONTACT_WECHAT_TITLE_ZH_TEXT}}</h3>
+          <div class="contact-info">
+            <img src="assets/contact/qr-wechat.jpg"
+                 alt="WeChat QR Code for contact"
+                 class="qr-code"
+                 loading="lazy"
+                 onerror="this.style.display='none'">
+          </div>
+          <p class="contact-note lang-en">{{HOME_STRINGS_NOTE_BULK_ORDERS_EN_TEXT}}</p>
+          <p class="contact-note lang-zh">{{HOME_STRINGS_NOTE_BULK_ORDERS_ZH_TEXT}}</p>
+        </div>
+
+        <div class="contact-item fade-in">
+          <div class="contact-icon" aria-hidden="true">📕</div>
+          <h3 class="lang-en">{{HOME_STRINGS_CONTACT_REDNOTE_TITLE_EN_TEXT}}</h3>
+          <h3 class="lang-zh">{{HOME_STRINGS_CONTACT_REDNOTE_TITLE_ZH_TEXT}}</h3>
+          <div class="contact-info">
+            <img src="assets/contact/qr-xhs.jpg"
+                 alt="Rednote QR Code for contact"
+                 class="qr-code"
+                 loading="lazy">
+          </div>
+          <div class="contact-info">
+            <a href="http://xhslink.com/m/41QoyH8K49O" target="_blank" rel="noopener noreferrer">Contact via Rednote</a>
+          </div>
+          <p class="contact-note lang-en">{{HOME_STRINGS_NOTE_BULK_ORDERS_EN_TEXT}}</p>
+          <p class="contact-note lang-zh">{{HOME_STRINGS_NOTE_BULK_ORDERS_ZH_TEXT}}</p>
+        </div>
+
+        <div class="contact-item fade-in">
+          <div class="contact-icon" aria-hidden="true">📧</div>
+          <h3 class="lang-en">{{HOME_STRINGS_CONTACT_EMAIL_TITLE_EN_TEXT}}</h3>
+          <h3 class="lang-zh">{{HOME_STRINGS_CONTACT_EMAIL_TITLE_ZH_TEXT}}</h3>
+          <div class="contact-info">
+            <a href="mailto:QiDumplingsINC@gmail.com">QiDumplingsINC@gmail.com</a>
+          </div>
+          <p class="contact-note lang-en">{{HOME_STRINGS_NOTE_BULK_ORDERS_EN_TEXT}}</p>
+          <p class="contact-note lang-zh">{{HOME_STRINGS_NOTE_BULK_ORDERS_ZH_TEXT}}</p>
+        </div>
+
+        <div class="contact-item fade-in">
+          <div class="contact-icon" aria-hidden="true">&#128222;</div>
+          <h3 class="lang-en">{{HOME_STRINGS_CONTACT_PHONE_TITLE_EN_TEXT}}</h3>
+          <h3 class="lang-zh">{{HOME_STRINGS_CONTACT_PHONE_TITLE_ZH_TEXT}}</h3>
+          <div class="contact-info">
+            <a href="tel:+17033458016">(703) 345-8016</a>
+          </div>
+          <p class="contact-note lang-en">{{HOME_STRINGS_NOTE_CALL_TEXT_EN_TEXT}}</p>
+          <p class="contact-note lang-zh">{{HOME_STRINGS_NOTE_CALL_TEXT_ZH_TEXT}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Signup -->
+  <section class="section newsletter-section" id="newsletter">
+    <div class="container">
+      <h2 class="section-title lang-en fade-in">{{HOME_STRINGS_NEWSLETTER_TITLE_EN_TEXT}}</h2>
+      <h2 class="section-title lang-zh fade-in">{{HOME_STRINGS_NEWSLETTER_TITLE_ZH_TEXT}}</h2>
+      <p class="newsletter-intro lang-en fade-in">{{HOME_STRINGS_NEWSLETTER_INTRO_EN_TEXT}}</p>
+      <p class="newsletter-intro lang-zh fade-in">{{HOME_STRINGS_NEWSLETTER_INTRO_ZH_TEXT}}</p>
+
+      <form class="newsletter-form fade-in" id="newsletterForm">
+        <input type="text" class="newsletter-honeypot" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="source" value="chili-sauce">
+        <input type="text" class="newsletter-field" id="newsletterName" name="name" data-placeholder-en="First Name" data-placeholder-zh="姓名" placeholder="First Name" aria-label="First Name" maxlength="100" required>
+        <input type="email" class="newsletter-field" id="newsletterEmail" name="email" data-placeholder-en="Email Address" data-placeholder-zh="电子邮箱" placeholder="Email Address" aria-label="Email Address" maxlength="100" required>
+        <button type="submit" class="newsletter-submit lang-en">{{HOME_STRINGS_NEWSLETTER_SUBMIT_EN_TEXT}}</button>
+        <button type="submit" class="newsletter-submit lang-zh">{{HOME_STRINGS_NEWSLETTER_SUBMIT_ZH_TEXT}}</button>
+      </form>
+      <p class="newsletter-status" id="newsletterStatusEn" role="status" aria-live="polite">{{HOME_STRINGS_NEWSLETTER_STATUS_EN_TEXT}}</p>
+      <p class="newsletter-status" id="newsletterStatusZh" role="status" aria-live="polite">{{HOME_STRINGS_NEWSLETTER_STATUS_ZH_TEXT}}</p>
+      <p class="newsletter-status" id="newsletterErrorEn" role="status" aria-live="polite">{{HOME_STRINGS_NEWSLETTER_ERROR_EN_TEXT}}</p>
+      <p class="newsletter-status" id="newsletterErrorZh" role="status" aria-live="polite">{{HOME_STRINGS_NEWSLETTER_ERROR_ZH_TEXT}}</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <p class="lang-en">&copy; 2024&ndash;<span id="copyright-year"></span> Kay's Special Chili Oil Sauce. All rights reserved.</p>
+        <p class="lang-zh">&copy; 2024&ndash;<span id="copyright-year-zh"></span> Kay's特制辣椒油。版权所有。</p>
+        <nav class="footer-social" role="navigation" aria-label="Footer social media links">
+          <a href="https://instagram.com/your-instagram-handle" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://amazon.com/your-product-link" target="_blank" rel="noopener noreferrer" class="lang-en">Amazon</a>
+          <a href="https://amazon.com/your-product-link" target="_blank" rel="noopener noreferrer" class="lang-zh">亚马逊</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // ==========================================
+    // COPYRIGHT YEAR
+    // ==========================================
+    const currentYear = new Date().getFullYear();
+    document.querySelectorAll('#copyright-year, #copyright-year-zh').forEach(el => {
+      el.textContent = currentYear;
+    });
+
+    // ==========================================
+    // LANGUAGE SWITCHER
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', function() {
+      const langButtons = document.querySelectorAll('.lang-btn');
+      const body = document.body;
+
+      // Check if user has a saved language preference
+      const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+      setLanguage(savedLang);
+
+      // Add click event to language buttons
+      langButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const lang = this.getAttribute('data-lang');
+          setLanguage(lang);
+          localStorage.setItem('preferredLanguage', lang);
+        });
+      });
+
+      function setLanguage(lang) {
+        // Remove active class from all buttons
+        langButtons.forEach(btn => btn.classList.remove('active'));
+
+        // Add active class to selected button
+        const activeButton = document.querySelector(`.lang-btn[data-lang="${lang}"]`);
+        if (activeButton) {
+          activeButton.classList.add('active');
+        }
+
+        // Update html lang attribute for accessibility
+        document.documentElement.setAttribute('lang', lang === 'zh' ? 'zh' : 'en');
+
+        // Toggle body class for language
+        if (lang === 'zh') {
+          body.classList.add('chinese');
+        } else {
+          body.classList.remove('chinese');
+        }
+
+        // Update newsletter field placeholders/labels for the active language
+        document.querySelectorAll('.newsletter-field').forEach(field => {
+          const text = lang === 'zh' ? field.dataset.placeholderZh : field.dataset.placeholderEn;
+          field.placeholder = text;
+          field.setAttribute('aria-label', text);
+        });
+      }
+    });
+
+    // ==========================================
+    // SCROLL TO TOP BUTTON
+    // ==========================================
+    const scrollToTopBtn = document.getElementById('scrollToTop');
+    const header = document.querySelector('header');
+
+    window.addEventListener('scroll', function() {
+      // Show/hide scroll to top button
+      if (window.pageYOffset > 300) {
+        scrollToTopBtn.classList.add('visible');
+      } else {
+        scrollToTopBtn.classList.remove('visible');
+      }
+
+      // Add shadow to header when scrolled
+      if (window.pageYOffset > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    scrollToTopBtn.addEventListener('click', function() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+
+    // ==========================================
+    // INTERSECTION OBSERVER FOR FADE-IN ANIMATIONS
+    // ==========================================
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Optionally unobserve after animation
+          // observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    // Observe all fade-in elements
+    document.querySelectorAll('.fade-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    // ==========================================
+    // SMOOTH SCROLL FOR ANCHOR LINKS
+    // ==========================================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+
+        // Don't prevent default for empty hash
+        if (href === '#') return;
+
+        e.preventDefault();
+        const target = document.querySelector(href);
+
+        if (target) {
+          const headerHeight = header.offsetHeight;
+          const targetPosition = target.offsetTop - headerHeight;
+
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // ==========================================
+    // LAZY LOADING FALLBACK (for older browsers)
+    // ==========================================
+    if ('loading' in HTMLImageElement.prototype === false) {
+      // Lazy loading not supported, load all images immediately
+      document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+        img.src = img.src;
+      });
+    }
+
+    // ==========================================
+    // QR CODE MODAL
+    // ==========================================
+    const qrData = {
+      wechat: {
+        titleEn: 'WeChat',
+        titleZh: '微信',
+        img: 'assets/contact/qr-wechat.jpg',
+        subtitleEn: 'Scan to add on WeChat',
+        subtitleZh: '扫码添加微信'
+      },
+      xhs: {
+        titleEn: 'Rednote',
+        titleZh: '小红书',
+        img: 'assets/contact/qr-xhs.jpg',
+        subtitleEn: 'Scan to follow on Rednote',
+        subtitleZh: '扫码关注小红书'
+      }
+    };
+
+    const qrOverlay = document.getElementById('qrModalOverlay');
+    const qrModalTitle = document.getElementById('qrModalTitle');
+    const qrModalImg = document.getElementById('qrModalImg');
+    const qrModalSubtitle = document.getElementById('qrModalSubtitle');
+
+    function openQrModal(key) {
+      const data = qrData[key];
+      const isZh = document.body.classList.contains('chinese');
+      qrModalTitle.textContent = isZh ? data.titleZh : data.titleEn;
+      qrModalImg.src = data.img;
+      qrModalImg.alt = (isZh ? data.titleZh : data.titleEn) + ' QR Code';
+      qrModalSubtitle.textContent = isZh ? data.subtitleZh : data.subtitleEn;
+      qrOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeQrModal() {
+      qrOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('[data-qr]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        openQrModal(this.dataset.qr);
+      });
+    });
+
+    document.getElementById('qrModalClose').addEventListener('click', closeQrModal);
+
+    qrOverlay.addEventListener('click', function(e) {
+      if (e.target === qrOverlay) closeQrModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeQrModal();
+    });
+
+    // ==========================================
+    // NEWSLETTER SIGNUP
+    // Posts to a Google Apps Script Web App that appends each signup to a
+    // Google Sheet. mode: 'no-cors' means the response is opaque — the
+    // .then() branch fires for any server response, not just success.
+    // ==========================================
+    const NEWSLETTER_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwxhYrrxZZp43HZn_SY79ZXwXfee-HNYwGzxmiR0uIvgU7tKMSi3IiiRV1WGrTLwdiicQ/exec';
+    const newsletterForm = document.getElementById('newsletterForm');
+    const newsletterStatusEn = document.getElementById('newsletterStatusEn');
+    const newsletterStatusZh = document.getElementById('newsletterStatusZh');
+    const newsletterErrorEn = document.getElementById('newsletterErrorEn');
+    const newsletterErrorZh = document.getElementById('newsletterErrorZh');
+    const newsletterAllStatus = [newsletterStatusEn, newsletterStatusZh, newsletterErrorEn, newsletterErrorZh];
+    const newsletterSubmitButtons = newsletterForm.querySelectorAll('.newsletter-submit');
+
+    function showNewsletterMessage(el) {
+      newsletterAllStatus.forEach(msg => msg.classList.remove('visible'));
+      el.classList.add('visible');
+    }
+
+    newsletterForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const isZh = document.body.classList.contains('chinese');
+
+      // Honeypot: if this hidden field got filled in, it was a bot — drop
+      // the submission silently instead of sending it or showing an error.
+      if (newsletterForm.elements['_gotcha'].value) {
+        newsletterForm.reset();
+        return;
+      }
+
+      newsletterSubmitButtons.forEach(btn => btn.disabled = true);
+
+      fetch(NEWSLETTER_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: new URLSearchParams(new FormData(newsletterForm))
+      })
+        .then(function() {
+          showNewsletterMessage(isZh ? newsletterStatusZh : newsletterStatusEn);
+          newsletterForm.reset();
+        })
+        .catch(function() {
+          showNewsletterMessage(isZh ? newsletterErrorZh : newsletterErrorEn);
+        })
+        .finally(function() {
+          newsletterSubmitButtons.forEach(btn => btn.disabled = false);
+        });
+    });
+
+    // ==========================================
+    // PERFORMANCE: Log page load time (optional)
+    // ==========================================
+    window.addEventListener('load', function() {
+      if (window.performance) {
+        const perfData = window.performance.timing;
+        const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+        console.log('Page load time:', pageLoadTime + 'ms');
+      }
+    });
+  </script>
+</body>
+
+</html>

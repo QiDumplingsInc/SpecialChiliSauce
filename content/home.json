@@ -1,0 +1,596 @@
+{
+    "strings": [
+        {
+            "key": "hero-h1-en",
+            "text": "Kay's Special Chili Oil Sauce"
+        },
+        {
+            "key": "hero-h1-zh",
+            "text": "Kay's 特制辣椒油"
+        },
+        {
+            "key": "hero-tagline-en",
+            "text": "Taste of Home, Just the Right Heat"
+        },
+        {
+            "key": "hero-tagline-zh",
+            "text": "家乡的味道，恰到好处的火辣"
+        },
+        {
+            "key": "hero-cta-en",
+            "text": "Shop Now"
+        },
+        {
+            "key": "hero-cta-zh",
+            "text": "立即购买"
+        },
+        {
+            "key": "logo-en",
+            "text": "Kay's Special Chili Oil Sauce"
+        },
+        {
+            "key": "logo-zh",
+            "text": "Kay's 特制辣椒油"
+        },
+        {
+            "key": "story-title-en",
+            "text": "Our Story"
+        },
+        {
+            "key": "story-title-zh",
+            "text": "我们的故事"
+        },
+        {
+            "key": "feedback-title-en",
+            "text": "Customer Love & Recipes"
+        },
+        {
+            "key": "feedback-title-zh",
+            "text": "客户好评 & 食谱"
+        },
+        {
+            "key": "products-title-en",
+            "text": "Our Signature Sauces"
+        },
+        {
+            "key": "products-title-zh",
+            "text": "我们的招牌酱料"
+        },
+        {
+            "key": "buynow-title-en",
+            "text": "Get Your Bottle Today"
+        },
+        {
+            "key": "buynow-title-zh",
+            "text": "今天就买一瓶吧"
+        },
+        {
+            "key": "contact-title-en",
+            "text": "Get in Touch"
+        },
+        {
+            "key": "contact-title-zh",
+            "text": "联系我们"
+        },
+        {
+            "key": "newsletter-title-en",
+            "text": "Stay in the Loop"
+        },
+        {
+            "key": "newsletter-title-zh",
+            "text": "订阅我们的消息"
+        },
+        {
+            "key": "features-title-en",
+            "text": "Why Choose Kay's?"
+        },
+        {
+            "key": "features-title-zh",
+            "text": "为什么选择Kay's？"
+        },
+        {
+            "key": "story-en-1",
+            "text": "Kay, known fondly as \"Kay Jie\" among her friends, was born in Xi'an, China. A passionate food lover and spice enthusiast, she began her culinary journey in Shenzhen, where she mastered the art of balancing flavors and heat. Bringing together the essence of both Northern and Southern Chinese chili traditions, Kay created her own signature chili sauce recipe — one that quickly gained admiration from friends and diners alike."
+        },
+        {
+            "key": "story-en-2",
+            "text": "In 2013, Kay immigrated to North America, bringing her love of bold flavors across the ocean. Her homemade chili sauce soon became a bridge of friendship — a taste of home that connected people through shared meals and stories."
+        },
+        {
+            "key": "story-en-3",
+            "text": "During her time running a restaurant in Virginia, Kay's chili sauce became a sensation. It was so popular that customers often asked for jars to take home, and even years after Kay sold her restaurant during the pandemic, people continued to reach out, hoping to get another taste."
+        },
+        {
+            "key": "story-en-4",
+            "text": "To honor that passion and bring authentic heat to those who love spice as much as she does, Kay founded her own food company. Her chili sauce became the first product — and the first premium chili sauce cooked entirely with avocado oil on the market."
+        },
+        {
+            "key": "story-en-5",
+            "text": "Today, Kay Chili Sauce carries the warmth of friendship, the richness of tradition, and the joy of real flavor — crafted for those who simply can't live without spice."
+        },
+        {
+            "key": "story-zh-1",
+            "text": "Kay（朋友们亲切地称她为\"Kay姐\"）出生于中国西安，成名于深圳。她不仅是一位美食探索家，还是位热情的画家，同时也是大华府地区活跃的中国京剧演员。她的画室是色彩的天堂，她对大自然的热爱以及对世界各地美食的独到见解，直接启发了她的私人菜单。她用艺术家的视角看待美食，将视觉审美、传统文化与深厚风味天衣无缝地融为一体。"
+        },
+        {
+            "key": "story-zh-2",
+            "text": "2013年，Kay将她的招牌辣椒酱配方带到了北美。在弗吉尼亚州经营风靡一时的餐厅期间，她的自制辣椒酱成了当时的爆款，食客们甚至经常要求打包整罐带回家。即使在疫情期间餐厅关闭多年后，忠实的顾客们依然不断联系她，只为能再次尝到那一口让人魂牵梦绕的味道。"
+        },
+        {
+            "key": "story-zh-3",
+            "text": "为了回应这份执着的期盼，Kay创立了自己的食品公司。Kay's Special Chili Oil Sauce 作为她的明星旗舰产品，是市面上第一款完全使用 100% 牛油果油和新鲜原料烹制的顶级辣椒酱。"
+        },
+        {
+            "key": "story-zh-4",
+            "text": "Kay 将中国辣椒传统的浓郁精髓与她独特的艺术灵魂注入其中，为所有真正无辣不欢的人，带去友情的温度、文化的厚度以及最纯正的家乡味道。"
+        },
+        {
+            "key": "feedback-intro-en",
+            "text": "See how our customers enjoy Kay's Special Chili Oil Sauce with their favorite dishes!"
+        },
+        {
+            "key": "feedback-intro-zh",
+            "text": "看看我们的客户如何用Kay's特制辣椒油搭配他们最喜欢的菜肴！"
+        },
+        {
+            "key": "feedback-1-caption-en",
+            "text": "\"Perfect with dumplings!\""
+        },
+        {
+            "key": "feedback-1-caption-zh",
+            "text": "\"搭配饺子太完美了！\""
+        },
+        {
+            "key": "feedback-2-caption-en",
+            "text": "\"Best chili oil I've ever had\""
+        },
+        {
+            "key": "feedback-2-caption-zh",
+            "text": "\"我吃过最好的辣椒油\""
+        },
+        {
+            "key": "feedback-3-caption-en",
+            "text": "\"Reminds me of home\""
+        },
+        {
+            "key": "feedback-3-caption-zh",
+            "text": "\"让我想起家的味道\""
+        },
+        {
+            "key": "feedback-4-caption-en",
+            "text": "\"Addicted to this sauce!\""
+        },
+        {
+            "key": "feedback-4-caption-zh",
+            "text": "\"对这个酱上瘾了！\""
+        },
+        {
+            "key": "feedback-1-attr-en",
+            "text": "Sarah, Arlington, VA"
+        },
+        {
+            "key": "feedback-1-attr-zh",
+            "text": "Sarah，弗吉尼亚州阿灵顿"
+        },
+        {
+            "key": "feedback-2-attr-en",
+            "text": "Michael, Richmond, VA"
+        },
+        {
+            "key": "feedback-2-attr-zh",
+            "text": "Michael，弗吉尼亚州里士满"
+        },
+        {
+            "key": "feedback-3-attr-en",
+            "text": "Linda, Seattle, WA"
+        },
+        {
+            "key": "feedback-3-attr-zh",
+            "text": "Linda，西雅图"
+        },
+        {
+            "key": "feedback-4-attr-en",
+            "text": "James, Fairfax, VA"
+        },
+        {
+            "key": "feedback-4-attr-zh",
+            "text": "James，弗吉尼亚州费尔法克斯"
+        },
+        {
+            "key": "product-first-flame-name-en",
+            "text": "First Flame"
+        },
+        {
+            "key": "product-first-flame-name-zh",
+            "text": "初焰"
+        },
+        {
+            "key": "product-flavor-rush-name-en",
+            "text": "Flavor Rush"
+        },
+        {
+            "key": "product-flavor-rush-name-zh",
+            "text": "香辣奔腾"
+        },
+        {
+            "key": "product-dragon-burn-name-en",
+            "text": "Dragon Burn"
+        },
+        {
+            "key": "product-dragon-burn-name-zh",
+            "text": "火龙焚烧"
+        },
+        {
+            "key": "product-first-flame-heat-en",
+            "text": "Mild Heat"
+        },
+        {
+            "key": "product-first-flame-heat-zh",
+            "text": "微辣"
+        },
+        {
+            "key": "product-flavor-rush-heat-en",
+            "text": "Medium Heat"
+        },
+        {
+            "key": "product-flavor-rush-heat-zh",
+            "text": "中辣"
+        },
+        {
+            "key": "product-dragon-burn-heat-en",
+            "text": "Extra Hot"
+        },
+        {
+            "key": "product-dragon-burn-heat-zh",
+            "text": "特辣"
+        },
+        {
+            "key": "product-first-flame-desc-en",
+            "text": "Our classic recipe with the perfect balance of heat and flavor. Great for beginners and everyday use."
+        },
+        {
+            "key": "product-first-flame-desc-zh",
+            "text": "我们的经典配方，热度和风味完美平衡。非常适合初学者和日常使用。"
+        },
+        {
+            "key": "product-flavor-rush-desc-en",
+            "text": "Rich smoky flavor with a deeper, more complex taste. Perfect for grilling and roasted dishes."
+        },
+        {
+            "key": "product-flavor-rush-desc-zh",
+            "text": "浓郁的烟熏味，口感更深层、更复杂。非常适合烧烤和烘烤菜肴。"
+        },
+        {
+            "key": "product-dragon-burn-desc-en",
+            "text": "For those who love intense heat and spicy. A fiery blend that packs a serious punch."
+        },
+        {
+            "key": "product-dragon-burn-desc-zh",
+            "text": "为热爱强烈辣味的人准备。火辣的混合，带来强劲的冲击。"
+        },
+        {
+            "key": "sizes-heading-en",
+            "text": "Available Sizes"
+        },
+        {
+            "key": "sizes-heading-zh",
+            "text": "可选规格"
+        },
+        {
+            "key": "size-8oz-label-en",
+            "text": "8 oz"
+        },
+        {
+            "key": "size-8oz-label-zh",
+            "text": "8盎司"
+        },
+        {
+            "key": "size-16oz-label-en",
+            "text": "16 oz"
+        },
+        {
+            "key": "size-16oz-label-zh",
+            "text": "16盎司"
+        },
+        {
+            "key": "size-32oz-label-en",
+            "text": "32 oz"
+        },
+        {
+            "key": "size-32oz-label-zh",
+            "text": "32盎司"
+        },
+        {
+            "key": "size-8oz-price-whole",
+            "text": "$10"
+        },
+        {
+            "key": "size-8oz-price-fraction",
+            "text": ".00"
+        },
+        {
+            "key": "size-16oz-price-whole",
+            "text": "$18"
+        },
+        {
+            "key": "size-16oz-price-fraction",
+            "text": ".00"
+        },
+        {
+            "key": "size-32oz-price-whole",
+            "text": "$28"
+        },
+        {
+            "key": "size-32oz-price-fraction",
+            "text": ".99"
+        },
+        {
+            "key": "size-8oz-per-oz",
+            "text": "$1.25/oz"
+        },
+        {
+            "key": "size-16oz-per-oz",
+            "text": "$1.125/oz"
+        },
+        {
+            "key": "size-32oz-per-oz",
+            "text": "$0.906/oz"
+        },
+        {
+            "key": "order-now-en",
+            "text": "Order Now"
+        },
+        {
+            "key": "order-now-zh",
+            "text": "立即订购"
+        },
+        {
+            "key": "feature-1-title-en",
+            "text": "Handcrafted in Small Batches"
+        },
+        {
+            "key": "feature-1-title-zh",
+            "text": "小批量手工制作"
+        },
+        {
+            "key": "feature-2-title-en",
+            "text": "All-Natural Ingredients"
+        },
+        {
+            "key": "feature-2-title-zh",
+            "text": "全天然成分"
+        },
+        {
+            "key": "feature-3-title-en",
+            "text": "Traditional Chinese Technique"
+        },
+        {
+            "key": "feature-3-title-zh",
+            "text": "传统中式工艺"
+        },
+        {
+            "key": "feature-4-title-en",
+            "text": "Perfect for Everything"
+        },
+        {
+            "key": "feature-4-title-zh",
+            "text": "百搭美味"
+        },
+        {
+            "key": "contact-wechat-title-en",
+            "text": "WeChat"
+        },
+        {
+            "key": "contact-wechat-title-zh",
+            "text": "微信"
+        },
+        {
+            "key": "contact-rednote-title-en",
+            "text": "Rednote"
+        },
+        {
+            "key": "contact-rednote-title-zh",
+            "text": "小红书"
+        },
+        {
+            "key": "contact-email-title-en",
+            "text": "Email"
+        },
+        {
+            "key": "contact-email-title-zh",
+            "text": "电子邮件"
+        },
+        {
+            "key": "contact-phone-title-en",
+            "text": "Phone"
+        },
+        {
+            "key": "contact-phone-title-zh",
+            "text": "电话"
+        },
+        {
+            "key": "feature-1-desc-en",
+            "text": "Each bottle is carefully made by hand to ensure consistent quality and flavor."
+        },
+        {
+            "key": "feature-1-desc-zh",
+            "text": "每瓶都经过精心手工制作，以确保质量和风味的一致性。"
+        },
+        {
+            "key": "feature-2-desc-en",
+            "text": "No artificial preservatives or additives. Just pure, natural ingredients."
+        },
+        {
+            "key": "feature-2-desc-zh",
+            "text": "无人工防腐剂或添加剂。只有纯天然的成分。"
+        },
+        {
+            "key": "feature-3-desc-en",
+            "text": "Made using authentic oil chili technique passed down through generations."
+        },
+        {
+            "key": "feature-3-desc-zh",
+            "text": "采用世代相传的正宗油泼辣子工艺制作。"
+        },
+        {
+            "key": "feature-4-desc-en",
+            "text": "Great for rice, dipping, cooking, and adding flavor to any dish."
+        },
+        {
+            "key": "feature-4-desc-zh",
+            "text": "适合拌饭、蘸料、烹饪，为任何菜肴增添风味。"
+        },
+        {
+            "key": "buynow-subtitle-en",
+            "text": "Experience the taste of home with Kay's Special Chili Oil Sauce"
+        },
+        {
+            "key": "buynow-subtitle-zh",
+            "text": "体验Kay's特制辣椒油的家的味道"
+        },
+        {
+            "key": "buy-order-directly-title-en",
+            "text": "Order Directly"
+        },
+        {
+            "key": "buy-order-directly-title-zh",
+            "text": "直接订购"
+        },
+        {
+            "key": "buy-coming-soon-title-en",
+            "text": "Coming Soon"
+        },
+        {
+            "key": "buy-coming-soon-title-zh",
+            "text": "将会支持"
+        },
+        {
+            "key": "buy-order-directly-subtitle-en",
+            "text": "For personal orders or bulk purchases"
+        },
+        {
+            "key": "buy-order-directly-subtitle-zh",
+            "text": "个人订购或批量采购"
+        },
+        {
+            "key": "buy-wechat-title-en",
+            "text": "Order via WeChat"
+        },
+        {
+            "key": "buy-wechat-title-zh",
+            "text": "微信订购"
+        },
+        {
+            "key": "buy-rednote-title-en",
+            "text": "Order via Rednote"
+        },
+        {
+            "key": "buy-rednote-title-zh",
+            "text": "小红书订购"
+        },
+        {
+            "key": "buy-email-title-en",
+            "text": "Email for Bulk Orders"
+        },
+        {
+            "key": "buy-email-title-zh",
+            "text": "批量订购邮箱"
+        },
+        {
+            "key": "buy-phone-title-en",
+            "text": "Phone Order"
+        },
+        {
+            "key": "buy-phone-title-zh",
+            "text": "电话订购"
+        },
+        {
+            "key": "buy-wechat-note-en",
+            "text": "Scan to place your order"
+        },
+        {
+            "key": "buy-wechat-note-zh",
+            "text": "扫码下单"
+        },
+        {
+            "key": "note-catering-en",
+            "text": "Perfect for catering & events"
+        },
+        {
+            "key": "note-catering-zh",
+            "text": "适合餐饮和活动"
+        },
+        {
+            "key": "note-call-text-en",
+            "text": "Call or text to place your order"
+        },
+        {
+            "key": "note-call-text-zh",
+            "text": "致电或发短信下单"
+        },
+        {
+            "key": "buy-amazon-coming-soon-en",
+            "text": "Buy on Amazon (Coming Soon)"
+        },
+        {
+            "key": "buy-amazon-coming-soon-zh",
+            "text": "亚马逊购买（即将上线）"
+        },
+        {
+            "key": "buy-instagram-coming-soon-en",
+            "text": "Follow on Instagram (Coming Soon)"
+        },
+        {
+            "key": "buy-instagram-coming-soon-zh",
+            "text": "关注Instagram（即将上线）"
+        },
+        {
+            "key": "contact-intro-en",
+            "text": "Have questions or interested in bulk orders for catering? We'd love to hear from you!"
+        },
+        {
+            "key": "contact-intro-zh",
+            "text": "有问题或对餐饮批量订购感兴趣？我们很乐意听到您的声音！"
+        },
+        {
+            "key": "note-bulk-orders-en",
+            "text": "For bulk orders, catering inquiries, or general questions"
+        },
+        {
+            "key": "note-bulk-orders-zh",
+            "text": "用于批量订购、餐饮咨询或一般问题"
+        },
+        {
+            "key": "newsletter-intro-en",
+            "text": "Get updates on new flavors, restocks, and special offers."
+        },
+        {
+            "key": "newsletter-intro-zh",
+            "text": "获取新口味、补货和特别优惠的最新消息。"
+        },
+        {
+            "key": "newsletter-submit-en",
+            "text": "Subscribe"
+        },
+        {
+            "key": "newsletter-submit-zh",
+            "text": "订阅"
+        },
+        {
+            "key": "newsletter-status-en",
+            "text": "Thanks for subscribing! We'll keep you posted."
+        },
+        {
+            "key": "newsletter-status-zh",
+            "text": "感谢您的订阅！我们会随时通知您最新消息。"
+        },
+        {
+            "key": "newsletter-error-en",
+            "text": "Something went wrong &mdash; please try again, or reach out via WeChat, email, or phone above."
+        },
+        {
+            "key": "newsletter-error-zh",
+            "text": "提交时出现问题，请重试，或通过上方的微信、邮箱或电话联系我们。"
+        }
+    ]
+}
