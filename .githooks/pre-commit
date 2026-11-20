@@ -1,0 +1,92 @@
+#!/bin/sh
+#
+# pre-commit hook: reject a staged package-lock.json that resolves packages
+# from a non-public registry host.
+#
+# What it does:
+#   Scans every staged package-lock.json (repo root and any nested package)
+#   and rejects the commit when a "resolved" URL points at a host that is not
+#   in the public-registry allowlist.
+# Input:
+#   None. Git runs pre-commit with no arguments. The hook reads the staged
+#   content of each lockfile from the index with "git show :<path>".
+# Output:
+#   Exit 0 and stay silent when no package-lock.json is staged, or when every
+#   staged lockfile resolves only from an allowed host.
+#   Exit 1 and print the offending file:line:host entries plus the fix when a
+#   staged lockfile resolves from a disallowed host.
+# How:
+#   List staged added/copied/modified files, keep those named
+#   package-lock.json, pipe each file's staged blob through awk, extract the
+#   host of each plain http(s) "resolved" URL, and record any host that is not
+#   in ALLOWED_HOSTS. If any host is recorded, print the report and exit 1.
+#
+# Why this guard exists:
+#   npm run in a shell that exports NPM_CONFIG_REGISTRY pointing at an internal
+#   mirror rewrites every "resolved" URL in package-lock.json to that mirror.
+#   An environment variable outranks the committed .npmrc, so the .npmrc alone
+#   does not stop recurrence. Internal mirror hosts have already reached a
+#   PUBLIC repository this way. This guard fails closed at commit time, before
+#   the leak can be pushed, instead of waiting for CI to fail incidentally.
+#
+# Limits:
+#   Git skips pre-commit on "git commit --no-verify". The hook inspects only
+#   plain http(s) "resolved" URLs (the shape npm uses for registry tarballs),
+#   so it does not police git+https or other VCS "resolved" forms. See
+#   README.md.
+
+# Space-separated allowlist of permitted registry hosts.
+# Default: the public npm registry only. Extend ONLY for a registry that this
+# repository deliberately uses.
+ALLOWED_HOSTS="registry.npmjs.org"
+
+tmp_dir=$(mktemp -d)
+trap 'rm -rf "$tmp_dir"' EXIT INT TERM
+
+git diff --cached --name-only --diff-filter=ACM > "$tmp_dir/staged"
+
+: > "$tmp_dir/violations"
+
+while IFS= read -r path; do
+	[ -n "$path" ] || continue
+	case "$path" in
+	package-lock.json | */package-lock.json) : ;;
+	*) continue ;;
+	esac
+
+	git show ":$path" 2>/dev/null | awk -v allow="$ALLOWED_HOSTS" -v file="$path" '
+		BEGIN { n = split(allow, a, " "); for (i = 1; i <= n; i++) ok[a[i]] = 1 }
+		/"resolved":[ \t]*"https?:\/\// {
+			host = $0
+			sub(/^.*"resolved":[ \t]*"https?:\/\//, "", host)
+			sub(/\/.*$/, "", host)
+			sub(/".*$/, "", host)
+			if (!(host in ok)) printf("  %s:%d: %s\n", file, NR, host)
+		}
+	' >> "$tmp_dir/violations"
+done < "$tmp_dir/staged"
+
+if [ -s "$tmp_dir/violations" ]; then
+	echo "Commit rejected: a staged package-lock.json resolves packages from a non-public registry host." >&2
+	echo "" >&2
+	echo "Allowed registry host(s): $ALLOWED_HOSTS" >&2
+	echo "" >&2
+	echo "Offending entries (file:line: host):" >&2
+	cat "$tmp_dir/violations" >&2
+	echo "" >&2
+	echo "This usually means npm ran in a shell that exports NPM_CONFIG_REGISTRY" >&2
+	echo "pointing at an internal mirror, which rewrites every resolved URL. The" >&2
+	echo "environment variable outranks the committed .npmrc, so fix the environment" >&2
+	echo "and regenerate the lockfile:" >&2
+	echo "" >&2
+	echo "  unset NPM_CONFIG_REGISTRY" >&2
+	echo "  rm -rf node_modules package-lock.json" >&2
+	echo "  npm install" >&2
+	echo "" >&2
+	echo "Then re-stage package-lock.json and commit again. To allow a registry this" >&2
+	echo "repository deliberately uses, add its host to ALLOWED_HOSTS in" >&2
+	echo ".githooks/pre-commit." >&2
+	exit 1
+fi
+
+exit 0
