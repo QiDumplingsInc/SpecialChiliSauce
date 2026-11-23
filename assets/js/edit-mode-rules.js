@@ -64,6 +64,27 @@ window.GALLERY_EDIT_RULES = {
           "maxLength": 500
         }
       }
+    },
+    "collections": {
+      "keyField": "slug",
+      "fields": {
+        "titleEn": {
+          "type": "text",
+          "maxLength": 120
+        },
+        "titleZh": {
+          "type": "text",
+          "maxLength": 120
+        },
+        "blurbEn": {
+          "type": "text",
+          "maxLength": 500
+        },
+        "blurbZh": {
+          "type": "text",
+          "maxLength": 500
+        }
+      }
     }
   }
 };

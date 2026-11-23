@@ -27,6 +27,7 @@ test('committed gallery HTML matches what build.mjs renders from templates and c
 test('build.mjs renders exactly the gallery pages that are committed', () => {
   const expected = [
     'gallery.html',
+    'gallery-collections.html',
     ...galleryConfig.mediumPages.map((page) => `gallery-${page.slug}.html`),
     ...galleryConfig.sectionPages.map((page) => `gallery-${page.slug}.html`),
   ].sort();
@@ -174,5 +175,141 @@ test('a front photograph that is not first fails the build', () => {
     assert.throws(() => execFileSync('node', ['build.mjs', '--fixture', fixtureRoot], { cwd: repoRoot, stdio: 'pipe' }));
   } finally {
     rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
+// The Collections page groups the catalog into curated series. These fixtures
+// build a self-contained catalog so each test isolates one collection rule
+// rather than depending on the real content files. A front image leads every
+// base work, so the hub's hero, about panels and medium cover all resolve and
+// the only variable is the collection data each test changes.
+const baseGalleryFixture = () => ({
+  searchPages: [],
+  facets: [],
+  artworkEmptyState: { en: 'None yet', zh: '暂无' },
+  mediumEmptyCover: { en: 'No works yet', zh: '暂无作品' },
+  heroSlides: [{ artworkId: 'w1', imageIndex: 0, headlineEn: 'Hero', headlineZh: '标题' }],
+  aboutPanels: [
+    { artworkId: 'w1', imageIndex: 0 },
+    { artworkId: 'w2', imageIndex: 0 },
+  ],
+  navTabs: [
+    { href: 'gallery.html', en: 'Artworks', zh: '作品' },
+    { href: 'gallery-collections.html', en: 'Collections', zh: '系列' },
+  ],
+  mediumPages: [{ slug: 'painting', titleEn: 'Painting', titleZh: '绘画', metaDescription: 'Paintings.' }],
+  sectionPages: [],
+  collectionsPage: {
+    titleEn: 'Collections',
+    titleZh: '系列',
+    metaDescription: 'Collections.',
+    introEn: 'Works grouped into series.',
+    introZh: '按系列分组的作品。',
+  },
+  collections: [
+    {
+      slug: 'series-a',
+      titleEn: 'Series A',
+      titleZh: '系列甲',
+      blurbEn: 'The first series.',
+      blurbZh: '第一个系列。',
+      cover: { artworkId: 'w1', imageIndex: 0 },
+    },
+  ],
+});
+const baseArtworksFixture = () => ({
+  artworks: [
+    {
+      id: 'w1',
+      medium: 'painting',
+      titleEn: 'Work One',
+      titleZh: '作品一',
+      images: [{ src: 'a.jpg', width: 10, height: 10, view: 'front', altEn: 'A', altZh: '甲' }],
+      collections: ['series-a'],
+    },
+    {
+      id: 'w2',
+      medium: 'painting',
+      titleEn: 'Work Two',
+      titleZh: '作品二',
+      images: [{ src: 'b.jpg', width: 10, height: 10, view: 'front', altEn: 'B', altZh: '乙' }],
+      collections: ['series-a'],
+    },
+  ],
+});
+const setupCollectionsFixture = (gallery, artworks) => {
+  const root = mkdtempSync(path.join(tmpdir(), 'gallery-collections-'));
+  mkdirSync(path.join(root, 'content'), { recursive: true });
+  mkdirSync(path.join(root, 'assets', 'js'), { recursive: true });
+  writeFileSync(path.join(root, 'content', 'gallery.json'), `${JSON.stringify(gallery, null, 4)}\n`);
+  writeFileSync(path.join(root, 'content', 'artworks.json'), `${JSON.stringify(artworks, null, 4)}\n`);
+  return root;
+};
+
+test('a collection renders its series heading and every work it holds', () => {
+  const root = setupCollectionsFixture(baseGalleryFixture(), baseArtworksFixture());
+  try {
+    execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' });
+    const html = readFileSync(path.join(root, 'gallery-collections.html'), 'utf8');
+    assert.match(html, /id="collection-series-a"/, 'the series section needs its anchor id');
+    assert.match(html, /Series A/, 'the series title should render');
+    assert.match(html, /Work One/, 'the first work in the series should render');
+    assert.match(html, /Work Two/, 'the second work in the series should render');
+    assert.match(html, /2 works/, 'the series work count should render');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('an unknown collection slug on a work fails the build', () => {
+  const artworks = baseArtworksFixture();
+  artworks.artworks[0].collections = ['no-such-series'];
+  const root = setupCollectionsFixture(baseGalleryFixture(), artworks);
+  try {
+    assert.throws(() => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a collection cover that is an in-situ photograph fails the build', () => {
+  const artworks = baseArtworksFixture();
+  // A work photographed only where it hangs: no front shot, so it leads with
+  // in-situ, which the catalogue allows. Pointing a collection cover at it must
+  // fail, because the overview crops covers to a square the way the hub does.
+  artworks.artworks.push({
+    id: 'w3',
+    medium: 'painting',
+    titleEn: 'Work Three',
+    titleZh: '作品三',
+    images: [{ src: 'c.jpg', width: 10, height: 10, view: 'in-situ', altEn: 'C', altZh: '丙' }],
+    collections: ['series-a'],
+  });
+  const gallery = baseGalleryFixture();
+  gallery.collections[0].cover = { artworkId: 'w3', imageIndex: 0 };
+  const root = setupCollectionsFixture(gallery, artworks);
+  try {
+    assert.throws(() => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a collection that no work joins fails the build', () => {
+  const gallery = baseGalleryFixture();
+  gallery.collections.push({
+    slug: 'series-b',
+    titleEn: 'Series B',
+    titleZh: '系列乙',
+    blurbEn: 'The empty series.',
+    blurbZh: '空系列。',
+    cover: { artworkId: 'w1', imageIndex: 0 },
+  });
+  // Every base work stays in series-a, so series-b holds nothing.
+  const root = setupCollectionsFixture(gallery, baseArtworksFixture());
+  try {
+    assert.throws(() => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
   }
 });

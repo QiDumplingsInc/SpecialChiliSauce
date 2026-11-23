@@ -712,6 +712,86 @@
   text-align: center;
 }
 
+/* ========================================
+   COLLECTIONS PAGE: hero intro, cover overview and per-series sections.
+   All rules use the shared brand tokens only: the overview reuses the
+   hub's .medium-grid / .medium-card look, and each section reuses the
+   category .artwork-grid / .artwork-card layout, so a series renders
+   exactly like a medium page under its own titled, counted heading.
+   ======================================== */
+.category-intro {
+  max-width: 44rem;
+  margin: 0 auto;
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
+}
+
+.collections-overview {
+  margin-bottom: var(--spacing-xl);
+}
+
+/* The work count under each overview cover card. */
+.collection-card-count {
+  display: block;
+  margin-top: var(--spacing-xs);
+  text-align: center;
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+/* One series block. scroll-margin-top keeps the heading clear of the sticky
+   header when an overview card jumps to it; a thin cream rule separates
+   adjacent series. */
+.collection-section {
+  padding: var(--spacing-lg) 0;
+  scroll-margin-top: 120px;
+}
+
+.collection-section + .collection-section {
+  border-top: 1px solid var(--color-bg-lighter);
+}
+
+.collection-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.collection-section-title {
+  margin: 0;
+  font-family: var(--font-family-geometric);
+  font-size: var(--font-size-2xl);
+  font-weight: 300;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+/* The chili-red count pill beside each series title. */
+.collection-count-pill {
+  display: inline-block;
+  padding: 0.2rem var(--spacing-sm);
+  background: var(--color-primary);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-sm);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-white);
+}
+
+.collection-blurb {
+  max-width: 44rem;
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
+}
+
 .filter-clear {
   background: none;
   border: none;

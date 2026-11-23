@@ -286,7 +286,7 @@ test('accepts a gallery page title edit against the committed file as it stands'
   rmSync(contentRoot, { recursive: true, force: true });
 });
 
-test('the whitelist is exactly the eight fields edit mode can reach in place', () => {
+test('the whitelist is exactly the fields edit mode can reach in place', () => {
   // ARQ-14 scoped edit mode to wording the build renders as the visible text of
   // one element, which is what the single inline mechanism can address. This is
   // a deliberate tripwire: every entry here is reach the patch gate grants, so
@@ -304,6 +304,10 @@ test('the whitelist is exactly the eight fields edit mode can reach in place', (
     'content/artworks.json|artworks|dimensionsZh',
     'content/artworks.json|artworks|titleEn',
     'content/artworks.json|artworks|titleZh',
+    'content/gallery.json|collections|blurbEn',
+    'content/gallery.json|collections|blurbZh',
+    'content/gallery.json|collections|titleEn',
+    'content/gallery.json|collections|titleZh',
     'content/gallery.json|mediumPages|titleEn',
     'content/gallery.json|mediumPages|titleZh',
     'content/gallery.json|sectionPages|bodyEn',
