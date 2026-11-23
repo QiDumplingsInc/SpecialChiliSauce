@@ -123,8 +123,26 @@ function renderWithArtworks(catalog) {
     const works = catalog.artworks.filter((artwork) => artwork.medium === page.slug);
     return works.length === 0 ? rest : { ...rest, cover: { artworkId: works[0].id, imageIndex: 0 } };
   });
+  // The collections array also names real artwork ids for its covers and takes
+  // its membership from each work's collections field. Collapse it to one
+  // sample series covered by the first sample work, and tag every sample work
+  // into that series, so a fixture render resolves and no series is empty.
+  fixtureConfig.collections = [
+    {
+      slug: 'sample-series',
+      titleEn: 'Sample Series',
+      titleZh: '样本系列',
+      blurbEn: 'A sample series for the fixture render.',
+      blurbZh: '用于夹具渲染的样本系列。',
+      cover: { artworkId: catalog.artworks[0].id, imageIndex: 0 },
+    },
+  ];
+  const fixtureCatalog = {
+    ...catalog,
+    artworks: catalog.artworks.map((artwork) => ({ ...artwork, collections: ['sample-series'] })),
+  };
   writeFileSync(path.join(fixtureRoot, 'content', 'gallery.json'), JSON.stringify(fixtureConfig, null, 4));
-  writeFileSync(path.join(fixtureRoot, 'content', 'artworks.json'), JSON.stringify(catalog, null, 4));
+  writeFileSync(path.join(fixtureRoot, 'content', 'artworks.json'), JSON.stringify(fixtureCatalog, null, 4));
   execFileSync('node', ['build.mjs', '--fixture', fixtureRoot], { cwd: repoRoot, encoding: 'utf8' });
   return fixtureRoot;
 }

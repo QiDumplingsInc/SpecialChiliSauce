@@ -96,6 +96,44 @@
                     "zh": "写实"
                 }
             ]
+        },
+        {
+            "key": "subject",
+            "field": "subject",
+            "labelEn": "Subject",
+            "labelZh": "主题",
+            "values": [
+                {
+                    "value": "fruit",
+                    "en": "Fruit",
+                    "zh": "水果"
+                },
+                {
+                    "value": "flower",
+                    "en": "Flower",
+                    "zh": "花卉"
+                },
+                {
+                    "value": "bird",
+                    "en": "Bird",
+                    "zh": "鸟类"
+                },
+                {
+                    "value": "animal",
+                    "en": "Animal",
+                    "zh": "动物"
+                },
+                {
+                    "value": "fish",
+                    "en": "Fish",
+                    "zh": "鱼类"
+                },
+                {
+                    "value": "landscape",
+                    "en": "Landscape",
+                    "zh": "风景"
+                }
+            ]
         }
     ],
     "artworkEmptyState": {
@@ -257,14 +295,59 @@
             "metaDescription": "Exhibitions at Kay's Gallery.",
             "bodyEn": "Content coming soon",
             "bodyZh": "内容即将上线"
+        }
+    ],
+    "collectionsPage": {
+        "titleEn": "Collections",
+        "titleZh": "系列",
+        "metaDescription": "Collections of Kay's works, grouped into series.",
+        "introEn": "Kay's works grouped into series you can browse by theme.",
+        "introZh": "将 Kay 的作品按主题分成可浏览的系列。"
+    },
+    "collections": [
+        {
+            "slug": "orchard-and-vine",
+            "titleEn": "Orchard & Vine",
+            "titleZh": "果园与藤蔓",
+            "blurbEn": "Fruit from the branch and the vine, painted close and still.",
+            "blurbZh": "来自枝头与藤蔓的果实，以近景静物描绘。",
+            "cover": {
+                "artworkId": "painting-006",
+                "imageIndex": 0
+            }
         },
         {
-            "slug": "collections",
-            "titleEn": "Collections",
-            "titleZh": "系列",
-            "metaDescription": "Collections at Kay's Gallery.",
-            "bodyEn": "Content coming soon",
-            "bodyZh": "内容即将上线"
+            "slug": "birds-and-beasts",
+            "titleEn": "Birds & Beasts",
+            "titleZh": "飞禽走兽",
+            "blurbEn": "Birds and animals, each held in a single telling pose.",
+            "blurbZh": "飞禽与走兽，各以一个传神的姿态定格。",
+            "cover": {
+                "artworkId": "painting-009",
+                "imageIndex": 0
+            }
+        },
+        {
+            "slug": "beneath-the-water",
+            "titleEn": "Beneath the Water",
+            "titleZh": "水下世界",
+            "blurbEn": "Fish moving through green and blue water.",
+            "blurbZh": "游动在绿水与蓝水之间的鱼。",
+            "cover": {
+                "artworkId": "painting-014",
+                "imageIndex": 0
+            }
+        },
+        {
+            "slug": "flowers-and-far-places",
+            "titleEn": "Flowers & Far Places",
+            "titleZh": "花卉与远景",
+            "blurbEn": "A bloom seen up close and a cabin far off in the snow.",
+            "blurbZh": "近处盛开的花，与远方雪中的木屋。",
+            "cover": {
+                "artworkId": "painting-007",
+                "imageIndex": 0
+            }
         }
     ]
 }
