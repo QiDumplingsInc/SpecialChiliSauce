@@ -44,7 +44,7 @@ window.GALLERY_EDIT_RULES = {
         }
       }
     },
-    "sectionPages": {
+    "collections": {
       "keyField": "slug",
       "fields": {
         "titleEn": {
@@ -55,17 +55,17 @@ window.GALLERY_EDIT_RULES = {
           "type": "text",
           "maxLength": 120
         },
-        "bodyEn": {
+        "blurbEn": {
           "type": "text",
           "maxLength": 500
         },
-        "bodyZh": {
+        "blurbZh": {
           "type": "text",
           "maxLength": 500
         }
       }
     },
-    "collections": {
+    "exhibitions": {
       "keyField": "slug",
       "fields": {
         "titleEn": {

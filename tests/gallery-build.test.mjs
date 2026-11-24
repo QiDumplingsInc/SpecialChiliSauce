@@ -31,8 +31,8 @@ test('build.mjs renders exactly the gallery pages that are committed', () => {
     'gallery-new-arrivals.html',
     'gallery-portfolio.html',
     'gallery-artists.html',
+    'gallery-exhibitions.html',
     ...galleryConfig.mediumPages.map((page) => `gallery-${page.slug}.html`),
-    ...galleryConfig.sectionPages.map((page) => `gallery-${page.slug}.html`),
   ].sort();
   assert.deepEqual([...generatedPages].sort(), expected);
 });
@@ -63,24 +63,31 @@ test('every generated page highlights exactly one nav tab', () => {
   }
 });
 
-test('every class the section-page template renders has a CSS rule', () => {
-  // The five section pages shipped a .painting-placeholder panel that had no
-  // rule in either stylesheet, so it rendered as unstyled body text. This
-  // catches the same class of defect: markup referencing a class nobody styled.
-  const sectionTemplate = readFileSync(path.join(repoRoot, 'templates', 'page-section.html'), 'utf8');
+test('every class the Exhibitions page renders has a CSS rule', () => {
+  // The section pages shipped a .painting-placeholder panel that had no rule in
+  // either stylesheet, so it rendered as unstyled body text on five live pages.
+  // Exhibitions is where that template ended up: it is the newest page and the
+  // one with markup of its own, so it is the page worth pinning against the
+  // same class of defect, markup referencing a class nobody styled.
+  const html = readFileSync(path.join(repoRoot, 'gallery-exhibitions.html'), 'utf8');
   const stylesheets =
     readFileSync(path.join(repoRoot, 'assets', 'css', 'site.css'), 'utf8') +
     readFileSync(path.join(repoRoot, 'assets', 'css', 'gallery.css'), 'utf8');
   const classNames = new Set();
-  for (const match of sectionTemplate.matchAll(/class="([^"{]+)"/g)) {
+  for (const match of html.matchAll(/class="([^"{<>]+)"/g)) {
     for (const name of match[1].trim().split(/\s+/)) classNames.add(name);
   }
-  assert.ok(classNames.has('painting-placeholder'), 'sanity check: expected the placeholder class in the template');
+  assert.ok(classNames.has('exhibition-photo'), 'sanity check: expected the hang photograph class on the page');
+  // .lang-btn is a script hook, not a styled class: assets/js/language.js
+  // selects the language buttons by it, and their appearance comes from
+  // .language-switcher button.
+  const scriptHookClasses = new Set(['lang-btn']);
   for (const name of classNames) {
+    if (scriptHookClasses.has(name)) continue;
     assert.match(
       stylesheets,
       new RegExp(`\\.${name}([\\s,:{]|$)`, 'm'),
-      `.${name} is rendered by templates/page-section.html but has no CSS rule`
+      `.${name} is rendered by gallery-exhibitions.html but has no CSS rule`
     );
   }
 });
@@ -119,6 +126,7 @@ test('an unknown medium on an artwork fails the build instead of rendering a bro
       {
         id: 'broken-1',
         medium: 'not-a-real-medium',
+        support: 'canvas',
         titleEn: 'Test',
         titleZh: '测试',
         year: 2026,
@@ -160,6 +168,7 @@ test('a front photograph that is not first fails the build', () => {
       {
         id: 'broken-2',
         medium: 'painting',
+        support: 'canvas',
         titleEn: 'Test',
         titleZh: '测试',
         images: [
@@ -201,7 +210,6 @@ const baseGalleryFixture = () => ({
     { href: 'gallery-collections.html', en: 'Collections', zh: '系列' },
   ],
   mediumPages: [{ slug: 'painting', titleEn: 'Painting', titleZh: '绘画', metaDescription: 'Paintings.' }],
-  sectionPages: [],
   collectionsPage: {
     titleEn: 'Collections',
     titleZh: '系列',
@@ -241,6 +249,17 @@ const baseGalleryFixture = () => ({
     introEn: 'The artists.',
     introZh: '艺术家。',
   },
+  exhibitionsPage: {
+    titleEn: 'Exhibitions',
+    titleZh: '展览',
+    metaDescription: 'Exhibitions.',
+    introEn: 'Where the work has hung.',
+    introZh: '作品曾悬挂之处。',
+  },
+  // Every base work is photographed face on only, so there is no hang scene to
+  // show. A test that needs one adds both the in-situ photograph and the scene
+  // that claims it, because the build requires that pairing in both directions.
+  exhibitions: [],
   artists: [
     {
       slug: 'sample',
@@ -257,6 +276,7 @@ const baseArtworksFixture = () => ({
     {
       id: 'w1',
       medium: 'painting',
+      support: 'canvas',
       titleEn: 'Work One',
       titleZh: '作品一',
       images: [{ src: 'a.jpg', width: 10, height: 10, view: 'front', altEn: 'A', altZh: '甲' }],
@@ -265,6 +285,7 @@ const baseArtworksFixture = () => ({
     {
       id: 'w2',
       medium: 'painting',
+      support: 'canvas',
       titleEn: 'Work Two',
       titleZh: '作品二',
       images: [{ src: 'b.jpg', width: 10, height: 10, view: 'front', altEn: 'B', altZh: '乙' }],
@@ -315,6 +336,7 @@ test('a collection cover that is an in-situ photograph fails the build', () => {
   artworks.artworks.push({
     id: 'w3',
     medium: 'painting',
+    support: 'canvas',
     titleEn: 'Work Three',
     titleZh: '作品三',
     images: [{ src: 'c.jpg', width: 10, height: 10, view: 'in-situ', altEn: 'C', altZh: '丙' }],
@@ -414,5 +436,168 @@ test('an artist with mismatched bio languages fails the build', () => {
     assert.throws(() => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }));
   } finally {
     rmSync(root, { recursive: true, force: true });
+  }
+});
+
+// The Exhibitions page renders the in-situ photographs the catalogue already
+// carried and nothing rendered. Its data model is a pairing in both directions:
+// a scene names photographs, and the works visible in a scene are derived from
+// those photographs rather than listed again. These fixtures pin each half of
+// that pairing, because a break in either one puts an untitled picture of a
+// wall on a live page or leaves a real hang record unpublished.
+const withHangScene = () => {
+  const artworks = baseArtworksFixture();
+  artworks.artworks[0].images.push({
+    src: 'wall.jpg',
+    width: 10,
+    height: 10,
+    view: 'in-situ',
+    altEn: 'Work One on a wall',
+    altZh: '墙上的作品一',
+  });
+  const gallery = baseGalleryFixture();
+  gallery.exhibitions = [
+    {
+      slug: 'a-wall',
+      titleEn: 'A Wall',
+      titleZh: '一面墙',
+      blurbEn: 'One work on one wall.',
+      blurbZh: '一面墙上的一件作品。',
+      images: [{ artworkId: 'w1', imageIndex: 1 }],
+    },
+  ];
+  return { gallery, artworks };
+};
+
+test('a hang scene renders its photograph and the works visible in it', () => {
+  const { gallery, artworks } = withHangScene();
+  const root = setupCollectionsFixture(gallery, artworks);
+  try {
+    execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' });
+    const html = readFileSync(path.join(root, 'gallery-exhibitions.html'), 'utf8');
+    assert.match(html, /id="exhibition-a-wall"/, 'the scene section needs its anchor id');
+    assert.match(html, /A Wall/, 'the scene title should render');
+    assert.match(html, /One work on one wall\./, 'the scene blurb should render');
+    assert.match(html, /src="wall\.jpg"/, 'the hang photograph should render');
+    assert.match(html, /Work One/, 'the work visible in the scene should render');
+    assert.match(html, /href="gallery-painting\.html"/, 'each visible work cross-links to the page that shows it');
+    assert.doesNotMatch(html, /Work Two/, 'a work that is not in the photograph must not be listed');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a hang scene photograph that is not an in-situ view fails the build', () => {
+  // The exact opposite of the hub rule: the hub crops to a fixed slot so an
+  // in-situ shot is wrong there, and here a front view would be a photograph of
+  // the work rather than a record of where it hung. The catalogue here carries
+  // no room photograph at all, so the view rule is the only thing that can
+  // fail and this cannot pass because some other guard fired first.
+  const { gallery } = withHangScene();
+  gallery.exhibitions[0].images = [{ artworkId: 'w1', imageIndex: 0 }];
+  const root = setupCollectionsFixture(gallery, baseArtworksFixture());
+  try {
+    assert.throws(
+      () => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }),
+      (error) => /needs an in-situ photograph/.test(String(error.stderr)),
+      'a front view in a hang scene must fail the build for that reason'
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('an in-situ photograph that belongs to no hang scene fails the build', () => {
+  const { artworks } = withHangScene();
+  const root = setupCollectionsFixture(baseGalleryFixture(), artworks);
+  try {
+    assert.throws(
+      () => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }),
+      (error) => /belongs to no exhibitions scene/.test(String(error.stderr)),
+      'an unpublished hang photograph must fail the build for that reason'
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('the same photograph claimed by two hang scenes fails the build', () => {
+  const { gallery, artworks } = withHangScene();
+  gallery.exhibitions.push({ ...gallery.exhibitions[0], slug: 'the-same-wall' });
+  const root = setupCollectionsFixture(gallery, artworks);
+  try {
+    assert.throws(
+      () => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }),
+      (error) => /belongs to exactly one scene/.test(String(error.stderr)),
+      'a photograph told about twice must fail the build for that reason'
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a facet value no work in the catalogue carries fails the build', () => {
+  // The size facet shipped exactly this way: four declared options and no work
+  // with a sizeRange, so every chip on the Painting page returned an empty
+  // result. A filter that can only ever match nothing is worse than no filter.
+  const gallery = baseGalleryFixture();
+  gallery.facets = [
+    {
+      key: 'size',
+      field: 'sizeRange',
+      labelEn: 'Size Range',
+      labelZh: '尺寸范围',
+      values: [{ value: 'large', en: 'Large', zh: '大' }],
+    },
+  ];
+  const root = setupCollectionsFixture(gallery, baseArtworksFixture());
+  try {
+    assert.throws(
+      () => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }),
+      (error) => /could never match anything/.test(String(error.stderr)),
+      'a dead facet value must fail the build for that reason'
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a medium page can gather its works on a field other than medium', () => {
+  // How the one drawing reaches the Work on Paper page: medium names the
+  // technique, support names the thing the work is made on, and a page may
+  // select on either. The work stays one catalogue entry listed under both.
+  const gallery = baseGalleryFixture();
+  gallery.mediumPages.push({
+    slug: 'work-on-paper',
+    titleEn: 'Work on Paper',
+    titleZh: '纸本作品',
+    metaDescription: 'Works on paper.',
+    select: { field: 'support', value: 'paper' },
+  });
+  const artworks = baseArtworksFixture();
+  artworks.artworks[1].support = 'paper';
+  const root = setupCollectionsFixture(gallery, artworks);
+  try {
+    execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' });
+    const html = readFileSync(path.join(root, 'gallery-work-on-paper.html'), 'utf8');
+    assert.match(html, /Work Two/, 'the work on paper should render on the page that selects it');
+    assert.doesNotMatch(html, /Work One/, 'a work on canvas must not appear on the Work on Paper page');
+    const painting = readFileSync(path.join(root, 'gallery-painting.html'), 'utf8');
+    assert.match(painting, /Work Two/, 'the same work still appears under its own medium');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('no committed gallery page carries placeholder copy', () => {
+  // The whole point of ARQ-45. Nine of the fourteen gallery pages shipped
+  // either "Content coming soon" or a one-line empty state; this fails the
+  // build out if any page goes back to standing in for content it does not
+  // have. A medium with no works says so in written copy, which is a statement
+  // rather than a placeholder, and is covered by its own test.
+  for (const name of generatedPages) {
+    const html = readFileSync(path.join(repoRoot, name), 'utf8');
+    assert.doesNotMatch(html, /coming soon/i, `${name} still promises content instead of carrying it`);
+    assert.doesNotMatch(html, /painting-placeholder/, `${name} still renders the old placeholder panel`);
   }
 });

@@ -1,10 +1,10 @@
 // build.mjs -- renders every gallery*.html page at the repo root from the
 // templates in templates/ and the data in content/.
 //
-// Input:  content/gallery.json   (nav tabs, medium pages, section pages)
+// Input:  content/gallery.json   (nav tabs, medium pages, collections, hang scenes)
 //         content/artworks.json  (the artwork catalog, display only)
 //         templates/page-*.html  (one template per page shape)
-//         templates/partials/*   (header, footers, filter bar, placeholder card)
+//         templates/partials/*   (header, footers, edit-mode bootstrap)
 // Output: gallery.html plus gallery-<slug>.html at the repo root, written in
 //         place so GitHub Pages keeps serving the committed HTML with no
 //         build step at deploy time. Also assets/js/gallery-search-index.js
@@ -59,9 +59,6 @@ if (!Array.isArray(galleryConfig.navTabs) || galleryConfig.navTabs.length === 0)
 if (!Array.isArray(galleryConfig.mediumPages) || galleryConfig.mediumPages.length === 0) {
   throw new Error('content/gallery.json: mediumPages must be a non-empty array');
 }
-if (!Array.isArray(galleryConfig.sectionPages)) {
-  throw new Error('content/gallery.json: sectionPages must be an array');
-}
 if (!Array.isArray(galleryConfig.facets)) {
   throw new Error('content/gallery.json: facets must be an array');
 }
@@ -72,12 +69,39 @@ for (const facet of galleryConfig.facets) {
   if (!facet.key || !facet.field || !facet.labelEn || !facet.labelZh || !Array.isArray(facet.values)) {
     throw new Error(`content/gallery.json: facet "${facet.key ?? '(no key)'}" needs key, field, labelEn, labelZh and values`);
   }
+  // Each card carries one data-<key> attribute per facet and the filter script
+  // reads it back as card.dataset[key], which only resolves for a key that is
+  // already lower camel case. A key with a dash in it would render an
+  // attribute no selection could ever match.
+  if (!/^[a-z][a-z0-9]*$/.test(facet.key)) {
+    throw new Error(
+      `content/gallery.json: facet key "${facet.key}" must be lower-case letters and digits only, because it becomes a data-<key> attribute the filter script reads as dataset.<key>`
+    );
+  }
 }
 if (!galleryConfig.artworkEmptyState?.en || !galleryConfig.artworkEmptyState?.zh) {
   throw new Error('content/gallery.json: artworkEmptyState needs both en and zh copy');
 }
 if (!galleryConfig.mediumEmptyCover?.en || !galleryConfig.mediumEmptyCover?.zh) {
   throw new Error('content/gallery.json: mediumEmptyCover needs both en and zh copy');
+}
+// The written page for a medium with no works. Both languages or neither: a
+// page with copy in one language renders a blank panel in the other, which is
+// the defect this whole change exists to remove.
+for (const page of galleryConfig.mediumPages) {
+  if (Boolean(page.emptyBodyEn) !== Boolean(page.emptyBodyZh)) {
+    throw new Error(
+      `content/gallery.json: mediumPages "${page.slug}" needs emptyBodyEn and emptyBodyZh together, or neither`
+    );
+  }
+}
+if (galleryConfig.mediumPages.some((page) => page.emptyBodyEn)) {
+  const enquiry = galleryConfig.unrepresentedMedium;
+  for (const field of ['enquiryEn', 'enquiryZh', 'enquiryLinkEn', 'enquiryLinkZh', 'enquiryHref']) {
+    if (!enquiry?.[field]) {
+      throw new Error(`content/gallery.json: unrepresentedMedium needs "${field}" for the unrepresented medium pages`);
+    }
+  }
 }
 if (!Array.isArray(galleryConfig.heroSlides) || galleryConfig.heroSlides.length === 0) {
   throw new Error('content/gallery.json: heroSlides must be a non-empty array');
@@ -104,10 +128,18 @@ if (!Array.isArray(artworkCatalog.artworks)) {
 }
 
 const IMAGE_VIEWS = new Set(['front', 'in-situ', 'detail']);
+// What the work is physically made on, which is a different fact from the
+// technique its medium names: a drawing is pencil on paper, a painting is paint
+// on canvas or on panel. Keeping the two apart is what lets the Work on Paper
+// page hold the drawing without the catalogue listing it twice.
+const SUPPORTS = new Set(['paper', 'canvas', 'panel']);
 const mediumSlugs = new Set(galleryConfig.mediumPages.map((page) => page.slug));
+const mediumTitleBySlug = new Map(
+  galleryConfig.mediumPages.map((page) => [page.slug, { en: page.titleEn, zh: page.titleZh }])
+);
 const seenArtworkIds = new Set();
 for (const artwork of artworkCatalog.artworks) {
-  for (const field of ['id', 'medium', 'titleEn', 'titleZh']) {
+  for (const field of ['id', 'medium', 'support', 'titleEn', 'titleZh']) {
     if (artwork[field] === undefined || artwork[field] === null || artwork[field] === '') {
       throw new Error(`content/artworks.json: artwork ${artwork.id ?? '(no id)'} is missing required field "${field}"`);
     }
@@ -119,6 +151,11 @@ for (const artwork of artworkCatalog.artworks) {
   if (!mediumSlugs.has(artwork.medium)) {
     throw new Error(
       `content/artworks.json: artwork "${artwork.id}" has medium "${artwork.medium}", which is not a slug in gallery.json mediumPages`
+    );
+  }
+  if (!SUPPORTS.has(artwork.support)) {
+    throw new Error(
+      `content/artworks.json: artwork "${artwork.id}" has support "${artwork.support}"; use ${[...SUPPORTS].join(', ')}`
     );
   }
   if (!Array.isArray(artwork.images) || artwork.images.length === 0) {
@@ -166,7 +203,53 @@ const yearLabel = (artwork) => ({
   zh: artwork.year === undefined ? UNDATED_ZH : String(artwork.year),
 });
 
+// A facet value no work in the catalogue carries is a filter chip that can
+// never match anything. The size facet shipped exactly that way -- four
+// declared options, no work with a sizeRange -- so every chip on the Painting
+// page returned an empty result, which is worse than offering no filter at all.
+// The rule this turns into a build failure: a facet may only declare a value
+// once some work has it. The filter bar is already derived per page, so a value
+// that is live in the catalogue but absent from one page is simply not offered
+// there; this guard is about values that are dead everywhere.
+const facetValueHolders = (facet, value) =>
+  artworkCatalog.artworks.filter((artwork) => {
+    const held = artwork[facet.field];
+    return Array.isArray(held) ? held.includes(value) : held === value;
+  });
+for (const facet of galleryConfig.facets) {
+  for (const option of facet.values) {
+    if (facetValueHolders(facet, option.value).length === 0) {
+      throw new Error(
+        `content/gallery.json: facet "${facet.key}" declares value "${option.value}", which no work in ` +
+          'content/artworks.json carries, so the filter chip could never match anything. Give a work that ' +
+          `value or take the option out of the facet.`
+      );
+    }
+  }
+}
+
 const artworkById = new Map(artworkCatalog.artworks.map((artwork) => [artwork.id, artwork]));
+
+// Which works a medium page shows. By default a medium page holds the works
+// whose medium is its own slug, which partitions the catalogue. A page may
+// instead declare select {field, value} to gather its works on another field:
+// work-on-paper selects support === 'paper', so the one drawing appears under
+// both Drawing and Work on Paper from a single catalogue entry instead of being
+// listed twice. The Portfolio page deliberately does not use this -- it groups
+// strictly by medium, so the whole catalogue is listed there exactly once.
+for (const page of galleryConfig.mediumPages) {
+  if (page.select === undefined) continue;
+  if (typeof page.select.field !== 'string' || page.select.field === '' || page.select.value === undefined) {
+    throw new Error(`content/gallery.json: mediumPages "${page.slug}" select needs a field name and a value`);
+  }
+}
+const worksForMediumPage = (page) => {
+  const { field, value } = page.select ?? { field: 'medium', value: page.slug };
+  return artworkCatalog.artworks.filter((artwork) => {
+    const held = artwork[field];
+    return Array.isArray(held) ? held.includes(value) : held === value;
+  });
+};
 
 // Resolves one { artworkId, imageIndex } reference from gallery.json into the
 // image object it names, for the hub page's hero slides, medium-card covers and
@@ -304,7 +387,7 @@ const languageSwitcherNote =
 
 let mediumGrid = '      <div class="medium-grid">\n';
 for (const page of galleryConfig.mediumPages) {
-  const works = artworkCatalog.artworks.filter((artwork) => artwork.medium === page.slug);
+  const works = worksForMediumPage(page);
   const cover = page.cover ?? (works.length > 0 ? { artworkId: works[0].id, imageIndex: 0 } : null);
   mediumGrid += `        <a href="gallery-${page.slug}.html" class="medium-card">\n`;
   if (cover === null) {
@@ -374,15 +457,21 @@ const aboutPanelImages = galleryConfig.aboutPanels.map((panel, panelIndex) => {
 const renderArtworkGrid = (works) => {
   let grid = '    <div class="artwork-grid">\n';
   for (const artwork of works) {
-    const colors = Array.isArray(artwork.colors) ? artwork.colors.join(' ') : '';
     const year = yearLabel(artwork);
     grid += '      <div class="artwork-card"';
     grid += ` data-medium="${escapeHtml(artwork.medium)}"`;
     grid += ` data-year="${escapeHtml(artwork.year ?? '')}"`;
-    grid += ` data-size="${escapeHtml(artwork.sizeRange ?? '')}"`;
-    grid += ` data-colors="${escapeHtml(colors)}"`;
-    grid += ` data-style="${escapeHtml(artwork.style ?? '')}"`;
-    grid += ` data-subject="${escapeHtml(artwork.subject ?? '')}"`;
+    // One data attribute per declared facet, named after the facet key, which
+    // is what assets/js/gallery-filters.js reads back as card.dataset[key].
+    // Deriving these from the facet list rather than naming them one by one is
+    // what keeps a card's attributes and the filter bar the same set: a facet
+    // dropped from the content cannot leave a dead attribute behind on every
+    // card, and a facet added cannot render a chip the cards do not answer.
+    for (const facet of galleryConfig.facets) {
+      const held = artwork[facet.field];
+      const value = Array.isArray(held) ? held.join(' ') : (held ?? '');
+      grid += ` data-${facet.key}="${escapeHtml(value)}"`;
+    }
     grid += ` data-title-en="${escapeHtml(artwork.titleEn)}"`;
     grid += ` data-title-zh="${escapeHtml(artwork.titleZh)}"`;
     grid += '>\n';
@@ -582,14 +671,16 @@ pages.push({
   })),
 });
 for (const page of galleryConfig.mediumPages) {
-  const works = artworkCatalog.artworks.filter((artwork) => artwork.medium === page.slug);
+  const works = worksForMediumPage(page);
 
   // The filter bar is derived from the works actually on the page, so a facet
   // can never offer a value that matches nothing and the bar disappears
   // entirely when there is nothing to filter. That is the whole point of
-  // generating it: the old hand-written bar was inert markup.
+  // generating it: the old hand-written bar was inert markup. A page holding a
+  // single work gets no bar either -- every chip on it could only ever hide
+  // that one work, which is a control with no useful outcome.
   let filterBar = '';
-  if (works.length > 0) {
+  if (works.length > 1) {
     let dropdowns = '';
     for (const facet of galleryConfig.facets) {
       const present = facet.values.filter((option) =>
@@ -644,10 +735,29 @@ for (const page of galleryConfig.mediumPages) {
 
   let artworkGrid = '';
   if (works.length === 0) {
-    artworkGrid += '    <div class="artwork-empty-state">\n';
-    artworkGrid += `      <span class="lang-en">${escapeHtml(galleryConfig.artworkEmptyState.en)}</span>\n`;
-    artworkGrid += `      <span class="lang-zh">${escapeHtml(galleryConfig.artworkEmptyState.zh)}</span>\n`;
-    artworkGrid += '    </div>\n';
+    // A medium Kay has not worked in yet gets a written page rather than one
+    // line of empty state: what the medium would mean in this gallery, what is
+    // true today, and a way to ask for a commission. The alternative shipped
+    // for months -- a single grey sentence on four live pages -- reads as an
+    // unfinished site rather than an honest one. A medium page that is empty
+    // for some other reason (a catalogue still being photographed) keeps the
+    // short empty state, which is what that situation actually means.
+    if (page.emptyBodyEn && page.emptyBodyZh) {
+      const enquiry = galleryConfig.unrepresentedMedium;
+      artworkGrid += '    <div class="medium-unrepresented">\n';
+      artworkGrid += `      <p class="medium-unrepresented-body lang-en">${escapeHtml(page.emptyBodyEn)}</p>\n`;
+      artworkGrid += `      <p class="medium-unrepresented-body lang-zh">${escapeHtml(page.emptyBodyZh)}</p>\n`;
+      artworkGrid += `      <p class="medium-unrepresented-enquiry lang-en">${escapeHtml(enquiry.enquiryEn)}</p>\n`;
+      artworkGrid += `      <p class="medium-unrepresented-enquiry lang-zh">${escapeHtml(enquiry.enquiryZh)}</p>\n`;
+      artworkGrid += `      <a class="medium-unrepresented-link lang-en" href="${escapeHtml(enquiry.enquiryHref)}">${escapeHtml(enquiry.enquiryLinkEn)} &rarr;</a>\n`;
+      artworkGrid += `      <a class="medium-unrepresented-link lang-zh" href="${escapeHtml(enquiry.enquiryHref)}">${escapeHtml(enquiry.enquiryLinkZh)} &rarr;</a>\n`;
+      artworkGrid += '    </div>\n';
+    } else {
+      artworkGrid += '    <div class="artwork-empty-state">\n';
+      artworkGrid += `      <span class="lang-en">${escapeHtml(galleryConfig.artworkEmptyState.en)}</span>\n`;
+      artworkGrid += `      <span class="lang-zh">${escapeHtml(galleryConfig.artworkEmptyState.zh)}</span>\n`;
+      artworkGrid += '    </div>\n';
+    }
   } else {
     artworkGrid += renderArtworkGrid(works);
     artworkGrid += '    <div class="artwork-no-matches" hidden>\n';
@@ -680,28 +790,6 @@ for (const page of galleryConfig.mediumPages) {
     ],
   });
 }
-for (const page of galleryConfig.sectionPages) {
-  pages.push({
-    fileName: `gallery-${page.slug}.html`,
-    templateName: 'page-section',
-    activeTab: `gallery-${page.slug}.html`,
-    tokens: {
-      LANGUAGE_SWITCHER_NOTE: '',
-      TITLE_EN: escapeHtml(page.titleEn),
-      TITLE_ZH: escapeHtml(page.titleZh),
-      TITLE_EN_EDIT_ATTR: ` data-edit-field="content/gallery.json|sectionPages|${escapeHtml(page.slug)}|titleEn"`,
-      TITLE_ZH_EDIT_ATTR: ` data-edit-field="content/gallery.json|sectionPages|${escapeHtml(page.slug)}|titleZh"`,
-      META_DESCRIPTION: escapeHtml(page.metaDescription),
-      BODY_EN: escapeHtml(page.bodyEn),
-      BODY_ZH: escapeHtml(page.bodyZh),
-      BODY_EN_EDIT_ATTR: ` data-edit-field="content/gallery.json|sectionPages|${escapeHtml(page.slug)}|bodyEn"`,
-      BODY_ZH_EDIT_ATTR: ` data-edit-field="content/gallery.json|sectionPages|${escapeHtml(page.slug)}|bodyZh"`,
-    },
-    // A section page renders its own title and body copy in place.
-    editableRecords: [{ file: 'content/gallery.json', collection: 'sectionPages', key: page.slug }],
-  });
-}
-
 // The chili sauce page carries its own header and markup, so it is rendered
 // from its own template with the home.json copy substituted in. It has no
 // gallery nav tabs or language-switcher note placeholders of its own.
@@ -938,6 +1026,170 @@ pages.push({
     collection: 'artworks',
     key: artwork.id,
   })),
+});
+
+// The Exhibitions page is the record of where the work has actually hung. It
+// needs no new photography: the catalogue already carries in-situ photographs
+// of works on real walls, and they were the one asset on this site nothing
+// rendered. Each scene in gallery.json exhibitions names its photographs by
+// { artworkId, imageIndex } and the works visible in a scene are derived from
+// those photographs rather than listed a second time, so tagging a work with an
+// in-situ image is the only step needed to place it in a scene.
+//
+// Two rules hold the page together, both build failures:
+//  - a scene photograph must be an in-situ view. This is the exact opposite of
+//    the hub rule: the hub crops to a fixed slot so an in-situ shot is wrong
+//    there, and here a cropped front view would be a photograph of the work
+//    rather than a record of the hang.
+//  - every in-situ photograph in the catalogue belongs to exactly one scene, so
+//    a new room photograph cannot sit in the catalogue unpublished and cannot
+//    be told about twice.
+// A scene cannot end up with no works to show: it names its photographs
+// through an artwork's own image list, so the artwork it was reached through
+// always counts as visible in it.
+const exhibitionsPage = galleryConfig.exhibitionsPage;
+if (
+  !exhibitionsPage ||
+  !exhibitionsPage.titleEn ||
+  !exhibitionsPage.titleZh ||
+  !exhibitionsPage.metaDescription ||
+  !exhibitionsPage.introEn ||
+  !exhibitionsPage.introZh
+) {
+  throw new Error('content/gallery.json: exhibitionsPage needs titleEn, titleZh, metaDescription, introEn and introZh');
+}
+if (!Array.isArray(galleryConfig.exhibitions)) {
+  throw new Error('content/gallery.json: exhibitions must be an array');
+}
+const resolveExhibitionImage = (reference, configPath) => {
+  const artwork = artworkById.get(reference.artworkId);
+  if (artwork === undefined) {
+    throw new Error(`${configPath}: no artwork with id "${reference.artworkId}" in content/artworks.json`);
+  }
+  const image = artwork.images[reference.imageIndex];
+  if (image === undefined) {
+    throw new Error(`${configPath}: artwork "${reference.artworkId}" has no image at index ${reference.imageIndex}`);
+  }
+  if (image.view !== 'in-situ') {
+    throw new Error(
+      `${configPath}: artwork "${reference.artworkId}" image ${reference.imageIndex + 1} is a ${image.view} view; a hang scene needs an in-situ photograph`
+    );
+  }
+  return image;
+};
+const exhibitionSlugs = new Set();
+const sceneBySource = new Map();
+const exhibitionScenes = galleryConfig.exhibitions.map((scene) => {
+  for (const field of ['slug', 'titleEn', 'titleZh', 'blurbEn', 'blurbZh']) {
+    if (scene[field] === undefined || scene[field] === null || scene[field] === '') {
+      throw new Error(`content/gallery.json: exhibitions scene "${scene.slug ?? '(no slug)'}" is missing "${field}"`);
+    }
+  }
+  if (exhibitionSlugs.has(scene.slug)) {
+    throw new Error(`content/gallery.json: duplicate exhibitions scene slug "${scene.slug}"`);
+  }
+  exhibitionSlugs.add(scene.slug);
+  if (!Array.isArray(scene.images) || scene.images.length === 0) {
+    throw new Error(`content/gallery.json: exhibitions scene "${scene.slug}" needs a non-empty images array`);
+  }
+  const images = scene.images.map((reference, index) => {
+    if (!reference.artworkId || !Number.isInteger(reference.imageIndex)) {
+      throw new Error(
+        `content/gallery.json: exhibitions scene "${scene.slug}" image ${index + 1} needs artworkId and imageIndex`
+      );
+    }
+    const image = resolveExhibitionImage(reference, `gallery.json exhibitions "${scene.slug}" image ${index + 1}`);
+    const claimed = sceneBySource.get(image.src);
+    if (claimed !== undefined) {
+      throw new Error(
+        `content/gallery.json: photograph "${image.src}" is in exhibitions scene "${claimed}" and scene "${scene.slug}"; each hang photograph belongs to exactly one scene`
+      );
+    }
+    sceneBySource.set(image.src, scene.slug);
+    return image;
+  });
+  const sources = new Set(images.map((image) => image.src));
+  const works = artworkCatalog.artworks.filter((artwork) =>
+    artwork.images.some((image) => image.view === 'in-situ' && sources.has(image.src))
+  );
+  return { scene, images, works };
+});
+for (const artwork of artworkCatalog.artworks) {
+  for (const image of artwork.images) {
+    if (image.view !== 'in-situ') continue;
+    if (!sceneBySource.has(image.src)) {
+      throw new Error(
+        `content/artworks.json: in-situ photograph "${image.src}" on artwork "${artwork.id}" belongs to no exhibitions scene in content/gallery.json; add it to a scene so the Exhibitions page shows it`
+      );
+    }
+  }
+}
+
+// One block per hang scene: the editable title and blurb, a count pill, the
+// photographs at their own aspect ratio (never cropped), then the works visible
+// in the view, each cross-linked to the medium page that shows it. The works
+// are a titled list rather than the shared artwork grid on purpose: the
+// photograph of the wall is the subject here, and every one of these works is
+// already shown as a card on three other pages.
+let exhibitionsSections = '';
+for (const { scene, images, works } of exhibitionScenes) {
+  exhibitionsSections += `      <section class="collection-section" id="exhibition-${escapeHtml(scene.slug)}">\n`;
+  exhibitionsSections += '        <div class="collection-section-head">\n';
+  exhibitionsSections += `          <h2 class="collection-section-title lang-en" data-edit-field="content/gallery.json|exhibitions|${escapeHtml(scene.slug)}|titleEn">${escapeHtml(scene.titleEn)}</h2>\n`;
+  exhibitionsSections += `          <h2 class="collection-section-title lang-zh" data-edit-field="content/gallery.json|exhibitions|${escapeHtml(scene.slug)}|titleZh">${escapeHtml(scene.titleZh)}</h2>\n`;
+  exhibitionsSections += `          <span class="collection-count-pill lang-en">${works.length} ${works.length === 1 ? 'work' : 'works'}</span>\n`;
+  exhibitionsSections += `          <span class="collection-count-pill lang-zh">${works.length} 件作品</span>\n`;
+  exhibitionsSections += '        </div>\n';
+  exhibitionsSections += `        <p class="collection-blurb lang-en" data-edit-field="content/gallery.json|exhibitions|${escapeHtml(scene.slug)}|blurbEn">${escapeHtml(scene.blurbEn)}</p>\n`;
+  exhibitionsSections += `        <p class="collection-blurb lang-zh" data-edit-field="content/gallery.json|exhibitions|${escapeHtml(scene.slug)}|blurbZh">${escapeHtml(scene.blurbZh)}</p>\n`;
+  exhibitionsSections += '        <div class="exhibition-photos">\n';
+  for (const image of images) {
+    exhibitionsSections += `          <img class="exhibition-photo" src="${escapeHtml(image.src)}"`;
+    exhibitionsSections += ` alt="${escapeHtml(image.altEn)}"`;
+    exhibitionsSections += ` width="${image.width}" height="${image.height}" loading="lazy"`;
+    exhibitionsSections += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
+  }
+  exhibitionsSections += '        </div>\n';
+  exhibitionsSections += '        <ul class="exhibition-works">\n';
+  for (const artwork of works) {
+    const year = yearLabel(artwork);
+    exhibitionsSections += '          <li class="exhibition-work">\n';
+    exhibitionsSections += `            <span class="exhibition-work-title lang-en"><span data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|titleEn">${escapeHtml(artwork.titleEn)}</span>, ${escapeHtml(year.en)}</span>\n`;
+    exhibitionsSections += `            <span class="exhibition-work-title lang-zh"><span data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|titleZh">${escapeHtml(artwork.titleZh)}</span>，${escapeHtml(year.zh)}</span>\n`;
+    if (artwork.dimensionsEn && artwork.dimensionsZh) {
+      exhibitionsSections += `            <span class="artwork-dimensions lang-en" data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|dimensionsEn">${escapeHtml(artwork.dimensionsEn)}</span>\n`;
+      exhibitionsSections += `            <span class="artwork-dimensions lang-zh" data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|dimensionsZh">${escapeHtml(artwork.dimensionsZh)}</span>\n`;
+    }
+    exhibitionsSections += `            <a class="exhibition-work-link lang-en" href="gallery-${escapeHtml(artwork.medium)}.html">View in ${escapeHtml(mediumTitleBySlug.get(artwork.medium).en)} &rarr;</a>\n`;
+    exhibitionsSections += `            <a class="exhibition-work-link lang-zh" href="gallery-${escapeHtml(artwork.medium)}.html">在${escapeHtml(mediumTitleBySlug.get(artwork.medium).zh)}中查看 &rarr;</a>\n`;
+    exhibitionsSections += '          </li>\n';
+  }
+  exhibitionsSections += '        </ul>\n';
+  exhibitionsSections += '      </section>\n';
+}
+pages.push({
+  fileName: 'gallery-exhibitions.html',
+  templateName: 'page-exhibitions',
+  activeTab: 'gallery-exhibitions.html',
+  tokens: {
+    LANGUAGE_SWITCHER_NOTE: '',
+    TITLE_EN: escapeHtml(exhibitionsPage.titleEn),
+    TITLE_ZH: escapeHtml(exhibitionsPage.titleZh),
+    META_DESCRIPTION: escapeHtml(exhibitionsPage.metaDescription),
+    INTRO_EN: escapeHtml(exhibitionsPage.introEn),
+    INTRO_ZH: escapeHtml(exhibitionsPage.introZh),
+    EXHIBITIONS_SECTIONS: exhibitionsSections,
+  },
+  editableRecords: [
+    ...galleryConfig.exhibitions.map((scene) => ({
+      file: 'content/gallery.json',
+      collection: 'exhibitions',
+      key: scene.slug,
+    })),
+    ...exhibitionScenes.flatMap(({ works }) =>
+      works.map((artwork) => ({ file: 'content/artworks.json', collection: 'artworks', key: artwork.id }))
+    ),
+  ],
 });
 
 // The search box used to carry its own hand-maintained copy of every page

@@ -69,9 +69,46 @@
   </section>
 
   <section class="container">
-    <div class="artwork-empty-state">
-      <span class="lang-en">No works in this medium are published yet.</span>
-      <span class="lang-zh">本媒介暂无已发布作品。</span>
+    <div class="artwork-grid">
+      <div class="artwork-card" data-medium="drawing" data-year="" data-colors="reds browns" data-style="realist" data-subject="animal" data-title-en="Two Dogs and Cherry Blossoms" data-title-zh="双犬与樱花">
+        <div class="artwork-image-wrap">
+          <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="2" style="aspect-ratio: 1200 / 900" tabindex="0">
+            <div class="artwork-slide" data-slide="0">
+              <img class="artwork-image" src="assets/gallery/drawing-001-1.jpg" alt="The framed drawing of two dogs hung high on a white wall above a second framed drawing, with a tall indoor tree to the left" width="1200" height="900" loading="lazy" data-view="in-situ" data-alt-en="The framed drawing of two dogs hung high on a white wall above a second framed drawing, with a tall indoor tree to the left" data-alt-zh="双犬素描装框后高挂于白墙，下方还有另一幅装框作品，左侧是一棵高大的室内绿植">
+            </div>
+            <div class="artwork-slide" data-slide="1">
+              <img class="artwork-image" src="assets/gallery/drawing-001-2.jpg" alt="Close detail of the drawing: two greyhounds pressed close together above a knitted collar, with pink cherry blossom across the foreground" width="750" height="1000" loading="lazy" data-view="detail" data-alt-en="Close detail of the drawing: two greyhounds pressed close together above a knitted collar, with pink cherry blossom across the foreground" data-alt-zh="素描局部特写：两只灵缇犬紧紧相依，下方是针织围领，前景横过粉色樱花">
+            </div>
+          </div>
+          <button type="button" class="artwork-carousel-nav artwork-carousel-prev" hidden>
+            <span aria-hidden="true">&#8249;</span>
+            <span class="visually-hidden lang-en">Previous view</span>
+            <span class="visually-hidden lang-zh">上一张</span>
+          </button>
+          <button type="button" class="artwork-carousel-nav artwork-carousel-next" hidden>
+            <span aria-hidden="true">&#8250;</span>
+            <span class="visually-hidden lang-en">Next view</span>
+            <span class="visually-hidden lang-zh">下一张</span>
+          </button>
+          <div class="artwork-carousel-dots" hidden>
+            <button type="button" class="artwork-carousel-dot" data-slide="0" aria-current="true">
+              <span class="visually-hidden lang-en">View 1</span>
+              <span class="visually-hidden lang-zh">第 1 张</span>
+            </button>
+            <button type="button" class="artwork-carousel-dot" data-slide="1">
+              <span class="visually-hidden lang-en">View 2</span>
+              <span class="visually-hidden lang-zh">第 2 张</span>
+            </button>
+          </div>
+        </div>
+        <div class="artwork-artist">KAY</div>
+        <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|drawing-001|titleEn">Two Dogs and Cherry Blossoms</span>, n.d.</div>
+        <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|drawing-001|titleZh">双犬与樱花</span>，年份不详</div>
+      </div>
+    </div>
+    <div class="artwork-no-matches" hidden>
+      <span class="lang-en">No works match the selected filters.</span>
+      <span class="lang-zh">没有符合所选筛选条件的作品。</span>
     </div>
   </section>
 

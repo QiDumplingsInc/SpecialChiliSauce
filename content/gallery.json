@@ -1,5 +1,5 @@
 {
-    "comment": "Structure of the gallery section: nav tabs, medium pages, section pages, the artwork filter facets and the hub page's photographs. Edited by hand; consumed by build.mjs to render gallery*.html. Bilingual site copy lives here as literal UTF-8 because this is localized content, not code. heroSlides, aboutPanels and a medium page's optional cover each point at one photograph in content/artworks.json by artworkId plus imageIndex; the build refuses an in-situ view in any of those slots because the hub crops a photograph to fit its slot and an in-situ shot must keep the framing it was taken with. A medium page with no cover falls back to the first photograph of its first work; a medium page with no works renders mediumEmptyCover instead of promising an image. newArrivalsPage lists real artwork ids newest-first (the order is editorial, not derived, so an undated work can still be featured). portfolioPage carries only intro copy; the build groups the whole catalogue by mediumPages order. artistsPage plus the artists array profile the people behind the work; each artist has a cover photograph (same in-situ rule) and bioEn/bioZh paragraph arrays, and the single-artist catalogue renders in full beneath the bio.",
+    "comment": "Structure of the gallery section: nav tabs, medium pages, collections, hang scenes, the artwork filter facets and the hub page's photographs. Edited by hand; consumed by build.mjs to render gallery*.html. Bilingual site copy lives here as literal UTF-8 because this is localized content, not code. heroSlides, aboutPanels, a medium page's optional cover and a collection cover each point at one photograph in content/artworks.json by artworkId plus imageIndex; the build refuses an in-situ view in any of those slots because the hub crops a photograph to fit its slot and an in-situ shot must keep the framing it was taken with. A medium page with no cover falls back to the first photograph of its first work; a medium page with no works renders mediumEmptyCover instead of promising an image. A medium page may carry an optional select {field, value} to choose its works by something other than medium: work-on-paper selects on support, so the one drawing appears under both Drawing and Work on Paper without being duplicated in the catalogue. A medium with no works at all carries emptyBodyEn/emptyBodyZh, the written page a visitor gets instead of a bare empty state, plus the shared enquiry copy in unrepresentedMedium. Every value a facet declares must match at least one work in the catalogue or the build fails: a filter chip that can never match anything is worse than no filter. exhibitionsPage plus the exhibitions array are the record of where the work has hung; each scene names its in-situ photographs (the build refuses a front or detail view there, the opposite of the hub rule) and the works visible in a scene are derived from those photographs, so tagging a work with an in-situ image is the only step needed to place it. Every in-situ photograph in the catalogue must belong to exactly one scene. newArrivalsPage lists real artwork ids newest-first (the order is editorial, not derived, so an undated work can still be featured). portfolioPage carries only intro copy; the build groups the whole catalogue by mediumPages order and always by medium, so a work is listed once there. artistsPage plus the artists array profile the people behind the work; each artist has a cover photograph (same in-situ rule) and bioEn/bioZh paragraph arrays, and the single-artist catalogue renders in full beneath the bio.",
     "searchPages": [
         {
             "href": "index.html",
@@ -13,34 +13,6 @@
         }
     ],
     "facets": [
-        {
-            "key": "size",
-            "field": "sizeRange",
-            "labelEn": "Size Range",
-            "labelZh": "尺寸范围",
-            "values": [
-                {
-                    "value": "small",
-                    "en": "Small",
-                    "zh": "小"
-                },
-                {
-                    "value": "medium",
-                    "en": "Medium",
-                    "zh": "中"
-                },
-                {
-                    "value": "large",
-                    "en": "Large",
-                    "zh": "大"
-                },
-                {
-                    "value": "very-large",
-                    "en": "Very large",
-                    "zh": "特大"
-                }
-            ]
-        },
         {
             "key": "colors",
             "field": "colors",
@@ -80,11 +52,6 @@
             "labelEn": "Style",
             "labelZh": "风格",
             "values": [
-                {
-                    "value": "abstract",
-                    "en": "Abstract",
-                    "zh": "抽象"
-                },
                 {
                     "value": "figurative",
                     "en": "Figurative",
@@ -141,8 +108,8 @@
         "zh": "本媒介暂无已发布作品。"
     },
     "mediumEmptyCover": {
-        "en": "No works yet",
-        "zh": "暂无作品"
+        "en": "Not yet represented",
+        "zh": "尚未收录"
     },
     "heroSlides": [
         {
@@ -226,7 +193,9 @@
             "slug": "mixed-media",
             "titleEn": "Mixed Media",
             "titleZh": "综合材料",
-            "metaDescription": "Mixed media artwork by Kay."
+            "metaDescription": "Mixed media artwork by Kay.",
+            "emptyBodyEn": "Not yet. Every work in the gallery is paint on one surface, or pencil on paper, and nothing in between. Mixed media would mean combining them: collage, paint over print, paper laid into a canvas. When a work like that exists it will be listed here with every material named, so nothing about how it was made is hidden.",
+            "emptyBodyZh": "暂时还没有。画廊中的每件作品，都是单一表面上的颜料，或纸上的铅笔，没有介于两者之间的。综合媒材意味着将它们结合——拼贴、在印刷品上作画、把纸嵌入画布——当这样的作品出现时，会在此列出并标明所有材料，让其制作方式毫无隐藏。"
         },
         {
             "slug": "painting",
@@ -242,35 +211,39 @@
             "slug": "photography",
             "titleEn": "Photography",
             "titleZh": "摄影",
-            "metaDescription": "Photography by Kay."
+            "metaDescription": "Photography by Kay.",
+            "emptyBodyEn": "Kay's Gallery does not show photographs yet. The photographs on this site are records of the paintings, not works in their own right: you will find them on the Exhibitions page, where they belong. If the gallery ever shows photography, it will be work made with the same attention the paintings are: from life, in one place, over time. Until then this page stays honest and empty.",
+            "emptyBodyZh": "Kay's 画廊目前尚未展出摄影作品。本站的照片是画作的记录，而非独立作品——你可以在展览页找到它们，那才是它们应在之处。若画廊将来展出摄影，那也会是与画作同等用心之作：写生、在同一处、历时而成。在那之前，本页保持诚实地留白。"
         },
         {
             "slug": "printmaking",
             "titleEn": "Printmaking",
             "titleZh": "版画",
-            "metaDescription": "Printmaking artwork by Kay."
+            "metaDescription": "Printmaking artwork by Kay.",
+            "emptyBodyEn": "No prints yet. Printmaking asks for a press and an edition, and the gallery has neither: every work here is a single original, painted once. If editions ever appear, they will be numbered, signed and listed with the full edition size, so you always know how many exist. We will not quietly reprint a sold-out work.",
+            "emptyBodyZh": "目前还没有版画。版画需要印刷机与版次，而画廊两者都没有——这里的每件作品都是只画一次的独版原作。若将来出现版次作品，都会编号、签名，并标注完整版次数量，让你随时知道存世有多少。我们不会悄悄加印一件已售罄的作品。"
         },
         {
             "slug": "sculpture",
             "titleEn": "Sculpture",
             "titleZh": "雕塑",
-            "metaDescription": "Sculptures by Kay."
+            "metaDescription": "Sculptures by Kay.",
+            "emptyBodyEn": "Nothing three-dimensional yet. The paintings already care a great deal about weight and surface, the skin of a pomegranate and the wet flank of a fish, so sculpture is a natural direction rather than a departure. This page is here waiting for the first piece.",
+            "emptyBodyZh": "目前还没有立体作品。画作本身已极为在意重量与表面质感——石榴的果皮、鱼身湿润的侧腹——因此雕塑是一个自然的方向，而非另起一路。本页在此等待第一件作品。"
         },
         {
             "slug": "work-on-paper",
             "titleEn": "Work on Paper",
             "titleZh": "纸本作品",
-            "metaDescription": "Works on paper by Kay."
-        }
-    ],
-    "sectionPages": [
-        {
-            "slug": "exhibitions",
-            "titleEn": "Exhibitions",
-            "titleZh": "展览",
-            "metaDescription": "Exhibitions at Kay's Gallery.",
-            "bodyEn": "Content coming soon",
-            "bodyZh": "内容即将上线"
+            "metaDescription": "Works on paper by Kay.",
+            "select": {
+                "field": "support",
+                "value": "paper"
+            },
+            "cover": {
+                "artworkId": "drawing-001",
+                "imageIndex": 1
+            }
         }
     ],
     "collectionsPage": {
@@ -372,6 +345,129 @@
                 "Kay 写生作画，贴近对象反复观察，直到柠檬、无花果或游鱼的形体在画板上站得住为止。",
                 "作品在不同题材间游走，却始终保持那份安静而专注的气质，将一切串连起来。枝头与藤蔓的果实，与定格于一个姿态的飞禽走兽、在绿水蓝水间转身的游鱼、近处盛放的花、以及远方雪中的木屋并置一处。",
                 "大部分作品为绘画，画册也延伸至素描。新作画完即加入画廊。"
+            ]
+        }
+    ],
+    "unrepresentedMedium": {
+        "enquiryEn": "Looking for something in this medium? Tell us what you have in mind: commissions are open.",
+        "enquiryZh": "在寻找这一媒介的作品？告诉我们你的想法——我们接受委托创作。",
+        "enquiryLinkEn": "Enquire about a commission",
+        "enquiryLinkZh": "咨询委托创作",
+        "enquiryHref": "index.html#contact"
+    },
+    "exhibitionsPage": {
+        "titleEn": "Exhibitions",
+        "titleZh": "展览",
+        "metaDescription": "Kay's works photographed where they hang, wall by wall.",
+        "introEn": "Every painting here was made to be lived with, not stored. These are the walls it has hung on: the gallery's own rooms, photographed as the work was hung, rehung and rearranged. Where a painting appears in more than one view, it has simply moved.",
+        "introZh": "这里的每一幅画，都是为了与人共处而作，而非为了入库封存。以下是它们曾悬挂过的墙面——画廊自己的房间，在作品悬挂、重挂与重新排布时拍摄而成。若同一幅画出现在多个视角中，那只是它换了位置。"
+    },
+    "exhibitions": [
+        {
+            "slug": "panelled-wall",
+            "titleEn": "The Panelled Wall",
+            "titleZh": "拼板墙",
+            "blurbEn": "Three fruit paintings hung as a column and a pair: lemons above tomatoes, with the pomegranates set to the right. The panelling's vertical lines do the framing, so the canvases hang close and unmatted. The second photograph is the same wall seen more square on, where the greens carry straight across all three frames and the group reads as one piece of work rather than three.",
+            "blurbZh": "三幅果实画作以一列加一对的方式悬挂：柠檬在番茄之上，石榴置于右侧。拼板墙的竖线本身就是画框，因此画布挂得紧密，不加卡纸。第二张照片是同一面墙更正面的视角，此时绿意径直贯穿三个画框，整组读起来像一件作品，而非三件。",
+            "images": [
+                {
+                    "artworkId": "painting-001",
+                    "imageIndex": 1
+                },
+                {
+                    "artworkId": "painting-001",
+                    "imageIndex": 2
+                }
+            ]
+        },
+        {
+            "slug": "the-stairwell",
+            "titleEn": "The Stairwell",
+            "titleZh": "楼梯间",
+            "blurbEn": "Two paintings carried up a stairwell with gold and cream striped walls: the pears near the foot of the stairs, the red grapes higher along the climb. Photographed from two different steps, then close in on the pears alone. A stairwell is never seen from one place, so the work arrives at a different height with every step.",
+            "blurbZh": "两幅画作沿着金色与米色条纹的楼梯间一路上行：梨靠近楼梯下段，红葡萄则悬于更高处。分别从两级不同的台阶拍摄，再单独近看那幅梨。楼梯间从来不是从一个位置观看的，每上一级，作品抵达眼前的高度都不同。",
+            "images": [
+                {
+                    "artworkId": "painting-004",
+                    "imageIndex": 2
+                },
+                {
+                    "artworkId": "painting-004",
+                    "imageIndex": 3
+                },
+                {
+                    "artworkId": "painting-004",
+                    "imageIndex": 1
+                }
+            ]
+        },
+        {
+            "slug": "living-room-corner",
+            "titleEn": "The Living Room Corner",
+            "titleZh": "客厅一角",
+            "blurbEn": "The peacock hung in the corner beside a curtained window, with a tall gold flower sculpture and a lamp standing in front of it. A corner is an awkward place for a painting and a good one for this painting: the tail runs out towards the window, which is the one thing in the room that changes through the day.",
+            "blurbZh": "孔雀画作挂在垂帘窗边的转角处，前方立着一座高大的金色花卉雕塑与一盏灯。转角对一幅画来说是别扭的位置，但对这一幅恰好合适：尾羽朝窗户的方向铺展，而窗光是房间里一整天唯一会变化的东西。",
+            "images": [
+                {
+                    "artworkId": "painting-008",
+                    "imageIndex": 0
+                }
+            ]
+        },
+        {
+            "slug": "under-the-cornice",
+            "titleEn": "Under the Cornice",
+            "titleZh": "顶线之下",
+            "blurbEn": "The spotted dog hung high on the wall, just under the cornice, with a sunflower painting to its right. At that height a picture is read from across the room rather than up close, and it holds the top of a wall that would otherwise be left bare.",
+            "blurbZh": "彩点狗高挂于墙面顶部装饰线下方，右侧是一幅向日葵画作。挂在这个高度，画是从房间另一端远观而非近看的；它占住了本会空着的墙顶。",
+            "images": [
+                {
+                    "artworkId": "painting-011",
+                    "imageIndex": 0
+                }
+            ]
+        },
+        {
+            "slug": "beside-the-door",
+            "titleEn": "Beside the Door",
+            "titleZh": "门边",
+            "blurbEn": "The redfish on a white wall next to a door frame, with two more canvases above and to the left. The narrow strip of wall beside a door is usually left bare. One painting the width of that strip turns it into the thing you look at on the way through.",
+            "blurbZh": "红鼓鱼挂在门框旁的白墙上，上方与左侧另有两幅画布。门边那条窄窄的墙面通常是空着的。一幅恰好与之同宽的画，把它变成了你经过时会去看的地方。",
+            "images": [
+                {
+                    "artworkId": "painting-013",
+                    "imageIndex": 1
+                }
+            ]
+        },
+        {
+            "slug": "the-washrooms",
+            "titleEn": "The Washrooms",
+            "titleZh": "洗手间",
+            "blurbEn": "Two small rooms, one painting each: the goldfish beside a towel ring on warm grey, and the winter cabin above a basin, where the oval mirror shows it a second time. A room this size is only ever seen from arm's length, which is a hard test of a painting and a generous one: nothing is lost to distance.",
+            "blurbZh": "两个小房间，各挂一幅：金鱼挂在暖灰色墙面的毛巾环旁；冬日木屋悬于洗手台之上，椭圆镜又将它映出第二次。这样大小的房间只会被在一臂之内观看，这对一幅画既是严苛的考验，也是慷慨的礼遇：没有任何细节会被距离吞没。",
+            "images": [
+                {
+                    "artworkId": "painting-015",
+                    "imageIndex": 1
+                },
+                {
+                    "artworkId": "painting-016",
+                    "imageIndex": 1
+                }
+            ]
+        },
+        {
+            "slug": "the-white-wall",
+            "titleEn": "The White Wall",
+            "titleZh": "白墙",
+            "blurbEn": "The one drawing in the gallery, framed and hung high on a white wall above a second frame, with a tall indoor tree to the left. Paper asks for glass and a mount, so it hangs differently from the canvases: set back behind the frame rather than sitting out on the wall.",
+            "blurbZh": "画廊中唯一的一幅素描，装框后高挂于白墙，下方还有另一幅画框，左侧是一棵高大的室内绿植。纸本需要玻璃与卡纸，因此它的悬挂方式与画布不同：被框住并后退一层，而不是直接贴在墙上。",
+            "images": [
+                {
+                    "artworkId": "drawing-001",
+                    "imageIndex": 0
+                }
             ]
         }
     ]

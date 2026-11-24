@@ -21,6 +21,7 @@ const SAMPLE_ARTWORKS = {
     {
       id: 'painting-dusk',
       medium: 'painting',
+      support: 'canvas',
       titleEn: 'Dusk Field',
       titleZh: '黄昏原野',
       year: 2024,
@@ -52,7 +53,6 @@ const SAMPLE_ARTWORKS = {
           altZh: '地平线处笔触的局部特写',
         },
       ],
-      sizeRange: 'large',
       colors: ['blues', 'greens'],
       style: 'abstract',
       dimensionsEn: '90 x 120 cm',
@@ -61,6 +61,7 @@ const SAMPLE_ARTWORKS = {
     {
       id: 'painting-quiet',
       medium: 'painting',
+      support: 'canvas',
       titleEn: 'Quiet Room',
       titleZh: '静室',
       year: 2026,
@@ -75,7 +76,6 @@ const SAMPLE_ARTWORKS = {
           altZh: '暖棕色光线中坐在窗边的人物',
         },
       ],
-      sizeRange: 'small',
       colors: ['browns'],
       style: 'figurative',
     },
@@ -149,6 +149,46 @@ function renderWithArtworks(catalog) {
     artworkIds: catalog.artworks.map((artwork) => artwork.id),
   };
   fixtureConfig.artists = fixtureConfig.artists.map((artist) => ({ ...artist, cover: { ...sampleCover } }));
+  // A facet may only declare a value some work carries, which is a rule about
+  // the real catalogue rather than about a two-work fixture. Rebuild each facet
+  // from the values the sample works actually have, keeping the real bilingual
+  // labels where one exists. The page-level rule the tests exercise is the
+  // other one: a value that is live in the catalogue but absent from this page,
+  // or present on fewer than two works, is never offered here.
+  fixtureConfig.facets = fixtureConfig.facets
+    .map((facet) => {
+      const present = [
+        ...new Set(
+          catalog.artworks.flatMap((artwork) => {
+            const held = artwork[facet.field];
+            if (Array.isArray(held)) return held;
+            return held === undefined ? [] : [held];
+          })
+        ),
+      ];
+      const labelled = new Map(facet.values.map((option) => [option.value, option]));
+      return { ...facet, values: present.map((value) => labelled.get(value) ?? { value, en: value, zh: value }) };
+    })
+    .filter((facet) => facet.values.length > 0);
+  // Every in-situ photograph in the catalogue belongs to exactly one hang
+  // scene, so give each distinct one a scene of its own. A sample catalogue
+  // with no room photographs gets no scenes, which the build allows.
+  const claimedSources = new Set();
+  fixtureConfig.exhibitions = catalog.artworks
+    .flatMap((artwork) => artwork.images.map((image, imageIndex) => ({ artwork, image, imageIndex })))
+    .filter(({ image }) => {
+      if (image.view !== 'in-situ' || claimedSources.has(image.src)) return false;
+      claimedSources.add(image.src);
+      return true;
+    })
+    .map(({ artwork, imageIndex }, index) => ({
+      slug: `scene-${index + 1}`,
+      titleEn: `Scene ${index + 1}`,
+      titleZh: `场景 ${index + 1}`,
+      blurbEn: 'A sample hang scene for the fixture render.',
+      blurbZh: '用于夹具渲染的样本悬挂场景。',
+      images: [{ artworkId: artwork.id, imageIndex }],
+    }));
   writeFileSync(path.join(fixtureRoot, 'content', 'gallery.json'), JSON.stringify(fixtureConfig, null, 4));
   writeFileSync(path.join(fixtureRoot, 'content', 'artworks.json'), JSON.stringify(fixtureCatalog, null, 4));
   execFileSync('node', ['build.mjs', '--fixture', fixtureRoot], { cwd: repoRoot, encoding: 'utf8' });
@@ -272,13 +312,19 @@ test('the filter bar only offers facet values that some artwork on the page actu
     const offered = [...document.querySelectorAll('.filter-option')].map(
       (option) => `${option.dataset.facet}:${option.dataset.value}`
     );
-    // Both sample works differ on size, color and style, so each of those
-    // facets has two or more values and appears. No work has a "reds" colour
-    // or a "realist" style, so neither may be offered.
-    assert.ok(offered.includes('size:large') && offered.includes('size:small'));
+    // The two sample works differ on colour and on style, so each of those
+    // facets has two or more values on this page and appears. Nothing else may
+    // be offered: no work here has a "reds" colour or a "realist" style, and
+    // neither carries a subject at all, so the subject facet has to vanish
+    // rather than render a dropdown with nothing in it.
+    assert.ok(offered.includes('colors:blues') && offered.includes('colors:browns'));
     assert.ok(offered.includes('style:abstract') && offered.includes('style:figurative'));
     assert.ok(!offered.includes('colors:reds'), 'offered a colour no artwork has');
     assert.ok(!offered.includes('style:realist'), 'offered a style no artwork has');
+    assert.ok(
+      !offered.some((option) => option.startsWith('subject:')),
+      'offered a facet no artwork on the page fills'
+    );
     assert.ok(document.querySelector('.filter-year-from'), 'two different years should give a year range');
     dom.window.close();
   } finally {
@@ -286,11 +332,24 @@ test('the filter bar only offers facet values that some artwork on the page actu
   }
 });
 
-test('a medium page with no artwork renders an empty state and no filter bar', () => {
-  const html = readFileSync(path.join(repoRoot, 'gallery-sculpture.html'), 'utf8');
-  assert.ok(html.includes('artwork-empty-state'), 'expected the honest empty state');
-  assert.ok(!html.includes('artwork-filter-bar'), 'a page with nothing to filter must not render a filter bar');
-  assert.ok(!html.includes('artwork-grid'), 'a page with no artwork must not render an empty grid');
+test('a medium with no works renders its written page, a commission link and no filter bar', () => {
+  // Four medium pages described media Kay has not worked in yet, and each
+  // shipped one grey line of empty state. A visitor reads that as an
+  // unfinished site rather than an honest one, so a medium with no works now
+  // carries written copy in both languages and a way to ask for a commission.
+  const enquiry = galleryConfig.unrepresentedMedium;
+  for (const slug of ['photography', 'printmaking', 'sculpture', 'mixed-media']) {
+    const page = galleryConfig.mediumPages.find((candidate) => candidate.slug === slug);
+    const html = readFileSync(path.join(repoRoot, `gallery-${slug}.html`), 'utf8');
+    assert.ok(worksForMediumPage(page).length === 0, `${slug} is the unrepresented case under test`);
+    assert.ok(html.includes('medium-unrepresented'), `${slug} must render its written page`);
+    assert.ok(html.includes(page.emptyBodyEn), `${slug} must carry its English copy`);
+    assert.ok(html.includes(page.emptyBodyZh), `${slug} must carry its Chinese copy`);
+    assert.ok(html.includes(`href="${enquiry.enquiryHref}"`), `${slug} must offer the commission enquiry link`);
+    assert.ok(!html.includes('artwork-empty-state'), `${slug} must not fall back to the bare empty state`);
+    assert.ok(!html.includes('artwork-filter-bar'), 'a page with nothing to filter must not render a filter bar');
+    assert.ok(!html.includes('artwork-grid'), 'a page with no artwork must not render an empty grid');
+  }
 });
 
 test('selecting a filter option hides the artwork that does not match', async () => {
@@ -320,8 +379,10 @@ test('a filter combination that matches nothing shows the no-matches message', a
   try {
     const dom = await loadFixturePage(fixtureRoot, 'gallery-painting.html');
     const { document } = dom.window;
+    // The abstract work is blue and green; the brown work is figurative. Asking
+    // for both at once can only match nothing.
     document.querySelector('.filter-option[data-facet="style"][data-value="abstract"]').click();
-    document.querySelector('.filter-option[data-facet="size"][data-value="small"]').click();
+    document.querySelector('.filter-option[data-facet="colors"][data-value="browns"]').click();
     assert.equal([...document.querySelectorAll('.artwork-card')].filter((card) => !card.hidden).length, 0);
     assert.ok(!document.querySelector('.artwork-no-matches').hidden);
     dom.window.close();
@@ -494,6 +555,19 @@ const catalogueImagesBySrc = new Map(
   catalogue.artworks.flatMap((artwork) => artwork.images.map((image) => [image.src, { ...image, artworkId: artwork.id }]))
 );
 
+// The works a medium page holds, read from the page's own rule. A medium page
+// may gather its works on a field other than medium: work-on-paper selects on
+// support, so the one drawing appears there as well as under Drawing. Tests
+// that ask "does this page have works" have to follow the same rule the build
+// does, or they assert against a page that does not exist.
+const worksForMediumPage = (page) => {
+  const { field, value } = page.select ?? { field: 'medium', value: page.slug };
+  return catalogue.artworks.filter((artwork) => {
+    const held = artwork[field];
+    return Array.isArray(held) ? held.includes(value) : held === value;
+  });
+};
+
 test('the hub shows a photograph for every medium that has works, and promises none for the rest', () => {
   const dom = committedHub();
   try {
@@ -501,7 +575,7 @@ test('the hub shows a photograph for every medium that has works, and promises n
     assert.equal(cards.length, galleryConfig.mediumPages.length, 'one card per medium page');
     for (const [index, page] of galleryConfig.mediumPages.entries()) {
       const card = cards[index];
-      const works = catalogue.artworks.filter((artwork) => artwork.medium === page.slug);
+      const works = worksForMediumPage(page);
       const image = card.querySelector('img');
       if (works.length > 0) {
         assert.ok(image, `${page.slug} has ${works.length} published work(s) but its hub card shows no photograph`);
@@ -537,7 +611,7 @@ test('a hub medium card carries its photograph and its editable title together',
     assert.equal(cards.length, galleryConfig.mediumPages.length, 'one card per medium page');
     for (const [index, page] of galleryConfig.mediumPages.entries()) {
       const card = cards[index];
-      const works = catalogue.artworks.filter((artwork) => artwork.medium === page.slug);
+      const works = worksForMediumPage(page);
       for (const [language, field] of [
         ['en', 'titleEn'],
         ['zh', 'titleZh'],

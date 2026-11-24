@@ -6,17 +6,32 @@ https://qidumplingsinc.github.io/SpecialChiliSauce/
 
 Every `gallery*.html` page at the repo root is generated. Do not hand-edit them. Edit the data or the templates and rerun the build:
 
-- `content/gallery.json` -- nav tabs, the medium pages, the section pages
+- `content/gallery.json` -- nav tabs, the medium pages, the collections, the hang scenes behind Exhibitions, the filter facets
 - `content/artworks.json` -- the artwork catalog (display only; no price, no purchase path)
 - `templates/page-*.html` -- one template per page shape
-- `templates/partials/` -- the header, nav tabs, footers, filter bar and placeholder card, each defined once
+- `templates/partials/` -- the header, nav tabs, footers and the edit-mode bootstrap, each defined once
 
 ```
-npm run build          # rewrite the 13 gallery pages
+npm run build          # rewrite the 14 gallery pages
 npm run build:check    # fail if the committed HTML has drifted from templates/content
 ```
 
 The rendered HTML stays committed so GitHub Pages serves the site with no build step at deploy time. `npm test` runs `build:check`, so drift fails the test suite.
+
+### The artwork model
+
+One work is one entry in `content/artworks.json`. Every field on it either drives a page or answers a question a buyer asks, and the build refuses the entry if a required one is missing:
+
+- `medium` is the technique and must match a `mediumPages` slug. `support` is the thing the work is made on -- `paper`, `canvas` or `panel`. They are separate facts, which is how the one drawing appears under both Drawing and Work on Paper from a single entry: a medium page may carry `select: { field, value }` to gather its works on a field other than `medium`.
+- `subject`, `colors` and `style` drive the filter bar. `collections` places the work in a series on the Collections page. `year` is optional, because the catalogue records an undated work as undated rather than inventing a plausible year; those render as `n.d.`.
+- `dimensionsEn` / `dimensionsZh` are optional and appear wherever the work is listed once they are filled in.
+
+Two rules keep the data and the pages honest, and both are build failures rather than review notes:
+
+- **A facet may only declare a value some work carries.** The size facet shipped with four options that no work had, so every chip on the Painting page returned an empty result. A filter that can only ever match nothing is worse than no filter, so the facet came out and this rule keeps it out until real measurements exist. Each artwork card carries one `data-<facet key>` attribute per declared facet, generated from the same list, so a facet cannot leave a dead attribute behind or render a chip the cards do not answer.
+- **Every in-situ photograph belongs to exactly one Exhibitions hang scene.** A scene in `gallery.json` `exhibitions` names its photographs and the works visible in it are derived from those photographs, so tagging a work with an in-situ image is the only step needed to place it. A scene photograph must be an in-situ view, which is the opposite of the rule for a hub or cover slot: those crop a photograph to a fixed shape, and a hang record must keep the framing it was taken with.
+
+A medium with no works at all carries `emptyBodyEn` / `emptyBodyZh` -- a written page saying what the medium would mean here and what is true today -- plus the shared commission enquiry copy in `unrepresentedMedium`. That is the alternative to one grey line of empty state, which reads as an unfinished site rather than an honest one.
 
 ## Adding artwork
 
@@ -99,9 +114,9 @@ How an editor uses it:
 3. Click **Review changes** to see every pending change as the old value next to the new one, and discard any single one.
 4. Click **Download edit-patch.json** and send that file to whoever maintains the repository.
 
-What is editable: the English and Chinese titles of a medium page, the titles and body copy of a section page, and the titles and dimensions of an artwork. That is the whole list, and the next section says why it stops there.
+What is editable: the English and Chinese titles of a medium page, the titles and blurbs of a collection and of an Exhibitions hang scene, and the titles and dimensions of an artwork. That is the whole list, and the next section says why it stops there.
 
-Editing copy on a medium or section page applies today, as does artwork wording: both `content/gallery.json` and `content/artworks.json` round-trip through the gate's formatter, and the build fails if either stops doing so.
+Editing page copy applies today, as does artwork wording: both `content/gallery.json` and `content/artworks.json` round-trip through the gate's formatter, and the build fails if either stops doing so.
 
 Implementation notes:
 

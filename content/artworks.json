@@ -1,9 +1,10 @@
 {
-    "comment": "Single source of truth for artwork shown in the gallery. Artwork is display only; there is no price, no wishlist and no purchase path. Add one object per work to the artworks array. Required: id, medium (must match a slug in gallery.json mediumPages), titleEn, titleZh, images. Optional: year (four-digit integer; omit it for an undated work and the card renders n.d.), sizeRange (small|medium|large|very-large), colors (array), style (abstract|figurative|realist), dimensionsEn, dimensionsZh. Each entry in images needs src, width, height, view, altEn and altZh, plus source for provenance. view is front (the work photographed face on, cropped to its edges), in-situ (the work where it hangs, never cropped) or detail (one part of the work at close range, never cropped). The first image is the one the grid shows; when a front photograph exists it must come first, and a work with no front photograph leads with its in-situ shot followed by details. width and height are the real pixel dimensions of the file and are rendered as width/height attributes so the browser reserves layout space before the image loads. An in-situ photograph showing several works at once is referenced by each of those works.",
+    "comment": "Single source of truth for artwork shown in the gallery. Artwork is display only; there is no price, no wishlist and no purchase path. Add one object per work to the artworks array. Required: id, medium (must match a slug in gallery.json mediumPages), support (paper|canvas|panel, the physical thing the work is made on, which is a separate fact from the technique the medium names), titleEn, titleZh, images. A medium page may select on support instead of medium, which is how the one drawing appears under both Drawing and Work on Paper without a second catalogue entry. Optional: year (four-digit integer; omit it for an undated work and the card renders n.d.), colors (array), style (abstract|figurative|realist), dimensionsEn, dimensionsZh. Each entry in images needs src, width, height, view, altEn and altZh, plus source for provenance. view is front (the work photographed face on, cropped to its edges), in-situ (the work where it hangs, never cropped) or detail (one part of the work at close range, never cropped). The first image is the one the grid shows; when a front photograph exists it must come first, and a work with no front photograph leads with its in-situ shot followed by details. width and height are the real pixel dimensions of the file and are rendered as width/height attributes so the browser reserves layout space before the image loads. An in-situ photograph showing several works at once is referenced by each of those works.",
     "artworks": [
         {
             "id": "painting-001",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Lemons",
             "titleZh": "柠檬",
             "images": [
@@ -47,6 +48,7 @@
         {
             "id": "painting-002",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Tomatoes on the Vine",
             "titleZh": "藤上番茄",
             "year": 2020,
@@ -91,6 +93,7 @@
         {
             "id": "painting-003",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Pomegranates",
             "titleZh": "石榴",
             "images": [
@@ -135,6 +138,7 @@
         {
             "id": "painting-004",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Pears",
             "titleZh": "梨",
             "year": 2022,
@@ -189,6 +193,7 @@
         {
             "id": "painting-005",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Red Grapes",
             "titleZh": "红葡萄",
             "year": 2024,
@@ -233,6 +238,7 @@
         {
             "id": "painting-006",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Figs",
             "titleZh": "无花果",
             "year": 2023,
@@ -268,6 +274,7 @@
         {
             "id": "painting-007",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Peonies",
             "titleZh": "牡丹",
             "images": [
@@ -294,6 +301,7 @@
         {
             "id": "painting-008",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Peacock",
             "titleZh": "孔雀",
             "images": [
@@ -329,6 +337,7 @@
         {
             "id": "painting-009",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Parrot",
             "titleZh": "鹦鹉",
             "images": [
@@ -355,6 +364,7 @@
         {
             "id": "painting-010",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Ram",
             "titleZh": "公羊",
             "images": [
@@ -380,6 +390,7 @@
         {
             "id": "painting-011",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Spotted Dog",
             "titleZh": "彩点狗",
             "images": [
@@ -406,6 +417,7 @@
         {
             "id": "painting-012",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Pintail Duck",
             "titleZh": "针尾鸭",
             "images": [
@@ -432,6 +444,7 @@
         {
             "id": "painting-013",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Redfish",
             "titleZh": "红鼓鱼",
             "images": [
@@ -467,6 +480,7 @@
         {
             "id": "painting-014",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Rockfish",
             "titleZh": "石斑鱼",
             "year": 2024,
@@ -494,6 +508,7 @@
         {
             "id": "painting-015",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Goldfish",
             "titleZh": "金鱼",
             "images": [
@@ -529,6 +544,7 @@
         {
             "id": "painting-016",
             "medium": "painting",
+            "support": "canvas",
             "titleEn": "Cabin in Winter",
             "titleZh": "冬日木屋",
             "images": [
@@ -564,6 +580,7 @@
         {
             "id": "drawing-001",
             "medium": "drawing",
+            "support": "paper",
             "titleEn": "Two Dogs and Cherry Blossoms",
             "titleZh": "双犬与樱花",
             "images": [

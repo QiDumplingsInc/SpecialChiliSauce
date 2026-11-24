@@ -170,7 +170,7 @@ const rejects = [
   ['a lone brace in a text value', patchOf(edit({ value: 'Lemons }' })), /value/i],
   ['a build placeholder in gallery page body copy', {
     version: 1,
-    edits: [{ file: 'content/gallery.json', collection: 'sectionPages', key: 'exhibitions', field: 'bodyEn', value: 'About {{FOOTER}}' }],
+    edits: [{ file: 'content/gallery.json', collection: 'collections', key: 'orchard-and-vine', field: 'blurbEn', value: 'About {{FOOTER}}' }],
   }, /value/i],
   // Security review F3: the per-field limit was only checked after trim(), so
   // a multi-megabyte string was accepted into the patch and copied once before
@@ -190,9 +190,9 @@ const rejects = [
     version: 1,
     edits: [{ file: 'content/gallery.json', collection: 'mediumPages', key: 'painting', field: 'metaDescription', value: 'Paintings by Kay.' }],
   }, /field/i],
-  ['a section page meta description, de-scoped from edit mode', {
+  ['a hang scene meta description, de-scoped from edit mode', {
     version: 1,
-    edits: [{ file: 'content/gallery.json', collection: 'sectionPages', key: 'exhibitions', field: 'metaDescription', value: 'Artists represented.' }],
+    edits: [{ file: 'content/gallery.json', collection: 'exhibitions', key: 'panelled-wall', field: 'metaDescription', value: 'Works on a panelled wall.' }],
   }, /field/i],
   ['two edits to the same field', patchOf(edit({ value: 'A' }), edit({ value: 'B' })), /duplicate/i],
   ['more edits than the cap', { version: 1, edits: Array.from({ length: 201 }, () => edit()) }, /edits/i],
@@ -308,12 +308,12 @@ test('the whitelist is exactly the fields edit mode can reach in place', () => {
     'content/gallery.json|collections|blurbZh',
     'content/gallery.json|collections|titleEn',
     'content/gallery.json|collections|titleZh',
+    'content/gallery.json|exhibitions|blurbEn',
+    'content/gallery.json|exhibitions|blurbZh',
+    'content/gallery.json|exhibitions|titleEn',
+    'content/gallery.json|exhibitions|titleZh',
     'content/gallery.json|mediumPages|titleEn',
     'content/gallery.json|mediumPages|titleZh',
-    'content/gallery.json|sectionPages|bodyEn',
-    'content/gallery.json|sectionPages|bodyZh',
-    'content/gallery.json|sectionPages|titleEn',
-    'content/gallery.json|sectionPages|titleZh',
   ]);
 });
 

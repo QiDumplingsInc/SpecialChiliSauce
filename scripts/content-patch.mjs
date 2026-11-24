@@ -49,6 +49,14 @@ const MAX_RAW_VALUE_LENGTH = 4096;
  * surface, which the project rejected. README.md, under "Admin edit mode: what
  * it deliberately does not cover", records that decision and what it would
  * take to reverse it.
+ *
+ * A medium page's emptyBodyEn/emptyBodyZh (the written page a medium with no
+ * works shows) is absent for a structural reason rather than a scope one. The
+ * hub renders a card for every mediumPages record, so the hub is one of the
+ * pages the reverse pencil guard checks that record on; whitelisting a field
+ * that renders only on the medium page itself would demand a pencil on the hub
+ * for copy the hub does not show. The artist bios are absent for the same
+ * reason as each other: they are paragraph arrays, not the text of one element.
  */
 export const EDITABLE_CONTENT = {
   'content/artworks.json': {
@@ -70,16 +78,16 @@ export const EDITABLE_CONTENT = {
         titleZh: { type: 'text', maxLength: 120 },
       },
     },
-    sectionPages: {
+    collections: {
       keyField: 'slug',
       fields: {
         titleEn: { type: 'text', maxLength: 120 },
         titleZh: { type: 'text', maxLength: 120 },
-        bodyEn: { type: 'text', maxLength: 500 },
-        bodyZh: { type: 'text', maxLength: 500 },
+        blurbEn: { type: 'text', maxLength: 500 },
+        blurbZh: { type: 'text', maxLength: 500 },
       },
     },
-    collections: {
+    exhibitions: {
       keyField: 'slug',
       fields: {
         titleEn: { type: 'text', maxLength: 120 },

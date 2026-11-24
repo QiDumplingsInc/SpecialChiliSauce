@@ -296,13 +296,13 @@ test('a hand-written address the gate would refuse fails the build', () => {
       path.join(fixtureRoot, 'assets', 'js', 'gallery-search-index.js')
     );
 
-    const templatePath = path.join(fixtureRoot, 'templates', 'page-section.html');
+    const templatePath = path.join(fixtureRoot, 'templates', 'page-exhibitions.html');
     const template = readFileSync(templatePath, 'utf8');
     writeFileSync(
       templatePath,
       template.replace(
-        '<div class="painting-grid">',
-        '<div class="painting-grid" data-edit-field="content/artworks.json|artworks|painting-001|image">'
+        '<section class="container">',
+        '<section class="container" data-edit-field="content/artworks.json|artworks|painting-001|image">'
       )
     );
 
@@ -316,7 +316,7 @@ test('a hand-written address the gate would refuse fails the build', () => {
     // browser as an edit whose patch has empty parts.
     writeFileSync(
       templatePath,
-      template.replace('<div class="painting-grid">', '<div class="painting-grid" data-edit-field="titleEn">')
+      template.replace('<section class="container">', '<section class="container" data-edit-field="titleEn">')
     );
     assert.throws(
       () => execFileSync('node', ['build.mjs'], { cwd: fixtureRoot, stdio: 'pipe' }),
