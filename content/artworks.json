@@ -38,7 +38,11 @@
             "colors": [
                 "greens"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "fruit",
+            "collections": [
+                "orchard-and-vine"
+            ]
         },
         {
             "id": "painting-002",
@@ -78,7 +82,11 @@
             "colors": [
                 "reds"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "fruit",
+            "collections": [
+                "orchard-and-vine"
+            ]
         },
         {
             "id": "painting-003",
@@ -118,7 +126,11 @@
                 "reds",
                 "greens"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "fruit",
+            "collections": [
+                "orchard-and-vine"
+            ]
         },
         {
             "id": "painting-004",
@@ -168,7 +180,11 @@
                 "greens",
                 "browns"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "fruit",
+            "collections": [
+                "orchard-and-vine"
+            ]
         },
         {
             "id": "painting-005",
@@ -208,7 +224,11 @@
             "colors": [
                 "reds"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "fruit",
+            "collections": [
+                "orchard-and-vine"
+            ]
         },
         {
             "id": "painting-006",
@@ -239,7 +259,11 @@
             "colors": [
                 "greens"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "fruit",
+            "collections": [
+                "orchard-and-vine"
+            ]
         },
         {
             "id": "painting-007",
@@ -261,7 +285,11 @@
                 "reds",
                 "greens"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "flower",
+            "collections": [
+                "flowers-and-far-places"
+            ]
         },
         {
             "id": "painting-008",
@@ -292,7 +320,11 @@
                 "blues",
                 "greens"
             ],
-            "style": "figurative"
+            "style": "figurative",
+            "subject": "bird",
+            "collections": [
+                "birds-and-beasts"
+            ]
         },
         {
             "id": "painting-009",
@@ -314,7 +346,11 @@
                 "greens",
                 "blacks-whites"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "bird",
+            "collections": [
+                "birds-and-beasts"
+            ]
         },
         {
             "id": "painting-010",
@@ -335,7 +371,11 @@
             "colors": [
                 "blacks-whites"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "animal",
+            "collections": [
+                "birds-and-beasts"
+            ]
         },
         {
             "id": "painting-011",
@@ -357,7 +397,11 @@
                 "blacks-whites",
                 "reds"
             ],
-            "style": "figurative"
+            "style": "figurative",
+            "subject": "animal",
+            "collections": [
+                "birds-and-beasts"
+            ]
         },
         {
             "id": "painting-012",
@@ -379,7 +423,11 @@
                 "browns",
                 "blues"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "bird",
+            "collections": [
+                "birds-and-beasts"
+            ]
         },
         {
             "id": "painting-013",
@@ -410,7 +458,11 @@
                 "greens",
                 "browns"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "fish",
+            "collections": [
+                "beneath-the-water"
+            ]
         },
         {
             "id": "painting-014",
@@ -433,7 +485,11 @@
                 "reds",
                 "blues"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "fish",
+            "collections": [
+                "beneath-the-water"
+            ]
         },
         {
             "id": "painting-015",
@@ -464,7 +520,11 @@
                 "reds",
                 "blues"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "fish",
+            "collections": [
+                "beneath-the-water"
+            ]
         },
         {
             "id": "painting-016",
@@ -495,7 +555,11 @@
                 "blues",
                 "reds"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "landscape",
+            "collections": [
+                "flowers-and-far-places"
+            ]
         },
         {
             "id": "drawing-001",
@@ -526,7 +590,11 @@
                 "reds",
                 "browns"
             ],
-            "style": "realist"
+            "style": "realist",
+            "subject": "animal",
+            "collections": [
+                "birds-and-beasts"
+            ]
         }
     ]
 }

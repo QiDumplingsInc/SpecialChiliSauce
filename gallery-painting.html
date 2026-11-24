@@ -113,6 +113,37 @@
         </div>
       </div>
       <div class="filter-dropdown">
+        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-subject" aria-expanded="false">
+          <span class="lang-en">Subject</span><span class="lang-zh">主题</span>
+        </button>
+        <div class="filter-dropdown-panel" role="group" aria-labelledby="filter-toggle-subject">
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false" data-facet="subject" data-value="fruit">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Fruit</span><span class="lang-zh">水果</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false" data-facet="subject" data-value="flower">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Flower</span><span class="lang-zh">花卉</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false" data-facet="subject" data-value="bird">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Bird</span><span class="lang-zh">鸟类</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false" data-facet="subject" data-value="animal">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Animal</span><span class="lang-zh">动物</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false" data-facet="subject" data-value="fish">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Fish</span><span class="lang-zh">鱼类</span>
+          </button>
+          <button type="button" class="filter-option" role="checkbox" aria-checked="false" data-facet="subject" data-value="landscape">
+            <span class="filter-check" aria-hidden="true">&#10003;</span>
+            <span class="lang-en">Landscape</span><span class="lang-zh">风景</span>
+          </button>
+        </div>
+      </div>
+      <div class="filter-dropdown">
         <button class="filter-dropdown-toggle" type="button" id="filter-toggle-year" aria-expanded="false">
           <span class="lang-en">Year Range</span><span class="lang-zh">年份范围</span>
         </button>
@@ -128,7 +159,7 @@
       </button>
     </div>
     <div class="artwork-grid">
-      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="greens" data-style="realist" data-title-en="Lemons" data-title-zh="柠檬">
+      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="greens" data-style="realist" data-subject="fruit" data-title-en="Lemons" data-title-zh="柠檬">
         <div class="artwork-image-wrap">
           <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="3" style="aspect-ratio: 889 / 1200" tabindex="0">
             <div class="artwork-slide" data-slide="0">
@@ -170,7 +201,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-001|titleEn">Lemons</span>, n.d.</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-001|titleZh">柠檬</span>，年份不详</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="2020" data-size="" data-colors="reds" data-style="realist" data-title-en="Tomatoes on the Vine" data-title-zh="藤上番茄">
+      <div class="artwork-card" data-medium="painting" data-year="2020" data-size="" data-colors="reds" data-style="realist" data-subject="fruit" data-title-en="Tomatoes on the Vine" data-title-zh="藤上番茄">
         <div class="artwork-image-wrap">
           <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="3" style="aspect-ratio: 910 / 1200" tabindex="0">
             <div class="artwork-slide" data-slide="0">
@@ -212,7 +243,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-002|titleEn">Tomatoes on the Vine</span>, 2020</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-002|titleZh">藤上番茄</span>，2020</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="reds greens" data-style="realist" data-title-en="Pomegranates" data-title-zh="石榴">
+      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="reds greens" data-style="realist" data-subject="fruit" data-title-en="Pomegranates" data-title-zh="石榴">
         <div class="artwork-image-wrap">
           <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="3" style="aspect-ratio: 614 / 1200" tabindex="0">
             <div class="artwork-slide" data-slide="0">
@@ -254,7 +285,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-003|titleEn">Pomegranates</span>, n.d.</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-003|titleZh">石榴</span>，年份不详</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="2022" data-size="" data-colors="greens browns" data-style="realist" data-title-en="Pears" data-title-zh="梨">
+      <div class="artwork-card" data-medium="painting" data-year="2022" data-size="" data-colors="greens browns" data-style="realist" data-subject="fruit" data-title-en="Pears" data-title-zh="梨">
         <div class="artwork-image-wrap">
           <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="4" style="aspect-ratio: 884 / 1200" tabindex="0">
             <div class="artwork-slide" data-slide="0">
@@ -303,7 +334,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-004|titleEn">Pears</span>, 2022</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-004|titleZh">梨</span>，2022</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="2024" data-size="" data-colors="reds" data-style="realist" data-title-en="Red Grapes" data-title-zh="红葡萄">
+      <div class="artwork-card" data-medium="painting" data-year="2024" data-size="" data-colors="reds" data-style="realist" data-subject="fruit" data-title-en="Red Grapes" data-title-zh="红葡萄">
         <div class="artwork-image-wrap">
           <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="3" style="aspect-ratio: 931 / 1200" tabindex="0">
             <div class="artwork-slide" data-slide="0">
@@ -345,7 +376,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-005|titleEn">Red Grapes</span>, 2024</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-005|titleZh">红葡萄</span>，2024</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="2023" data-size="" data-colors="greens" data-style="realist" data-title-en="Figs" data-title-zh="无花果">
+      <div class="artwork-card" data-medium="painting" data-year="2023" data-size="" data-colors="greens" data-style="realist" data-subject="fruit" data-title-en="Figs" data-title-zh="无花果">
         <div class="artwork-image-wrap">
           <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="2" style="aspect-ratio: 927 / 1200" tabindex="0">
             <div class="artwork-slide" data-slide="0">
@@ -380,7 +411,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-006|titleEn">Figs</span>, 2023</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-006|titleZh">无花果</span>，2023</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="reds greens" data-style="realist" data-title-en="Peonies" data-title-zh="牡丹">
+      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="reds greens" data-style="realist" data-subject="flower" data-title-en="Peonies" data-title-zh="牡丹">
         <div class="artwork-image-wrap">
           <img class="artwork-image" src="assets/gallery/painting-007-1.jpg" alt="Painting of two full pink peony blooms on green stems against a graded green ground" width="942" height="1200" loading="lazy" data-view="front" data-alt-en="Painting of two full pink peony blooms on green stems against a graded green ground" data-alt-zh="画作：两朵盛开的粉色牡丹立于绿色花茎之上，背景为渐变绿色">
         </div>
@@ -388,7 +419,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-007|titleEn">Peonies</span>, n.d.</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-007|titleZh">牡丹</span>，年份不详</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="blues greens" data-style="figurative" data-title-en="Peacock" data-title-zh="孔雀">
+      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="blues greens" data-style="figurative" data-subject="bird" data-title-en="Peacock" data-title-zh="孔雀">
         <div class="artwork-image-wrap">
           <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="2" style="aspect-ratio: 900 / 1200" tabindex="0">
             <div class="artwork-slide" data-slide="0">
@@ -423,7 +454,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-008|titleEn">Peacock</span>, n.d.</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-008|titleZh">孔雀</span>，年份不详</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="greens blacks-whites" data-style="realist" data-title-en="Parrot" data-title-zh="鹦鹉">
+      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="greens blacks-whites" data-style="realist" data-subject="bird" data-title-en="Parrot" data-title-zh="鹦鹉">
         <div class="artwork-image-wrap">
           <img class="artwork-image" src="assets/gallery/painting-009-1.jpg" alt="Painting of a green parrot's head in profile with a pale curved beak and red brow, on a near black ground" width="928" height="1200" loading="lazy" data-view="front" data-alt-en="Painting of a green parrot's head in profile with a pale curved beak and red brow, on a near black ground" data-alt-zh="画作：绿色鹦鹉头部侧面，喙呈浅色弯钩状，额前有红羽，背景近黑">
         </div>
@@ -431,7 +462,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-009|titleEn">Parrot</span>, n.d.</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-009|titleZh">鹦鹉</span>，年份不详</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="blacks-whites" data-style="realist" data-title-en="Ram" data-title-zh="公羊">
+      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="blacks-whites" data-style="realist" data-subject="animal" data-title-en="Ram" data-title-zh="公羊">
         <div class="artwork-image-wrap">
           <img class="artwork-image" src="assets/gallery/painting-010-1.jpg" alt="Painting of a horned ram's head in profile, its curled fleece and dark face rendered in greys and white" width="1200" height="955" loading="lazy" data-view="front" data-alt-en="Painting of a horned ram's head in profile, its curled fleece and dark face rendered in greys and white" data-alt-zh="画作：带角公羊头部侧面，灰白卷毛与深色面部以灰白色调绘出">
         </div>
@@ -439,7 +470,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-010|titleEn">Ram</span>, n.d.</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-010|titleZh">公羊</span>，年份不详</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="blacks-whites reds" data-style="figurative" data-title-en="Spotted Dog" data-title-zh="彩点狗">
+      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="blacks-whites reds" data-style="figurative" data-subject="animal" data-title-en="Spotted Dog" data-title-zh="彩点狗">
         <div class="artwork-image-wrap">
           <img class="artwork-image" src="assets/gallery/painting-011-1.jpg" alt="The spotted dog painting hung high on a wall just under the cornice, with a sunflower painting to its right" width="1200" height="900" loading="lazy" data-view="in-situ" data-alt-en="The spotted dog painting hung high on a wall just under the cornice, with a sunflower painting to its right" data-alt-zh="彩点狗画作高挂于墙面顶部装饰线下方，右侧是一幅向日葵画作">
         </div>
@@ -447,7 +478,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-011|titleEn">Spotted Dog</span>, n.d.</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-011|titleZh">彩点狗</span>，年份不详</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="browns blues" data-style="realist" data-title-en="Pintail Duck" data-title-zh="针尾鸭">
+      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="browns blues" data-style="realist" data-subject="bird" data-title-en="Pintail Duck" data-title-zh="针尾鸭">
         <div class="artwork-image-wrap">
           <img class="artwork-image" src="assets/gallery/painting-012-1.jpg" alt="Painting of a pintail duck on dark water, its brown head and patterned wing reflected below, on a deep brown ground" width="911" height="1200" loading="lazy" data-view="front" data-alt-en="Painting of a pintail duck on dark water, its brown head and patterned wing reflected below, on a deep brown ground" data-alt-zh="画作：针尾鸭浮于暗色水面，棕色头部与带纹双翼映于水中，背景为深棕色">
         </div>
@@ -455,7 +486,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-012|titleEn">Pintail Duck</span>, n.d.</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-012|titleZh">针尾鸭</span>，年份不详</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="greens browns" data-style="realist" data-title-en="Redfish" data-title-zh="红鼓鱼">
+      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="greens browns" data-style="realist" data-subject="fish" data-title-en="Redfish" data-title-zh="红鼓鱼">
         <div class="artwork-image-wrap">
           <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="2" style="aspect-ratio: 927 / 1200" tabindex="0">
             <div class="artwork-slide" data-slide="0">
@@ -490,7 +521,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-013|titleEn">Redfish</span>, n.d.</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-013|titleZh">红鼓鱼</span>，年份不详</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="2024" data-size="" data-colors="reds blues" data-style="realist" data-title-en="Rockfish" data-title-zh="石斑鱼">
+      <div class="artwork-card" data-medium="painting" data-year="2024" data-size="" data-colors="reds blues" data-style="realist" data-subject="fish" data-title-en="Rockfish" data-title-zh="石斑鱼">
         <div class="artwork-image-wrap">
           <img class="artwork-image" src="assets/gallery/painting-014-1.jpg" alt="Painting of an orange rockfish with red fins against a deep blue ground mottled with green" width="1200" height="845" loading="lazy" data-view="front" data-alt-en="Painting of an orange rockfish with red fins against a deep blue ground mottled with green" data-alt-zh="画作：橙色石斑鱼展开红色鳍条，背景为带绿色斑驳的深蓝">
         </div>
@@ -498,7 +529,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-014|titleEn">Rockfish</span>, 2024</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-014|titleZh">石斑鱼</span>，2024</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="reds blues" data-style="realist" data-title-en="Goldfish" data-title-zh="金鱼">
+      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="reds blues" data-style="realist" data-subject="fish" data-title-en="Goldfish" data-title-zh="金鱼">
         <div class="artwork-image-wrap">
           <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="2" style="aspect-ratio: 889 / 1200" tabindex="0">
             <div class="artwork-slide" data-slide="0">
@@ -533,7 +564,7 @@
         <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|painting-015|titleEn">Goldfish</span>, n.d.</div>
         <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|painting-015|titleZh">金鱼</span>，年份不详</div>
       </div>
-      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="blues reds" data-style="realist" data-title-en="Cabin in Winter" data-title-zh="冬日木屋">
+      <div class="artwork-card" data-medium="painting" data-year="" data-size="" data-colors="blues reds" data-style="realist" data-subject="landscape" data-title-en="Cabin in Winter" data-title-zh="冬日木屋">
         <div class="artwork-image-wrap">
           <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="2" style="aspect-ratio: 900 / 1200" tabindex="0">
             <div class="artwork-slide" data-slide="0">

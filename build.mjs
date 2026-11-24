@@ -364,6 +364,196 @@ const aboutPanelImages = galleryConfig.aboutPanels.map((panel, panelIndex) => {
   return markup;
 });
 
+// Renders one artwork grid: the <div class="artwork-grid"> block with one card
+// per work, image (or a multi-image carousel), the "KAY" byline and the
+// bilingual title + year. Returns that block as a string. Two callers share it
+// -- every medium page and every collection section -- so the card markup, the
+// carousel and the edit pencils stay one definition rather than two that drift.
+// The caller supplies the works and decides what wraps the grid (a filter bar
+// and a no-matches message on medium pages, a section head on collection pages).
+const renderArtworkGrid = (works) => {
+  let grid = '    <div class="artwork-grid">\n';
+  for (const artwork of works) {
+    const colors = Array.isArray(artwork.colors) ? artwork.colors.join(' ') : '';
+    const year = yearLabel(artwork);
+    grid += '      <div class="artwork-card"';
+    grid += ` data-medium="${escapeHtml(artwork.medium)}"`;
+    grid += ` data-year="${escapeHtml(artwork.year ?? '')}"`;
+    grid += ` data-size="${escapeHtml(artwork.sizeRange ?? '')}"`;
+    grid += ` data-colors="${escapeHtml(colors)}"`;
+    grid += ` data-style="${escapeHtml(artwork.style ?? '')}"`;
+    grid += ` data-subject="${escapeHtml(artwork.subject ?? '')}"`;
+    grid += ` data-title-en="${escapeHtml(artwork.titleEn)}"`;
+    grid += ` data-title-zh="${escapeHtml(artwork.titleZh)}"`;
+    grid += '>\n';
+    grid += '        <div class="artwork-image-wrap">\n';
+    // A work with one photograph renders a bare image: carousel controls on a
+    // single slide would be an affordance that does nothing. A work with
+    // several renders a scroll-snap strip, which already swipes on touch and
+    // scrolls with no script at all; the buttons and dots start hidden and the
+    // carousel script unhides them, so they never sit there inert.
+    const slides = artwork.images;
+    if (slides.length > 1) {
+      // The aspect ratio is per work, so it has to be an inline style rather
+      // than a stylesheet rule. It comes from the first photograph, which is
+      // the one the grid shows.
+      grid += `          <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="${slides.length}"`;
+      grid += ` style="aspect-ratio: ${slides[0].width} / ${slides[0].height}" tabindex="0">\n`;
+    }
+    const slideIndent = slides.length > 1 ? '            ' : '          ';
+    for (const [slideIndex, image] of slides.entries()) {
+      if (slides.length > 1) {
+        grid += `${slideIndent}<div class="artwork-slide" data-slide="${slideIndex}">\n`;
+      }
+      const imageIndent = slides.length > 1 ? `${slideIndent}  ` : slideIndent;
+      grid += `${imageIndent}<img class="artwork-image" src="${escapeHtml(image.src)}"`;
+      grid += ` alt="${escapeHtml(image.altEn)}"`;
+      grid += ` width="${image.width}" height="${image.height}" loading="lazy"`;
+      grid += ` data-view="${escapeHtml(image.view)}"`;
+      grid += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
+      if (slides.length > 1) {
+        grid += `${slideIndent}</div>\n`;
+      }
+    }
+    if (slides.length > 1) {
+      grid += '          </div>\n';
+      for (const direction of ['prev', 'next']) {
+        const glyph = direction === 'prev' ? '&#8249;' : '&#8250;';
+        const labelEn = direction === 'prev' ? 'Previous view' : 'Next view';
+        const labelZh = direction === 'prev' ? '上一张' : '下一张';
+        grid += `          <button type="button" class="artwork-carousel-nav artwork-carousel-${direction}" hidden>\n`;
+        grid += `            <span aria-hidden="true">${glyph}</span>\n`;
+        grid += `            <span class="visually-hidden lang-en">${labelEn}</span>\n`;
+        grid += `            <span class="visually-hidden lang-zh">${labelZh}</span>\n`;
+        grid += '          </button>\n';
+      }
+      grid += '          <div class="artwork-carousel-dots" hidden>\n';
+      for (const slideIndex of slides.keys()) {
+        grid += `            <button type="button" class="artwork-carousel-dot" data-slide="${slideIndex}"`;
+        grid += slideIndex === 0 ? ' aria-current="true">\n' : '>\n';
+        grid += `              <span class="visually-hidden lang-en">View ${slideIndex + 1}</span>\n`;
+        grid += `              <span class="visually-hidden lang-zh">第 ${slideIndex + 1} 张</span>\n`;
+        grid += '            </button>\n';
+      }
+      grid += '          </div>\n';
+    }
+    grid += '        </div>\n';
+    grid += '        <div class="artwork-artist">KAY</div>\n';
+    // The title is wrapped in its own span rather than composed with the
+    // year into one string, so the element carrying the edit address holds
+    // exactly the title that is on disk and nothing else. That is the whole
+    // contract the browser overlay reads: textContent is the value.
+    grid += `        <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|titleEn">${escapeHtml(artwork.titleEn)}</span>, ${escapeHtml(year.en)}</div>\n`;
+    grid += `        <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|titleZh">${escapeHtml(artwork.titleZh)}</span>，${escapeHtml(year.zh)}</div>\n`;
+    if (artwork.dimensionsEn && artwork.dimensionsZh) {
+      grid += `        <div class="artwork-dimensions lang-en" data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|dimensionsEn">${escapeHtml(artwork.dimensionsEn)}</div>\n`;
+      grid += `        <div class="artwork-dimensions lang-zh" data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|dimensionsZh">${escapeHtml(artwork.dimensionsZh)}</div>\n`;
+    }
+    grid += '      </div>\n';
+  }
+  grid += '    </div>\n';
+  return grid;
+};
+
+// The Collections page groups the catalog into curated series. Membership lives
+// on each work (artwork.collections, an array of slugs); the series title, blurb
+// and cover live in gallery.json collections. Validate that pairing before any
+// render: the hub-image rule already refuses an in-situ cover, and here we also
+// refuse a cover or a membership slug that names a series that does not exist,
+// and a series that no work joins.
+const collectionsPage = galleryConfig.collectionsPage;
+if (
+  !collectionsPage ||
+  !collectionsPage.titleEn ||
+  !collectionsPage.titleZh ||
+  !collectionsPage.metaDescription ||
+  !collectionsPage.introEn ||
+  !collectionsPage.introZh
+) {
+  throw new Error('content/gallery.json: collectionsPage needs titleEn, titleZh, metaDescription, introEn and introZh');
+}
+if (!Array.isArray(galleryConfig.collections) || galleryConfig.collections.length === 0) {
+  throw new Error('content/gallery.json: collections must be a non-empty array');
+}
+const collectionSlugs = new Set();
+for (const collection of galleryConfig.collections) {
+  for (const field of ['slug', 'titleEn', 'titleZh', 'blurbEn', 'blurbZh']) {
+    if (collection[field] === undefined || collection[field] === null || collection[field] === '') {
+      throw new Error(`content/gallery.json: collection "${collection.slug ?? '(no slug)'}" is missing "${field}"`);
+    }
+  }
+  if (collectionSlugs.has(collection.slug)) {
+    throw new Error(`content/gallery.json: duplicate collection slug "${collection.slug}"`);
+  }
+  collectionSlugs.add(collection.slug);
+  if (!collection.cover || !collection.cover.artworkId || !Number.isInteger(collection.cover.imageIndex)) {
+    throw new Error(`content/gallery.json: collection "${collection.slug}" needs a cover with artworkId and imageIndex`);
+  }
+}
+for (const artwork of artworkCatalog.artworks) {
+  if (artwork.collections === undefined) continue;
+  if (!Array.isArray(artwork.collections)) {
+    throw new Error(`content/artworks.json: artwork "${artwork.id}" collections must be an array`);
+  }
+  for (const slug of artwork.collections) {
+    if (!collectionSlugs.has(slug)) {
+      throw new Error(
+        `content/artworks.json: artwork "${artwork.id}" names collection "${slug}", which is not a slug in gallery.json collections`
+      );
+    }
+  }
+}
+const worksByCollection = new Map(galleryConfig.collections.map((collection) => [collection.slug, []]));
+for (const artwork of artworkCatalog.artworks) {
+  for (const slug of artwork.collections ?? []) {
+    worksByCollection.get(slug).push(artwork);
+  }
+}
+for (const collection of galleryConfig.collections) {
+  if (worksByCollection.get(collection.slug).length === 0) {
+    throw new Error(`content/gallery.json: collection "${collection.slug}" has no works; every series must hold at least one`);
+  }
+}
+
+// The overview grid: one square cover card per series, reusing the hub's
+// medium-card look, each an in-page anchor to its section plus a work count.
+let collectionsOverview = '      <div class="medium-grid">\n';
+for (const collection of galleryConfig.collections) {
+  const image = resolveHubImage(collection.cover, `gallery.json collections "${collection.slug}" cover`);
+  const count = worksByCollection.get(collection.slug).length;
+  collectionsOverview += `        <a href="#collection-${escapeHtml(collection.slug)}" class="medium-card">\n`;
+  collectionsOverview += `          <img class="medium-card-image" src="${escapeHtml(image.src)}"`;
+  collectionsOverview += ` alt="${escapeHtml(image.altEn)}"`;
+  collectionsOverview += ` width="${image.width}" height="${image.height}" loading="lazy"`;
+  collectionsOverview += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
+  collectionsOverview += `          <span class="medium-card-label lang-en">${escapeHtml(collection.titleEn)}</span>\n`;
+  collectionsOverview += `          <span class="medium-card-label lang-zh">${escapeHtml(collection.titleZh)}</span>\n`;
+  collectionsOverview += `          <span class="collection-card-count lang-en">${count} works</span>\n`;
+  collectionsOverview += `          <span class="collection-card-count lang-zh">${count} 件作品</span>\n`;
+  collectionsOverview += '        </a>\n';
+}
+collectionsOverview += '      </div>\n';
+
+// One section per series: the editable title and blurb, a chili-red count pill,
+// then the shared artwork grid. The title and blurb carry edit pencils so the
+// browser overlay can reach them; the count is derived, so it does not.
+let collectionsSections = '';
+for (const collection of galleryConfig.collections) {
+  const works = worksByCollection.get(collection.slug);
+  const count = works.length;
+  collectionsSections += `      <section class="collection-section" id="collection-${escapeHtml(collection.slug)}">\n`;
+  collectionsSections += '        <div class="collection-section-head">\n';
+  collectionsSections += `          <h2 class="collection-section-title lang-en" data-edit-field="content/gallery.json|collections|${escapeHtml(collection.slug)}|titleEn">${escapeHtml(collection.titleEn)}</h2>\n`;
+  collectionsSections += `          <h2 class="collection-section-title lang-zh" data-edit-field="content/gallery.json|collections|${escapeHtml(collection.slug)}|titleZh">${escapeHtml(collection.titleZh)}</h2>\n`;
+  collectionsSections += `          <span class="collection-count-pill lang-en">${count} works</span>\n`;
+  collectionsSections += `          <span class="collection-count-pill lang-zh">${count} 件作品</span>\n`;
+  collectionsSections += '        </div>\n';
+  collectionsSections += `        <p class="collection-blurb lang-en" data-edit-field="content/gallery.json|collections|${escapeHtml(collection.slug)}|blurbEn">${escapeHtml(collection.blurbEn)}</p>\n`;
+  collectionsSections += `        <p class="collection-blurb lang-zh" data-edit-field="content/gallery.json|collections|${escapeHtml(collection.slug)}|blurbZh">${escapeHtml(collection.blurbZh)}</p>\n`;
+  collectionsSections += renderArtworkGrid(works);
+  collectionsSections += '      </section>\n';
+}
+
 const pages = [];
 // editableRecords names every whitelisted record a page renders in place,
 // derived from the same content arrays the markup above is built from, not from
@@ -459,85 +649,7 @@ for (const page of galleryConfig.mediumPages) {
     artworkGrid += `      <span class="lang-zh">${escapeHtml(galleryConfig.artworkEmptyState.zh)}</span>\n`;
     artworkGrid += '    </div>\n';
   } else {
-    artworkGrid += '    <div class="artwork-grid">\n';
-    for (const artwork of works) {
-      const colors = Array.isArray(artwork.colors) ? artwork.colors.join(' ') : '';
-      const year = yearLabel(artwork);
-      artworkGrid += '      <div class="artwork-card"';
-      artworkGrid += ` data-medium="${escapeHtml(artwork.medium)}"`;
-      artworkGrid += ` data-year="${escapeHtml(artwork.year ?? '')}"`;
-      artworkGrid += ` data-size="${escapeHtml(artwork.sizeRange ?? '')}"`;
-      artworkGrid += ` data-colors="${escapeHtml(colors)}"`;
-      artworkGrid += ` data-style="${escapeHtml(artwork.style ?? '')}"`;
-      artworkGrid += ` data-title-en="${escapeHtml(artwork.titleEn)}"`;
-      artworkGrid += ` data-title-zh="${escapeHtml(artwork.titleZh)}"`;
-      artworkGrid += '>\n';
-      artworkGrid += '        <div class="artwork-image-wrap">\n';
-      // A work with one photograph renders a bare image: carousel controls on a
-      // single slide would be an affordance that does nothing. A work with
-      // several renders a scroll-snap strip, which already swipes on touch and
-      // scrolls with no script at all; the buttons and dots start hidden and the
-      // carousel script unhides them, so they never sit there inert.
-      const slides = artwork.images;
-      if (slides.length > 1) {
-        // The aspect ratio is per work, so it has to be an inline style rather
-        // than a stylesheet rule. It comes from the first photograph, which is
-        // the one the grid shows.
-        artworkGrid += `          <div class="artwork-carousel" role="group" aria-roledescription="carousel" data-slide-count="${slides.length}"`;
-        artworkGrid += ` style="aspect-ratio: ${slides[0].width} / ${slides[0].height}" tabindex="0">\n`;
-      }
-      const slideIndent = slides.length > 1 ? '            ' : '          ';
-      for (const [slideIndex, image] of slides.entries()) {
-        if (slides.length > 1) {
-          artworkGrid += `${slideIndent}<div class="artwork-slide" data-slide="${slideIndex}">\n`;
-        }
-        const imageIndent = slides.length > 1 ? `${slideIndent}  ` : slideIndent;
-        artworkGrid += `${imageIndent}<img class="artwork-image" src="${escapeHtml(image.src)}"`;
-        artworkGrid += ` alt="${escapeHtml(image.altEn)}"`;
-        artworkGrid += ` width="${image.width}" height="${image.height}" loading="lazy"`;
-        artworkGrid += ` data-view="${escapeHtml(image.view)}"`;
-        artworkGrid += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
-        if (slides.length > 1) {
-          artworkGrid += `${slideIndent}</div>\n`;
-        }
-      }
-      if (slides.length > 1) {
-        artworkGrid += '          </div>\n';
-        for (const direction of ['prev', 'next']) {
-          const glyph = direction === 'prev' ? '&#8249;' : '&#8250;';
-          const labelEn = direction === 'prev' ? 'Previous view' : 'Next view';
-          const labelZh = direction === 'prev' ? '上一张' : '下一张';
-          artworkGrid += `          <button type="button" class="artwork-carousel-nav artwork-carousel-${direction}" hidden>\n`;
-          artworkGrid += `            <span aria-hidden="true">${glyph}</span>\n`;
-          artworkGrid += `            <span class="visually-hidden lang-en">${labelEn}</span>\n`;
-          artworkGrid += `            <span class="visually-hidden lang-zh">${labelZh}</span>\n`;
-          artworkGrid += '          </button>\n';
-        }
-        artworkGrid += '          <div class="artwork-carousel-dots" hidden>\n';
-        for (const slideIndex of slides.keys()) {
-          artworkGrid += `            <button type="button" class="artwork-carousel-dot" data-slide="${slideIndex}"`;
-          artworkGrid += slideIndex === 0 ? ' aria-current="true">\n' : '>\n';
-          artworkGrid += `              <span class="visually-hidden lang-en">View ${slideIndex + 1}</span>\n`;
-          artworkGrid += `              <span class="visually-hidden lang-zh">第 ${slideIndex + 1} 张</span>\n`;
-          artworkGrid += '            </button>\n';
-        }
-        artworkGrid += '          </div>\n';
-      }
-      artworkGrid += '        </div>\n';
-      artworkGrid += '        <div class="artwork-artist">KAY</div>\n';
-      // The title is wrapped in its own span rather than composed with the
-      // year into one string, so the element carrying the edit address holds
-      // exactly the title that is on disk and nothing else. That is the whole
-      // contract the browser overlay reads: textContent is the value.
-      artworkGrid += `        <div class="artwork-title lang-en"><span data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|titleEn">${escapeHtml(artwork.titleEn)}</span>, ${escapeHtml(year.en)}</div>\n`;
-      artworkGrid += `        <div class="artwork-title lang-zh"><span data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|titleZh">${escapeHtml(artwork.titleZh)}</span>，${escapeHtml(year.zh)}</div>\n`;
-      if (artwork.dimensionsEn && artwork.dimensionsZh) {
-        artworkGrid += `        <div class="artwork-dimensions lang-en" data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|dimensionsEn">${escapeHtml(artwork.dimensionsEn)}</div>\n`;
-        artworkGrid += `        <div class="artwork-dimensions lang-zh" data-edit-field="content/artworks.json|artworks|${escapeHtml(artwork.id)}|dimensionsZh">${escapeHtml(artwork.dimensionsZh)}</div>\n`;
-      }
-      artworkGrid += '      </div>\n';
-    }
-    artworkGrid += '    </div>\n';
+    artworkGrid += renderArtworkGrid(works);
     artworkGrid += '    <div class="artwork-no-matches" hidden>\n';
     artworkGrid += '      <span class="lang-en">No works match the selected filters.</span>\n';
     artworkGrid += '      <span class="lang-zh">没有符合所选筛选条件的作品。</span>\n';
@@ -605,6 +717,40 @@ if (renderHome) {
     editableRecords: [],
   });
 }
+
+// The Collections page: a cover overview over one section per series. Its hero
+// copy is site structure (not editable), while each series title and blurb and
+// each artwork title render with pencils, so every one of those records is
+// listed here for the reverse guard to confirm its attributes are present.
+pages.push({
+  fileName: 'gallery-collections.html',
+  templateName: 'page-collections',
+  activeTab: 'gallery-collections.html',
+  tokens: {
+    LANGUAGE_SWITCHER_NOTE: '',
+    TITLE_EN: escapeHtml(collectionsPage.titleEn),
+    TITLE_ZH: escapeHtml(collectionsPage.titleZh),
+    META_DESCRIPTION: escapeHtml(collectionsPage.metaDescription),
+    INTRO_EN: escapeHtml(collectionsPage.introEn),
+    INTRO_ZH: escapeHtml(collectionsPage.introZh),
+    COLLECTIONS_OVERVIEW: collectionsOverview,
+    COLLECTIONS_SECTIONS: collectionsSections,
+  },
+  editableRecords: [
+    ...galleryConfig.collections.map((collection) => ({
+      file: 'content/gallery.json',
+      collection: 'collections',
+      key: collection.slug,
+    })),
+    ...galleryConfig.collections.flatMap((collection) =>
+      worksByCollection.get(collection.slug).map((artwork) => ({
+        file: 'content/artworks.json',
+        collection: 'artworks',
+        key: artwork.id,
+      }))
+    ),
+  ],
+});
 
 // The search box used to carry its own hand-maintained copy of every page
 // title. Generating the index from the same content that renders the pages
