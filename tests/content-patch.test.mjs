@@ -170,7 +170,7 @@ const rejects = [
   ['a lone brace in a text value', patchOf(edit({ value: 'Lemons }' })), /value/i],
   ['a build placeholder in gallery page body copy', {
     version: 1,
-    edits: [{ file: 'content/gallery.json', collection: 'sectionPages', key: 'artists', field: 'bodyEn', value: 'About {{FOOTER}}' }],
+    edits: [{ file: 'content/gallery.json', collection: 'sectionPages', key: 'exhibitions', field: 'bodyEn', value: 'About {{FOOTER}}' }],
   }, /value/i],
   // Security review F3: the per-field limit was only checked after trim(), so
   // a multi-megabyte string was accepted into the patch and copied once before
@@ -192,7 +192,7 @@ const rejects = [
   }, /field/i],
   ['a section page meta description, de-scoped from edit mode', {
     version: 1,
-    edits: [{ file: 'content/gallery.json', collection: 'sectionPages', key: 'artists', field: 'metaDescription', value: 'Artists represented.' }],
+    edits: [{ file: 'content/gallery.json', collection: 'sectionPages', key: 'exhibitions', field: 'metaDescription', value: 'Artists represented.' }],
   }, /field/i],
   ['two edits to the same field', patchOf(edit({ value: 'A' }), edit({ value: 'B' })), /duplicate/i],
   ['more edits than the cap', { version: 1, edits: Array.from({ length: 201 }, () => edit()) }, /edits/i],

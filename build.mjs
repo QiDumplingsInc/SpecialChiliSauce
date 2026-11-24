@@ -752,6 +752,194 @@ pages.push({
   ],
 });
 
+// The New Arrivals page is a flat, ordered grid of the most recent works. The
+// order is editorial, not derived: newArrivalsPage.artworkIds lists the works
+// newest first by hand, so a work with no year can still be featured and the
+// sequence never depends on every record carrying a year. Each id must name a
+// real artwork, the same contract the hub image and collection membership use.
+const newArrivalsPage = galleryConfig.newArrivalsPage;
+if (
+  !newArrivalsPage ||
+  !newArrivalsPage.titleEn ||
+  !newArrivalsPage.titleZh ||
+  !newArrivalsPage.metaDescription ||
+  !newArrivalsPage.introEn ||
+  !newArrivalsPage.introZh
+) {
+  throw new Error('content/gallery.json: newArrivalsPage needs titleEn, titleZh, metaDescription, introEn and introZh');
+}
+if (!Array.isArray(newArrivalsPage.artworkIds) || newArrivalsPage.artworkIds.length === 0) {
+  throw new Error('content/gallery.json: newArrivalsPage.artworkIds must be a non-empty array');
+}
+const newArrivalsWorks = newArrivalsPage.artworkIds.map((id) => {
+  const artwork = artworkById.get(id);
+  if (!artwork) {
+    throw new Error(
+      `content/gallery.json: newArrivalsPage.artworkIds names "${id}", which is not an artwork in content/artworks.json`
+    );
+  }
+  return artwork;
+});
+pages.push({
+  fileName: 'gallery-new-arrivals.html',
+  templateName: 'page-new-arrivals',
+  activeTab: 'gallery-new-arrivals.html',
+  tokens: {
+    LANGUAGE_SWITCHER_NOTE: '',
+    TITLE_EN: escapeHtml(newArrivalsPage.titleEn),
+    TITLE_ZH: escapeHtml(newArrivalsPage.titleZh),
+    META_DESCRIPTION: escapeHtml(newArrivalsPage.metaDescription),
+    INTRO_EN: escapeHtml(newArrivalsPage.introEn),
+    INTRO_ZH: escapeHtml(newArrivalsPage.introZh),
+    ARTWORK_GRID: renderArtworkGrid(newArrivalsWorks),
+  },
+  editableRecords: newArrivalsWorks.map((artwork) => ({
+    file: 'content/artworks.json',
+    collection: 'artworks',
+    key: artwork.id,
+  })),
+});
+
+// The Portfolio page is the whole catalogue in one place, grouped by medium in
+// the same order the hub lists the media. A medium with no works is skipped
+// rather than shown as an empty heading, so the page grows and shrinks with the
+// catalogue on its own. Each medium heading renders its title with pencils, so
+// the medium record is listed for the reverse guard just as the hub lists it.
+const portfolioPage = galleryConfig.portfolioPage;
+if (
+  !portfolioPage ||
+  !portfolioPage.titleEn ||
+  !portfolioPage.titleZh ||
+  !portfolioPage.metaDescription ||
+  !portfolioPage.introEn ||
+  !portfolioPage.introZh
+) {
+  throw new Error('content/gallery.json: portfolioPage needs titleEn, titleZh, metaDescription, introEn and introZh');
+}
+let portfolioSections = '';
+const portfolioMediumPages = [];
+const portfolioWorks = [];
+for (const medium of galleryConfig.mediumPages) {
+  const works = artworkCatalog.artworks.filter((artwork) => artwork.medium === medium.slug);
+  if (works.length === 0) continue;
+  portfolioMediumPages.push(medium);
+  portfolioWorks.push(...works);
+  portfolioSections += `      <section class="collection-section" id="portfolio-${escapeHtml(medium.slug)}">\n`;
+  portfolioSections += '        <div class="collection-section-head">\n';
+  portfolioSections += `          <h2 class="collection-section-title lang-en" data-edit-field="content/gallery.json|mediumPages|${escapeHtml(medium.slug)}|titleEn">${escapeHtml(medium.titleEn)}</h2>\n`;
+  portfolioSections += `          <h2 class="collection-section-title lang-zh" data-edit-field="content/gallery.json|mediumPages|${escapeHtml(medium.slug)}|titleZh">${escapeHtml(medium.titleZh)}</h2>\n`;
+  portfolioSections += `          <span class="collection-count-pill lang-en">${works.length} ${works.length === 1 ? 'work' : 'works'}</span>\n`;
+  portfolioSections += `          <span class="collection-count-pill lang-zh">${works.length} 件作品</span>\n`;
+  portfolioSections += '        </div>\n';
+  portfolioSections += renderArtworkGrid(works);
+  portfolioSections += '      </section>\n';
+}
+pages.push({
+  fileName: 'gallery-portfolio.html',
+  templateName: 'page-portfolio',
+  activeTab: 'gallery-portfolio.html',
+  tokens: {
+    LANGUAGE_SWITCHER_NOTE: '',
+    TITLE_EN: escapeHtml(portfolioPage.titleEn),
+    TITLE_ZH: escapeHtml(portfolioPage.titleZh),
+    META_DESCRIPTION: escapeHtml(portfolioPage.metaDescription),
+    INTRO_EN: escapeHtml(portfolioPage.introEn),
+    INTRO_ZH: escapeHtml(portfolioPage.introZh),
+    PORTFOLIO_SECTIONS: portfolioSections,
+  },
+  editableRecords: [
+    ...portfolioMediumPages.map((medium) => ({
+      file: 'content/gallery.json',
+      collection: 'mediumPages',
+      key: medium.slug,
+    })),
+    ...portfolioWorks.map((artwork) => ({
+      file: 'content/artworks.json',
+      collection: 'artworks',
+      key: artwork.id,
+    })),
+  ],
+});
+
+// The Artists page profiles the people behind the work. The catalogue has no
+// per-work artist field because every work is by one artist, so each artist
+// section shows the whole catalogue beneath the bio. The cover follows the hub
+// image rule (no in-situ shot), and the bio is site prose rather than an
+// in-place editable record, so the only pencils here are the artwork titles.
+const artistsPage = galleryConfig.artistsPage;
+if (
+  !artistsPage ||
+  !artistsPage.titleEn ||
+  !artistsPage.titleZh ||
+  !artistsPage.metaDescription ||
+  !artistsPage.introEn ||
+  !artistsPage.introZh
+) {
+  throw new Error('content/gallery.json: artistsPage needs titleEn, titleZh, metaDescription, introEn and introZh');
+}
+if (!Array.isArray(galleryConfig.artists) || galleryConfig.artists.length === 0) {
+  throw new Error('content/gallery.json: artists must be a non-empty array');
+}
+const artistWorks = artworkCatalog.artworks;
+let artistsSections = '';
+for (const artist of galleryConfig.artists) {
+  if (
+    !artist.slug ||
+    !artist.nameEn ||
+    !artist.nameZh ||
+    !Array.isArray(artist.bioEn) ||
+    artist.bioEn.length === 0 ||
+    !Array.isArray(artist.bioZh) ||
+    artist.bioZh.length === 0 ||
+    artist.bioEn.length !== artist.bioZh.length
+  ) {
+    throw new Error(
+      `content/gallery.json: artist "${artist.slug ?? '(no slug)'}" needs slug, nameEn, nameZh and matching non-empty bioEn and bioZh arrays`
+    );
+  }
+  const cover = resolveHubImage(artist.cover, `gallery.json artists "${artist.slug}" cover`);
+  const coverArtwork = artworkById.get(artist.cover.artworkId);
+  artistsSections += `      <section class="collection-section" id="artist-${escapeHtml(artist.slug)}">\n`;
+  artistsSections += '        <div class="collection-section-head">\n';
+  artistsSections += `          <h2 class="collection-section-title lang-en">${escapeHtml(artist.nameEn)}</h2>\n`;
+  artistsSections += `          <h2 class="collection-section-title lang-zh">${escapeHtml(artist.nameZh)}</h2>\n`;
+  artistsSections += `          <span class="collection-count-pill lang-en">${artistWorks.length} ${artistWorks.length === 1 ? 'work' : 'works'}</span>\n`;
+  artistsSections += `          <span class="collection-count-pill lang-zh">${artistWorks.length} 件作品</span>\n`;
+  artistsSections += '        </div>\n';
+  artistsSections += '        <div class="medium-grid">\n';
+  artistsSections += `          <a href="gallery-${escapeHtml(coverArtwork.medium)}.html" class="medium-card">\n`;
+  artistsSections += `            <img class="medium-card-image" src="${escapeHtml(cover.src)}" alt="${escapeHtml(cover.altEn)}" width="${cover.width}" height="${cover.height}" loading="lazy" data-alt-en="${escapeHtml(cover.altEn)}" data-alt-zh="${escapeHtml(cover.altZh)}">\n`;
+  artistsSections += `            <span class="medium-card-label lang-en">${escapeHtml(artist.nameEn)}</span>\n`;
+  artistsSections += `            <span class="medium-card-label lang-zh">${escapeHtml(artist.nameZh)}</span>\n`;
+  artistsSections += '          </a>\n';
+  artistsSections += '        </div>\n';
+  for (const [paragraphIndex, paragraphEn] of artist.bioEn.entries()) {
+    artistsSections += `        <p class="collection-blurb lang-en">${escapeHtml(paragraphEn)}</p>\n`;
+    artistsSections += `        <p class="collection-blurb lang-zh">${escapeHtml(artist.bioZh[paragraphIndex])}</p>\n`;
+  }
+  artistsSections += renderArtworkGrid(artistWorks);
+  artistsSections += '      </section>\n';
+}
+pages.push({
+  fileName: 'gallery-artists.html',
+  templateName: 'page-artists',
+  activeTab: 'gallery-artists.html',
+  tokens: {
+    LANGUAGE_SWITCHER_NOTE: '',
+    TITLE_EN: escapeHtml(artistsPage.titleEn),
+    TITLE_ZH: escapeHtml(artistsPage.titleZh),
+    META_DESCRIPTION: escapeHtml(artistsPage.metaDescription),
+    INTRO_EN: escapeHtml(artistsPage.introEn),
+    INTRO_ZH: escapeHtml(artistsPage.introZh),
+    ARTISTS_SECTIONS: artistsSections,
+  },
+  editableRecords: artistWorks.map((artwork) => ({
+    file: 'content/artworks.json',
+    collection: 'artworks',
+    key: artwork.id,
+  })),
+});
+
 // The search box used to carry its own hand-maintained copy of every page
 // title. Generating the index from the same content that renders the pages
 // means a new medium page or a new artwork becomes searchable without anybody

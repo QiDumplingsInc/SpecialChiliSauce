@@ -28,6 +28,9 @@ test('build.mjs renders exactly the gallery pages that are committed', () => {
   const expected = [
     'gallery.html',
     'gallery-collections.html',
+    'gallery-new-arrivals.html',
+    'gallery-portfolio.html',
+    'gallery-artists.html',
     ...galleryConfig.mediumPages.map((page) => `gallery-${page.slug}.html`),
     ...galleryConfig.sectionPages.map((page) => `gallery-${page.slug}.html`),
   ].sort();
@@ -216,6 +219,38 @@ const baseGalleryFixture = () => ({
       cover: { artworkId: 'w1', imageIndex: 0 },
     },
   ],
+  newArrivalsPage: {
+    titleEn: 'New Arrivals',
+    titleZh: '新品上架',
+    metaDescription: 'New arrivals.',
+    introEn: 'The latest works.',
+    introZh: '最新作品。',
+    artworkIds: ['w1', 'w2'],
+  },
+  portfolioPage: {
+    titleEn: 'Portfolio',
+    titleZh: '作品集',
+    metaDescription: 'Portfolio.',
+    introEn: 'The whole catalogue.',
+    introZh: '全部作品。',
+  },
+  artistsPage: {
+    titleEn: 'Artists',
+    titleZh: '艺术家',
+    metaDescription: 'Artists.',
+    introEn: 'The artists.',
+    introZh: '艺术家。',
+  },
+  artists: [
+    {
+      slug: 'sample',
+      nameEn: 'Sample Artist',
+      nameZh: '样本艺术家',
+      cover: { artworkId: 'w1', imageIndex: 0 },
+      bioEn: ['A sample artist bio.'],
+      bioZh: ['样本艺术家简介。'],
+    },
+  ],
 });
 const baseArtworksFixture = () => ({
   artworks: [
@@ -306,6 +341,74 @@ test('a collection that no work joins fails the build', () => {
     cover: { artworkId: 'w1', imageIndex: 0 },
   });
   // Every base work stays in series-a, so series-b holds nothing.
+  const root = setupCollectionsFixture(gallery, baseArtworksFixture());
+  try {
+    assert.throws(() => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('the New Arrivals page renders its listed works in the order given', () => {
+  const root = setupCollectionsFixture(baseGalleryFixture(), baseArtworksFixture());
+  try {
+    execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' });
+    const html = readFileSync(path.join(root, 'gallery-new-arrivals.html'), 'utf8');
+    assert.match(html, /The latest works\./, 'the intro copy should render');
+    assert.match(html, /Work One/, 'the first listed work should render');
+    assert.match(html, /Work Two/, 'the second listed work should render');
+    assert.ok(
+      html.indexOf('Work One') < html.indexOf('Work Two'),
+      'the works should keep the order of newArrivalsPage.artworkIds'
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('the New Arrivals page refuses an artwork id that does not exist', () => {
+  const gallery = baseGalleryFixture();
+  gallery.newArrivalsPage.artworkIds = ['w1', 'no-such-work'];
+  const root = setupCollectionsFixture(gallery, baseArtworksFixture());
+  try {
+    assert.throws(() => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('the Portfolio page groups every work under its medium heading', () => {
+  const root = setupCollectionsFixture(baseGalleryFixture(), baseArtworksFixture());
+  try {
+    execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' });
+    const html = readFileSync(path.join(root, 'gallery-portfolio.html'), 'utf8');
+    assert.match(html, /id="portfolio-painting"/, 'the medium section needs its anchor id');
+    assert.match(html, /Painting/, 'the medium heading should render');
+    assert.match(html, /2 works/, 'the medium work count should render');
+    assert.match(html, /Work One/, 'a work in the medium should render');
+    assert.match(html, /Work Two/, 'every work in the medium should render');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('the Artists page renders the artist name, bio and works', () => {
+  const root = setupCollectionsFixture(baseGalleryFixture(), baseArtworksFixture());
+  try {
+    execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' });
+    const html = readFileSync(path.join(root, 'gallery-artists.html'), 'utf8');
+    assert.match(html, /id="artist-sample"/, 'the artist section needs its anchor id');
+    assert.match(html, /Sample Artist/, 'the artist name should render');
+    assert.match(html, /A sample artist bio\./, 'the artist bio should render');
+    assert.match(html, /Work One/, 'the artist works grid should render the catalogue');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('an artist with mismatched bio languages fails the build', () => {
+  const gallery = baseGalleryFixture();
+  gallery.artists[0].bioZh = [];
   const root = setupCollectionsFixture(gallery, baseArtworksFixture());
   try {
     assert.throws(() => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }));

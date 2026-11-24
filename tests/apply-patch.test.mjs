@@ -208,7 +208,7 @@ test('rolls back when one content file writes and the next one fails', () => {
       version: 1,
       edits: [
         { file: 'content/artworks.json', collection: 'artworks', key: 'painting-001', field: 'titleEn', value: 'Lemons and a Lime' },
-        { file: 'content/gallery.json', collection: 'sectionPages', key: 'artists', field: 'titleEn', value: 'The Artist' },
+        { file: 'content/gallery.json', collection: 'sectionPages', key: 'exhibitions', field: 'titleEn', value: 'The Artist' },
       ],
     });
     // artworks.json sorts first, so it is written before gallery.json fails.

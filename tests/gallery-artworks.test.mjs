@@ -141,6 +141,14 @@ function renderWithArtworks(catalog) {
     ...catalog,
     artworks: catalog.artworks.map((artwork) => ({ ...artwork, collections: ['sample-series'] })),
   };
+  // New Arrivals lists real artwork ids by hand and the Artists cover names a
+  // real id too, so point both at the sample catalogue the same way the covers
+  // above are pointed, or the build refuses the references it cannot resolve.
+  fixtureConfig.newArrivalsPage = {
+    ...fixtureConfig.newArrivalsPage,
+    artworkIds: catalog.artworks.map((artwork) => artwork.id),
+  };
+  fixtureConfig.artists = fixtureConfig.artists.map((artist) => ({ ...artist, cover: { ...sampleCover } }));
   writeFileSync(path.join(fixtureRoot, 'content', 'gallery.json'), JSON.stringify(fixtureConfig, null, 4));
   writeFileSync(path.join(fixtureRoot, 'content', 'artworks.json'), JSON.stringify(fixtureCatalog, null, 4));
   execFileSync('node', ['build.mjs', '--fixture', fixtureRoot], { cwd: repoRoot, encoding: 'utf8' });

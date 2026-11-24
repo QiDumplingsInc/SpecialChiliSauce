@@ -1,5 +1,5 @@
 {
-    "comment": "Structure of the gallery section: nav tabs, medium pages, section pages, the artwork filter facets and the hub page's photographs. Edited by hand; consumed by build.mjs to render gallery*.html. Bilingual site copy lives here as literal UTF-8 because this is localized content, not code. heroSlides, aboutPanels and a medium page's optional cover each point at one photograph in content/artworks.json by artworkId plus imageIndex; the build refuses an in-situ view in any of those slots because the hub crops a photograph to fit its slot and an in-situ shot must keep the framing it was taken with. A medium page with no cover falls back to the first photograph of its first work; a medium page with no works renders mediumEmptyCover instead of promising an image.",
+    "comment": "Structure of the gallery section: nav tabs, medium pages, section pages, the artwork filter facets and the hub page's photographs. Edited by hand; consumed by build.mjs to render gallery*.html. Bilingual site copy lives here as literal UTF-8 because this is localized content, not code. heroSlides, aboutPanels and a medium page's optional cover each point at one photograph in content/artworks.json by artworkId plus imageIndex; the build refuses an in-situ view in any of those slots because the hub crops a photograph to fit its slot and an in-situ shot must keep the framing it was taken with. A medium page with no cover falls back to the first photograph of its first work; a medium page with no works renders mediumEmptyCover instead of promising an image. newArrivalsPage lists real artwork ids newest-first (the order is editorial, not derived, so an undated work can still be featured). portfolioPage carries only intro copy; the build groups the whole catalogue by mediumPages order. artistsPage plus the artists array profile the people behind the work; each artist has a cover photograph (same in-situ rule) and bioEn/bioZh paragraph arrays, and the single-artist catalogue renders in full beneath the bio.",
     "searchPages": [
         {
             "href": "index.html",
@@ -265,30 +265,6 @@
     ],
     "sectionPages": [
         {
-            "slug": "new-arrivals",
-            "titleEn": "New Arrivals",
-            "titleZh": "新品上架",
-            "metaDescription": "New arrivals at Kay's Gallery.",
-            "bodyEn": "New work coming soon",
-            "bodyZh": "新作品即将上线"
-        },
-        {
-            "slug": "portfolio",
-            "titleEn": "Portfolio",
-            "titleZh": "作品集",
-            "metaDescription": "Portfolio at Kay's Gallery.",
-            "bodyEn": "Content coming soon",
-            "bodyZh": "内容即将上线"
-        },
-        {
-            "slug": "artists",
-            "titleEn": "Artists",
-            "titleZh": "艺术家",
-            "metaDescription": "Artists at Kay's Gallery.",
-            "bodyEn": "Content coming soon",
-            "bodyZh": "内容即将上线"
-        },
-        {
             "slug": "exhibitions",
             "titleEn": "Exhibitions",
             "titleZh": "展览",
@@ -348,6 +324,55 @@
                 "artworkId": "painting-007",
                 "imageIndex": 0
             }
+        }
+    ],
+    "newArrivalsPage": {
+        "titleEn": "New Arrivals",
+        "titleZh": "新品上架",
+        "metaDescription": "The latest paintings to join Kay's Gallery, newest first.",
+        "introEn": "The most recent paintings to join the gallery, newest first. Each one is painted from life and shown here as soon as it is finished.",
+        "introZh": "最近加入画廊的画作，新作在前。每一幅都写生而成，画完即在此展出。",
+        "artworkIds": [
+            "painting-005",
+            "painting-014",
+            "painting-006",
+            "painting-004",
+            "painting-002"
+        ]
+    },
+    "portfolioPage": {
+        "titleEn": "Portfolio",
+        "titleZh": "作品集",
+        "metaDescription": "The full body of Kay's work, grouped by medium.",
+        "introEn": "The full body of work, grouped by medium. From painted fruit and flowers to birds, animals and fish, this is everything in the gallery in one place.",
+        "introZh": "全部作品，按媒介分组。从画中的果实与花卉，到飞禽、走兽与游鱼，画廊的所有作品都汇聚于此。"
+    },
+    "artistsPage": {
+        "titleEn": "Artists",
+        "titleZh": "艺术家",
+        "metaDescription": "The artists behind Kay's Gallery.",
+        "introEn": "The hands behind the work. Kay's Gallery shows the paintings and drawings of a single artist.",
+        "introZh": "作品背后的创作者。Kay's 画廊展出同一位艺术家的绘画与素描。"
+    },
+    "artists": [
+        {
+            "slug": "kay",
+            "nameEn": "Kay",
+            "nameZh": "Kay",
+            "cover": {
+                "artworkId": "painting-014",
+                "imageIndex": 0
+            },
+            "bioEn": [
+                "Kay paints from life, working close to the subject until the shape of a lemon, a fig or a fish feels solid on the panel.",
+                "The work moves across subjects without leaving the still, watchful mood that ties it together. Fruit from the branch and the vine sits beside birds and animals caught in a single pose, fish turning through green and blue water, a bloom seen up close and a cabin far off in the snow.",
+                "Most of the work is in paint, with the catalogue reaching into drawing as well. New paintings join the gallery as soon as they are finished."
+            ],
+            "bioZh": [
+                "Kay 写生作画，贴近对象反复观察，直到柠檬、无花果或游鱼的形体在画板上站得住为止。",
+                "作品在不同题材间游走，却始终保持那份安静而专注的气质，将一切串连起来。枝头与藤蔓的果实，与定格于一个姿态的飞禽走兽、在绿水蓝水间转身的游鱼、近处盛放的花、以及远方雪中的木屋并置一处。",
+                "大部分作品为绘画，画册也延伸至素描。新作画完即加入画廊。"
+            ]
         }
     ]
 }

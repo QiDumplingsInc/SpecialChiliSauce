@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>{{TITLE_EN}} - Kay's Gallery</title>
+  <meta name="description" content="{{META_DESCRIPTION}}">
+
+  <link rel="icon" type="image/png" href="assets/logo/favicon.png">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/gallery.css">
+</head>
+
+<body>
+{{> gallery-header}}
+  <!-- Category hero -->
+  <section class="category-hero">
+    <div class="container">
+      <a href="gallery.html" class="category-back lang-en">&larr; Back to Gallery</a>
+      <a href="gallery.html" class="category-back lang-zh">&larr; 返回画廊</a>
+      <h1 class="lang-en">{{TITLE_EN}}</h1>
+      <h1 class="lang-zh">{{TITLE_ZH}}</h1>
+      <p class="category-intro lang-en">{{INTRO_EN}}</p>
+      <p class="category-intro lang-zh">{{INTRO_ZH}}</p>
+    </div>
+  </section>
+
+  <section class="container">
+{{ARTWORK_GRID}}
+  </section>
+
+{{> footer-simple}}
+  <script src="assets/js/language.js"></script>
+  <script src="assets/js/gallery-search-index.js"></script>
+  <script src="assets/js/gallery-search.js"></script>
+  <script src="assets/js/gallery-carousel.js"></script>
+  <script>
+    const currentYear = new Date().getFullYear();
+    document.querySelectorAll('#copyright-year, #copyright-year-zh').forEach(el => {
+      el.textContent = currentYear;
+    });
+  </script>
+{{> edit-mode-bootstrap}}</body>
+
+</html>
