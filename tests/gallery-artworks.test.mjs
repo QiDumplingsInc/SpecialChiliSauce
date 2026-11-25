@@ -137,6 +137,9 @@ function renderWithArtworks(catalog) {
       cover: { artworkId: catalog.artworks[0].id, imageIndex: 0 },
     },
   ];
+  // Each browse page's hub cover names a real artwork id too. Point them at
+  // the first sample work for the same reason.
+  fixtureConfig.browsePages = fixtureConfig.browsePages.map((page) => ({ ...page, cover: { ...sampleCover } }));
   const fixtureCatalog = {
     ...catalog,
     artworks: catalog.artworks.map((artwork) => ({ ...artwork, collections: ['sample-series'] })),
@@ -497,7 +500,7 @@ const catalogueImagesBySrc = new Map(
 test('the hub shows a photograph for every medium that has works, and promises none for the rest', () => {
   const dom = committedHub();
   try {
-    const cards = [...dom.window.document.querySelectorAll('.medium-card')];
+    const cards = [...dom.window.document.querySelectorAll('#explore-medium .medium-card')];
     assert.equal(cards.length, galleryConfig.mediumPages.length, 'one card per medium page');
     for (const [index, page] of galleryConfig.mediumPages.entries()) {
       const card = cards[index];
@@ -533,7 +536,7 @@ test('a hub medium card carries its photograph and its editable title together',
   // something a reviewer has to spot in generated HTML.
   const dom = committedHub();
   try {
-    const cards = [...dom.window.document.querySelectorAll('.medium-card')];
+    const cards = [...dom.window.document.querySelectorAll('#explore-medium .medium-card')];
     assert.equal(cards.length, galleryConfig.mediumPages.length, 'one card per medium page');
     for (const [index, page] of galleryConfig.mediumPages.entries()) {
       const card = cards[index];

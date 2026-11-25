@@ -77,6 +77,16 @@ window.GALLERY_SEARCH_INDEX = [
     "href": "gallery-work-on-paper.html"
   },
   {
+    "en": "Browse by Subject",
+    "zh": "按主题浏览",
+    "href": "gallery-by-subject.html"
+  },
+  {
+    "en": "Browse by Color",
+    "zh": "按颜色浏览",
+    "href": "gallery-by-color.html"
+  },
+  {
     "en": "Lemons, n.d.",
     "zh": "柠檬，年份不详",
     "href": "gallery-painting.html"

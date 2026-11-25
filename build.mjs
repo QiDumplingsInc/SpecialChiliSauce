@@ -62,6 +62,9 @@ if (!Array.isArray(galleryConfig.mediumPages) || galleryConfig.mediumPages.lengt
 if (!Array.isArray(galleryConfig.sectionPages)) {
   throw new Error('content/gallery.json: sectionPages must be an array');
 }
+if (!Array.isArray(galleryConfig.browsePages)) {
+  throw new Error('content/gallery.json: browsePages must be an array');
+}
 if (!Array.isArray(galleryConfig.facets)) {
   throw new Error('content/gallery.json: facets must be an array');
 }
@@ -167,6 +170,31 @@ const yearLabel = (artwork) => ({
 });
 
 const artworkById = new Map(artworkCatalog.artworks.map((artwork) => [artwork.id, artwork]));
+
+// Selects the works that carry one value of one facet, out of the works given.
+// Takes a facet record from gallery.json, one of its value strings and the
+// candidate works; returns the subset that matches. A facet field is either a
+// single value (subject, style, sizeRange) or an array of them (colors), so the
+// match reads the field and compares or looks inside accordingly.
+//
+// Two callers share it: the per-medium filter bar, which uses it to decide
+// which values are worth offering, and the browse pages, which use it to group
+// works under a value. Sharing it is the point -- a filter that offered a value
+// the browse page grouped by a different rule would disagree with itself about
+// which works are blue.
+const worksWithFacetValue = (facet, value, works) =>
+  works.filter((artwork) => {
+    const field = artwork[facet.field];
+    return Array.isArray(field) ? field.includes(value) : field === value;
+  });
+
+// The user-visible work count beside a series or facet-value heading. English
+// needs the singular: a facet value or a series that holds one work reads "1
+// work", not "1 works". Chinese takes the measure word either way.
+const workCountLabel = (count) => ({
+  en: count === 1 ? '1 work' : `${count} works`,
+  zh: `${count} 件作品`,
+});
 
 // Resolves one { artworkId, imageIndex } reference from gallery.json into the
 // image object it names, for the hub page's hero slides, medium-card covers and
@@ -528,8 +556,8 @@ for (const collection of galleryConfig.collections) {
   collectionsOverview += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
   collectionsOverview += `          <span class="medium-card-label lang-en">${escapeHtml(collection.titleEn)}</span>\n`;
   collectionsOverview += `          <span class="medium-card-label lang-zh">${escapeHtml(collection.titleZh)}</span>\n`;
-  collectionsOverview += `          <span class="collection-card-count lang-en">${count} works</span>\n`;
-  collectionsOverview += `          <span class="collection-card-count lang-zh">${count} 件作品</span>\n`;
+  collectionsOverview += `          <span class="collection-card-count lang-en">${workCountLabel(count).en}</span>\n`;
+  collectionsOverview += `          <span class="collection-card-count lang-zh">${workCountLabel(count).zh}</span>\n`;
   collectionsOverview += '        </a>\n';
 }
 collectionsOverview += '      </div>\n';
@@ -545,14 +573,105 @@ for (const collection of galleryConfig.collections) {
   collectionsSections += '        <div class="collection-section-head">\n';
   collectionsSections += `          <h2 class="collection-section-title lang-en" data-edit-field="content/gallery.json|collections|${escapeHtml(collection.slug)}|titleEn">${escapeHtml(collection.titleEn)}</h2>\n`;
   collectionsSections += `          <h2 class="collection-section-title lang-zh" data-edit-field="content/gallery.json|collections|${escapeHtml(collection.slug)}|titleZh">${escapeHtml(collection.titleZh)}</h2>\n`;
-  collectionsSections += `          <span class="collection-count-pill lang-en">${count} works</span>\n`;
-  collectionsSections += `          <span class="collection-count-pill lang-zh">${count} 件作品</span>\n`;
+  collectionsSections += `          <span class="collection-count-pill lang-en">${workCountLabel(count).en}</span>\n`;
+  collectionsSections += `          <span class="collection-count-pill lang-zh">${workCountLabel(count).zh}</span>\n`;
   collectionsSections += '        </div>\n';
   collectionsSections += `        <p class="collection-blurb lang-en" data-edit-field="content/gallery.json|collections|${escapeHtml(collection.slug)}|blurbEn">${escapeHtml(collection.blurbEn)}</p>\n`;
   collectionsSections += `        <p class="collection-blurb lang-zh" data-edit-field="content/gallery.json|collections|${escapeHtml(collection.slug)}|blurbZh">${escapeHtml(collection.blurbZh)}</p>\n`;
   collectionsSections += renderArtworkGrid(works);
   collectionsSections += '      </section>\n';
 }
+
+// The cross-cut browse pages. Each browsePages entry names one facet from the
+// same facets array the per-medium filter bar is generated from, and renders
+// the whole catalogue as one section per value of that facet: Browse by
+// Subject and Browse by Color today. They are the one view that cuts across
+// medium, which is what the filter bar cannot do -- it only ever filters the
+// works already on one medium page.
+//
+// The sections deliberately reuse the Collections page's section markup and
+// classes (.collection-section, its head, its count pill) and the shared
+// artwork grid, so a facet value renders exactly like a series and the pages
+// need no CSS of their own.
+//
+// Values nobody matches are skipped rather than rendered empty: the facets
+// array is the site's full vocabulary, not a claim that the catalogue fills
+// every word of it. A work that carries no value for the facet at all is
+// absent from that page by the same rule -- tests/gallery-build.test.mjs
+// asserts the real catalogue leaves no work out, which is where a missing
+// subject gets caught, rather than failing the build for a data gap the
+// fixture renders on purpose.
+const browsePageSlugs = new Set();
+const facetByKey = new Map(galleryConfig.facets.map((facet) => [facet.key, facet]));
+const existingPageSlugs = new Set(
+  [...galleryConfig.mediumPages, ...galleryConfig.sectionPages].map((page) => page.slug)
+);
+const browseSectionsBySlug = new Map();
+for (const page of galleryConfig.browsePages) {
+  for (const field of ['slug', 'facet', 'titleEn', 'titleZh', 'metaDescription', 'introEn', 'introZh']) {
+    if (page[field] === undefined || page[field] === null || page[field] === '') {
+      throw new Error(`content/gallery.json: browsePages entry "${page.slug ?? '(no slug)'}" is missing "${field}"`);
+    }
+  }
+  if (browsePageSlugs.has(page.slug) || existingPageSlugs.has(page.slug)) {
+    throw new Error(
+      `content/gallery.json: browsePages slug "${page.slug}" is already used by another page; ` +
+        'every page slug becomes a gallery-<slug>.html filename, so two pages cannot share one'
+    );
+  }
+  browsePageSlugs.add(page.slug);
+  const facet = facetByKey.get(page.facet);
+  if (facet === undefined) {
+    throw new Error(
+      `content/gallery.json: browsePages entry "${page.slug}" names facet "${page.facet}", which is not a key in gallery.json facets`
+    );
+  }
+  if (!page.cover || !page.cover.artworkId || !Number.isInteger(page.cover.imageIndex)) {
+    throw new Error(`content/gallery.json: browsePages entry "${page.slug}" needs a cover with artworkId and imageIndex`);
+  }
+
+  let sections = '';
+  for (const option of facet.values) {
+    const works = worksWithFacetValue(facet, option.value, artworkCatalog.artworks);
+    if (works.length === 0) continue;
+    sections += `      <section class="collection-section" id="browse-${escapeHtml(page.slug)}-${escapeHtml(option.value)}">\n`;
+    sections += '        <div class="collection-section-head">\n';
+    sections += `          <h2 class="collection-section-title lang-en">${escapeHtml(option.en)}</h2>\n`;
+    sections += `          <h2 class="collection-section-title lang-zh">${escapeHtml(option.zh)}</h2>\n`;
+    sections += `          <span class="collection-count-pill lang-en">${workCountLabel(works.length).en}</span>\n`;
+    sections += `          <span class="collection-count-pill lang-zh">${workCountLabel(works.length).zh}</span>\n`;
+    sections += '        </div>\n';
+    sections += renderArtworkGrid(works);
+    sections += '      </section>\n';
+  }
+  if (sections === '') {
+    // No work carries any value of this facet, so the page says what the empty
+    // medium pages say rather than rendering a hero over nothing.
+    sections += '      <div class="artwork-empty-state">\n';
+    sections += `        <span class="lang-en">${escapeHtml(galleryConfig.artworkEmptyState.en)}</span>\n`;
+    sections += `        <span class="lang-zh">${escapeHtml(galleryConfig.artworkEmptyState.zh)}</span>\n`;
+    sections += '      </div>\n';
+  }
+  browseSectionsBySlug.set(page.slug, sections);
+}
+
+// The hub's entry point to those pages. They are not nav tabs: the gallery nav
+// already carries seven, and a browse page is a way into the catalogue rather
+// than a section of the site, so it belongs beside "Explore by Medium" on the
+// hub. One cover card each, reusing the medium-card look.
+let browseGrid = '      <div class="medium-grid">\n';
+for (const page of galleryConfig.browsePages) {
+  const image = resolveHubImage(page.cover, `gallery.json browsePages "${page.slug}" cover`);
+  browseGrid += `        <a href="gallery-${escapeHtml(page.slug)}.html" class="medium-card">\n`;
+  browseGrid += `          <img class="medium-card-image" src="${escapeHtml(image.src)}"`;
+  browseGrid += ` alt="${escapeHtml(image.altEn)}"`;
+  browseGrid += ` width="${image.width}" height="${image.height}" loading="lazy"`;
+  browseGrid += ` data-alt-en="${escapeHtml(image.altEn)}" data-alt-zh="${escapeHtml(image.altZh)}">\n`;
+  browseGrid += `          <span class="medium-card-label lang-en">${escapeHtml(page.titleEn)}</span>\n`;
+  browseGrid += `          <span class="medium-card-label lang-zh">${escapeHtml(page.titleZh)}</span>\n`;
+  browseGrid += '        </a>\n';
+}
+browseGrid += '      </div>\n';
 
 const pages = [];
 // editableRecords names every whitelisted record a page renders in place,
@@ -572,6 +691,7 @@ pages.push({
     HERO_SLIDES: heroSlides,
     HERO_PAGER: heroPager,
     MEDIUM_GRID: mediumGrid,
+    BROWSE_GRID: browseGrid,
     ABOUT_PANEL_1: aboutPanelImages[0],
     ABOUT_PANEL_2: aboutPanelImages[1],
   },
@@ -592,12 +712,7 @@ for (const page of galleryConfig.mediumPages) {
   if (works.length > 0) {
     let dropdowns = '';
     for (const facet of galleryConfig.facets) {
-      const present = facet.values.filter((option) =>
-        works.some((artwork) => {
-          const field = artwork[facet.field];
-          return Array.isArray(field) ? field.includes(option.value) : field === option.value;
-        })
-      );
+      const present = facet.values.filter((option) => worksWithFacetValue(facet, option.value, works).length > 0);
       if (present.length < 2) continue;
       dropdowns += '      <div class="filter-dropdown">\n';
       dropdowns += `        <button class="filter-dropdown-toggle" type="button" id="filter-toggle-${facet.key}" aria-expanded="false">\n`;
@@ -940,6 +1055,38 @@ pages.push({
   })),
 });
 
+// One page per browse facet. The hero copy and every section heading are site
+// structure derived from the facets vocabulary, so nothing on the page is
+// editable except the artwork titles the shared grid renders; those records are
+// listed so the reverse guard confirms their pencils survived.
+for (const page of galleryConfig.browsePages) {
+  const facet = facetByKey.get(page.facet);
+  const works = artworkCatalog.artworks.filter(
+    (artwork) => facet.values.some((option) => worksWithFacetValue(facet, option.value, [artwork]).length > 0)
+  );
+  pages.push({
+    fileName: `gallery-${page.slug}.html`,
+    templateName: 'page-browse',
+    // A browse page is a way into the Artworks catalogue rather than a site
+    // section of its own, so the Artworks tab stays the highlighted one.
+    activeTab: 'gallery.html',
+    tokens: {
+      LANGUAGE_SWITCHER_NOTE: '',
+      TITLE_EN: escapeHtml(page.titleEn),
+      TITLE_ZH: escapeHtml(page.titleZh),
+      META_DESCRIPTION: escapeHtml(page.metaDescription),
+      INTRO_EN: escapeHtml(page.introEn),
+      INTRO_ZH: escapeHtml(page.introZh),
+      BROWSE_SECTIONS: browseSectionsBySlug.get(page.slug),
+    },
+    editableRecords: works.map((artwork) => ({
+      file: 'content/artworks.json',
+      collection: 'artworks',
+      key: artwork.id,
+    })),
+  });
+}
+
 // The search box used to carry its own hand-maintained copy of every page
 // title. Generating the index from the same content that renders the pages
 // means a new medium page or a new artwork becomes searchable without anybody
@@ -951,6 +1098,11 @@ const searchIndex = [
     .filter((tab) => !tab.href.includes('#'))
     .map((tab) => ({ en: tab.en, zh: tab.zh, href: tab.href })),
   ...galleryConfig.mediumPages.map((page) => ({
+    en: page.titleEn,
+    zh: page.titleZh,
+    href: `gallery-${page.slug}.html`,
+  })),
+  ...galleryConfig.browsePages.map((page) => ({
     en: page.titleEn,
     zh: page.titleZh,
     href: `gallery-${page.slug}.html`,

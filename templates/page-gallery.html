@@ -283,12 +283,24 @@
   </section>
 
   <!-- Explore by Medium -->
-  <section class="medium-section">
+  <section class="medium-section" id="explore-medium">
     <div class="container">
       <h2 class="medium-section-title lang-en">Explore by Medium</h2>
       <h2 class="medium-section-title lang-zh">按创作媒介浏览</h2>
 
 {{MEDIUM_GRID}}
+    </div>
+  </section>
+
+  <!-- Explore by Subject & Colour. These two pages cut across medium, which is
+       the one thing the per-medium filter bar cannot do, so they sit here on
+       the hub rather than taking an eighth and ninth gallery nav tab. -->
+  <section class="medium-section" id="explore-browse">
+    <div class="container">
+      <h2 class="medium-section-title lang-en">Explore by Subject &amp; Color</h2>
+      <h2 class="medium-section-title lang-zh">按主题与颜色浏览</h2>
+
+{{BROWSE_GRID}}
     </div>
   </section>
 
