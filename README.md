@@ -6,13 +6,13 @@ https://qidumplingsinc.github.io/SpecialChiliSauce/
 
 Every `gallery*.html` page at the repo root is generated. Do not hand-edit them. Edit the data or the templates and rerun the build:
 
-- `content/gallery.json` -- nav tabs, the medium pages, the section pages
+- `content/gallery.json` -- nav tabs, the medium pages, the section pages, the browse pages
 - `content/artworks.json` -- the artwork catalog (display only; no price, no purchase path)
 - `templates/page-*.html` -- one template per page shape
 - `templates/partials/` -- the header, nav tabs, footers, filter bar and placeholder card, each defined once
 
 ```
-npm run build          # rewrite the 13 gallery pages
+npm run build          # rewrite the 16 gallery pages
 npm run build:check    # fail if the committed HTML has drifted from templates/content
 ```
 
