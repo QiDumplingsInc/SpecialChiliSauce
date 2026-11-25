@@ -30,6 +30,7 @@ test('build.mjs renders exactly the gallery pages that are committed', () => {
     'gallery-collections.html',
     ...galleryConfig.mediumPages.map((page) => `gallery-${page.slug}.html`),
     ...galleryConfig.sectionPages.map((page) => `gallery-${page.slug}.html`),
+    ...galleryConfig.browsePages.map((page) => `gallery-${page.slug}.html`),
   ].sort();
   assert.deepEqual([...generatedPages].sort(), expected);
 });
@@ -199,6 +200,7 @@ const baseGalleryFixture = () => ({
   ],
   mediumPages: [{ slug: 'painting', titleEn: 'Painting', titleZh: '绘画', metaDescription: 'Paintings.' }],
   sectionPages: [],
+  browsePages: [],
   collectionsPage: {
     titleEn: 'Collections',
     titleZh: '系列',
@@ -306,6 +308,190 @@ test('a collection that no work joins fails the build', () => {
     cover: { artworkId: 'w1', imageIndex: 0 },
   });
   // Every base work stays in series-a, so series-b holds nothing.
+  const root = setupCollectionsFixture(gallery, baseArtworksFixture());
+  try {
+    assert.throws(() => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+// The browse pages (Browse by Subject, Browse by Color) group the whole
+// catalogue by one filter facet, so they are the only view that cuts across
+// medium. These tests assert the two things that make such a page honest: no
+// work is left out of it, and no value heading stands over an empty grid.
+
+const artworkCatalog = JSON.parse(readFileSync(path.join(repoRoot, 'content', 'artworks.json'), 'utf8'));
+const browsePageHtml = (page) => readFileSync(path.join(repoRoot, `gallery-${page.slug}.html`), 'utf8');
+const browseSections = (html) =>
+  html
+    .split('<section class="collection-section"')
+    .slice(1)
+    .map((chunk) => chunk.slice(0, chunk.indexOf('</section>')));
+
+test('every browse page renders every work in the catalogue', () => {
+  // A work whose facet field is missing or holds a value outside the facet's
+  // vocabulary would silently vanish from the page: it matches no value
+  // section, and the page would still look complete. This is the check that
+  // catches it, which is why the build itself does not have to refuse the data.
+  for (const page of galleryConfig.browsePages) {
+    const html = browsePageHtml(page);
+    for (const artwork of artworkCatalog.artworks) {
+      assert.doesNotMatch(
+        artwork.titleEn,
+        /[&<>"]/,
+        `artwork "${artwork.id}" has a title needing HTML escaping, so this test must escape before matching`
+      );
+      assert.match(
+        html,
+        new RegExp(`data-title-en="${artwork.titleEn}"`),
+        `gallery-${page.slug}.html leaves out "${artwork.titleEn}"; its ${page.facet} value is missing or unknown`
+      );
+    }
+  }
+});
+
+test('no browse section stands over an empty grid, and the count pill matches it', () => {
+  for (const page of galleryConfig.browsePages) {
+    const html = browsePageHtml(page);
+    const sections = browseSections(html);
+    assert.ok(sections.length > 0, `gallery-${page.slug}.html renders no value section at all`);
+    assert.doesNotMatch(
+      html,
+      /artwork-empty-state/,
+      `gallery-${page.slug}.html fell back to the empty state, so no work carries any ${page.facet} value`
+    );
+    for (const section of sections) {
+      const cards = (section.match(/class="artwork-card"/g) ?? []).length;
+      assert.ok(cards > 0, `a section of gallery-${page.slug}.html has a heading but no works`);
+      const pill = section.match(/collection-count-pill lang-en">(?:(\d+) works|(1) work)</);
+      assert.ok(pill, `a section of gallery-${page.slug}.html has no English count pill`);
+      assert.equal(
+        Number(pill[1] ?? pill[2]),
+        cards,
+        `a count pill on gallery-${page.slug}.html disagrees with the works under it`
+      );
+    }
+  }
+});
+
+test('the hub offers an entry point to every browse page', () => {
+  // The decision these pages needed: they are reachable from the hub's explore
+  // area rather than from an eighth and ninth gallery nav tab. A browse page
+  // nothing links to is a page nobody can find.
+  const hub = readFileSync(path.join(repoRoot, 'gallery.html'), 'utf8');
+  for (const page of galleryConfig.browsePages) {
+    assert.match(hub, new RegExp(`href="gallery-${page.slug}\\.html"`), `the hub does not link gallery-${page.slug}.html`);
+    assert.match(hub, new RegExp(page.titleEn), `the hub does not name "${page.titleEn}"`);
+  }
+  for (const tab of galleryConfig.navTabs) {
+    for (const page of galleryConfig.browsePages) {
+      assert.notEqual(tab.href, `gallery-${page.slug}.html`, 'a browse page took a nav tab; the entry point is the hub');
+    }
+  }
+});
+
+test('every class the browse-page template renders has a CSS rule', () => {
+  // The browse pages ship no CSS of their own: they reuse the Collections
+  // page's section classes. This is what proves that claim rather than
+  // assuming it.
+  const browseTemplate = readFileSync(path.join(repoRoot, 'templates', 'page-browse.html'), 'utf8');
+  const stylesheets =
+    readFileSync(path.join(repoRoot, 'assets', 'css', 'site.css'), 'utf8') +
+    readFileSync(path.join(repoRoot, 'assets', 'css', 'gallery.css'), 'utf8');
+  const classNames = new Set();
+  for (const match of browseTemplate.matchAll(/class="([^"{]+)"/g)) {
+    for (const name of match[1].trim().split(/\s+/)) classNames.add(name);
+  }
+  assert.ok(classNames.has('category-intro'), 'sanity check: expected the hero intro class in the template');
+  for (const name of classNames) {
+    assert.match(
+      stylesheets,
+      new RegExp(`\\.${name}([\\s,:{]|$)`, 'm'),
+      `.${name} is rendered by templates/page-browse.html but has no CSS rule`
+    );
+  }
+});
+
+// Fixture-backed browse rules. Each builds a self-contained catalogue so one
+// rule is isolated, the same way the collection tests above do.
+const browseGalleryFixture = () => {
+  const gallery = baseGalleryFixture();
+  gallery.facets = [
+    {
+      key: 'subject',
+      field: 'subject',
+      labelEn: 'Subject',
+      labelZh: '主题',
+      values: [
+        { value: 'fruit', en: 'Fruit', zh: '水果' },
+        { value: 'bird', en: 'Bird', zh: '鸟类' },
+      ],
+    },
+  ];
+  gallery.browsePages = [
+    {
+      slug: 'by-subject',
+      facet: 'subject',
+      titleEn: 'Browse by Subject',
+      titleZh: '按主题浏览',
+      metaDescription: 'By subject.',
+      introEn: 'Works by subject.',
+      introZh: '按主题的作品。',
+      cover: { artworkId: 'w1', imageIndex: 0 },
+    },
+  ];
+  return gallery;
+};
+
+test('a browse page groups works under each facet value and skips a value nothing carries', () => {
+  const artworks = baseArtworksFixture();
+  artworks.artworks[0].subject = 'fruit';
+  artworks.artworks[1].subject = 'fruit';
+  const root = setupCollectionsFixture(browseGalleryFixture(), artworks);
+  try {
+    execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' });
+    const html = readFileSync(path.join(root, 'gallery-by-subject.html'), 'utf8');
+    assert.match(html, /id="browse-by-subject-fruit"/, 'the matched value needs its own section');
+    assert.doesNotMatch(html, /id="browse-by-subject-bird"/, 'a value no work carries must not render a section');
+    assert.match(html, /Work One/, 'the first work should render under its value');
+    assert.match(html, /Work Two/, 'the second work should render under its value');
+    assert.match(html, /2 works/, 'the value count should render');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a browse page whose facet no work carries renders the empty state, not a bare hero', () => {
+  // The base works carry no subject at all, which is a data gap rather than a
+  // configuration error, so the page says what an empty medium page says.
+  const root = setupCollectionsFixture(browseGalleryFixture(), baseArtworksFixture());
+  try {
+    execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' });
+    const html = readFileSync(path.join(root, 'gallery-by-subject.html'), 'utf8');
+    assert.match(html, /artwork-empty-state/, 'a browse page with nothing to group needs the shared empty state');
+    assert.doesNotMatch(html, /<section class="collection-section"/, 'no value section should render');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a browse page naming a facet that does not exist fails the build', () => {
+  const gallery = browseGalleryFixture();
+  gallery.browsePages[0].facet = 'not-a-facet';
+  const root = setupCollectionsFixture(gallery, baseArtworksFixture());
+  try {
+    assert.throws(() => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a browse page whose slug collides with another page fails the build', () => {
+  // Both would render to the same gallery-<slug>.html, so one would overwrite
+  // the other and --check would compare the survivor against both.
+  const gallery = browseGalleryFixture();
+  gallery.browsePages[0].slug = 'painting';
   const root = setupCollectionsFixture(gallery, baseArtworksFixture());
   try {
     assert.throws(() => execFileSync('node', ['build.mjs', '--fixture', root], { cwd: repoRoot, stdio: 'pipe' }));

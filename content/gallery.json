@@ -1,5 +1,5 @@
 {
-    "comment": "Structure of the gallery section: nav tabs, medium pages, section pages, the artwork filter facets and the hub page's photographs. Edited by hand; consumed by build.mjs to render gallery*.html. Bilingual site copy lives here as literal UTF-8 because this is localized content, not code. heroSlides, aboutPanels and a medium page's optional cover each point at one photograph in content/artworks.json by artworkId plus imageIndex; the build refuses an in-situ view in any of those slots because the hub crops a photograph to fit its slot and an in-situ shot must keep the framing it was taken with. A medium page with no cover falls back to the first photograph of its first work; a medium page with no works renders mediumEmptyCover instead of promising an image.",
+    "comment": "Structure of the gallery section: nav tabs, medium pages, section pages, browse pages, the artwork filter facets and the hub page's photographs. Edited by hand; consumed by build.mjs to render gallery*.html. Bilingual site copy lives here as literal UTF-8 because this is localized content, not code. heroSlides, aboutPanels, a browse page's cover and a medium page's optional cover each point at one photograph in content/artworks.json by artworkId plus imageIndex; the build refuses an in-situ view in any of those slots because the hub crops a photograph to fit its slot and an in-situ shot must keep the framing it was taken with. A medium page with no cover falls back to the first photograph of its first work; a medium page with no works renders mediumEmptyCover instead of promising an image. A browsePages entry names one facet key and renders the whole catalogue as one section per value of that facet, so it cuts across medium where the filter bar cannot; values no work carries are skipped rather than rendered empty.",
     "searchPages": [
         {
             "href": "index.html",
@@ -346,6 +346,34 @@
             "blurbZh": "近处盛开的花，与远方雪中的木屋。",
             "cover": {
                 "artworkId": "painting-007",
+                "imageIndex": 0
+            }
+        }
+    ],
+    "browsePages": [
+        {
+            "slug": "by-subject",
+            "facet": "subject",
+            "titleEn": "Browse by Subject",
+            "titleZh": "按主题浏览",
+            "metaDescription": "Kay's works grouped by what they depict.",
+            "introEn": "Every work in the gallery, grouped by what it depicts, across all media.",
+            "introZh": "画廊中的全部作品，按描绘的题材分组，跨越所有创作媒介。",
+            "cover": {
+                "artworkId": "painting-010",
+                "imageIndex": 0
+            }
+        },
+        {
+            "slug": "by-color",
+            "facet": "colors",
+            "titleEn": "Browse by Color",
+            "titleZh": "按颜色浏览",
+            "metaDescription": "Kay's works grouped by the colours that carry them.",
+            "introEn": "Every work in the gallery, grouped by the colours that carry it. A work with more than one appears under each.",
+            "introZh": "画廊中的全部作品，按主导色彩分组。一件作品若有多种主色，会出现在每一组中。",
+            "cover": {
+                "artworkId": "painting-015",
                 "imageIndex": 0
             }
         }
