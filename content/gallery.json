@@ -1,5 +1,5 @@
 {
-    "comment": "Structure of the gallery section: nav tabs, medium pages, collections, hang scenes, the artwork filter facets and the hub page's photographs. Edited by hand; consumed by build.mjs to render gallery*.html. Bilingual site copy lives here as literal UTF-8 because this is localized content, not code. heroSlides, aboutPanels, a medium page's optional cover and a collection cover each point at one photograph in content/artworks.json by artworkId plus imageIndex; the build refuses an in-situ view in any of those slots because the hub crops a photograph to fit its slot and an in-situ shot must keep the framing it was taken with. A medium page with no cover falls back to the first photograph of its first work; a medium page with no works renders mediumEmptyCover instead of promising an image. A medium page may carry an optional select {field, value} to choose its works by something other than medium: work-on-paper selects on support, so the one drawing appears under both Drawing and Work on Paper without being duplicated in the catalogue. A medium with no works at all carries emptyBodyEn/emptyBodyZh, the written page a visitor gets instead of a bare empty state, plus the shared enquiry copy in unrepresentedMedium. Every value a facet declares must match at least one work in the catalogue or the build fails: a filter chip that can never match anything is worse than no filter. exhibitionsPage plus the exhibitions array are the record of where the work has hung; each scene names its in-situ photographs (the build refuses a front or detail view there, the opposite of the hub rule) and the works visible in a scene are derived from those photographs, so tagging a work with an in-situ image is the only step needed to place it. Every in-situ photograph in the catalogue must belong to exactly one scene. newArrivalsPage lists real artwork ids newest-first (the order is editorial, not derived, so an undated work can still be featured). portfolioPage carries only intro copy; the build groups the whole catalogue by mediumPages order and always by medium, so a work is listed once there. artistsPage plus the artists array profile the people behind the work; each artist has a cover photograph (same in-situ rule) and bioEn/bioZh paragraph arrays, and the single-artist catalogue renders in full beneath the bio.",
+    "comment": "Structure of the gallery section: nav tabs, medium pages, collections, browse pages, hang scenes, the artwork filter facets and the hub page's photographs. Edited by hand; consumed by build.mjs to render gallery*.html. Bilingual site copy lives here as literal UTF-8 because this is localized content, not code. heroSlides, aboutPanels, a browse page's cover, a medium page's optional cover and a collection cover each point at one photograph in content/artworks.json by artworkId plus imageIndex; the build refuses an in-situ view in any of those slots because the hub crops a photograph to fit its slot and an in-situ shot must keep the framing it was taken with. A medium page with no cover falls back to the first photograph of its first work; a medium page with no works renders mediumEmptyCover instead of promising an image. A medium page may carry an optional select {field, value} to choose its works by something other than medium: work-on-paper selects on support, so the one drawing appears under both Drawing and Work on Paper without being duplicated in the catalogue. A medium with no works at all carries emptyBodyEn/emptyBodyZh, the written page a visitor gets instead of a bare empty state, plus the shared enquiry copy in unrepresentedMedium. A browsePages entry names one facet key and renders the whole catalogue as one section per value of that facet, so it cuts across medium where the filter bar cannot; values no work carries are skipped rather than rendered empty. Every value a facet declares must match at least one work in the catalogue or the build fails: a filter chip that can never match anything is worse than no filter. exhibitionsPage plus the exhibitions array are the record of where the work has hung; each scene names its in-situ photographs (the build refuses a front or detail view there, the opposite of the hub rule) and the works visible in a scene are derived from those photographs, so tagging a work with an in-situ image is the only step needed to place it. Every in-situ photograph in the catalogue must belong to exactly one scene. newArrivalsPage lists real artwork ids newest-first (the order is editorial, not derived, so an undated work can still be featured). portfolioPage carries only intro copy; the build groups the whole catalogue by mediumPages order and always by medium, so a work is listed once there. artistsPage plus the artists array profile the people behind the work; each artist has a cover photograph (same in-situ rule) and bioEn/bioZh paragraph arrays, and the single-artist catalogue renders in full beneath the bio.",
     "searchPages": [
         {
             "href": "index.html",
@@ -469,6 +469,34 @@
                     "imageIndex": 0
                 }
             ]
+        }
+    ],
+    "browsePages": [
+        {
+            "slug": "by-subject",
+            "facet": "subject",
+            "titleEn": "Browse by Subject",
+            "titleZh": "按主题浏览",
+            "metaDescription": "Kay's works grouped by what they depict.",
+            "introEn": "Every work in the gallery, grouped by what it depicts, across all media.",
+            "introZh": "画廊中的全部作品，按描绘的题材分组，跨越所有创作媒介。",
+            "cover": {
+                "artworkId": "painting-010",
+                "imageIndex": 0
+            }
+        },
+        {
+            "slug": "by-color",
+            "facet": "colors",
+            "titleEn": "Browse by Color",
+            "titleZh": "按颜色浏览",
+            "metaDescription": "Kay's works grouped by the colours that carry them.",
+            "introEn": "Every work in the gallery, grouped by the colours that carry it. A work with more than one appears under each.",
+            "introZh": "画廊中的全部作品，按主导色彩分组。一件作品若有多种主色，会出现在每一组中。",
+            "cover": {
+                "artworkId": "painting-015",
+                "imageIndex": 0
+            }
         }
     ]
 }

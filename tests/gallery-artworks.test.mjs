@@ -137,6 +137,9 @@ function renderWithArtworks(catalog) {
       cover: { artworkId: catalog.artworks[0].id, imageIndex: 0 },
     },
   ];
+  // Each browse page's hub cover names a real artwork id too. Point them at
+  // the first sample work for the same reason.
+  fixtureConfig.browsePages = fixtureConfig.browsePages.map((page) => ({ ...page, cover: { ...sampleCover } }));
   const fixtureCatalog = {
     ...catalog,
     artworks: catalog.artworks.map((artwork) => ({ ...artwork, collections: ['sample-series'] })),
@@ -170,6 +173,11 @@ function renderWithArtworks(catalog) {
       return { ...facet, values: present.map((value) => labelled.get(value) ?? { value, en: value, zh: value }) };
     })
     .filter((facet) => facet.values.length > 0);
+  // A browse page names one facet, and the rebuild above drops a facet no
+  // sample work carries. Drop the browse pages whose facet went with it, or the
+  // build refuses a page that points at a facet this fixture no longer declares.
+  const fixtureFacetKeys = new Set(fixtureConfig.facets.map((facet) => facet.key));
+  fixtureConfig.browsePages = fixtureConfig.browsePages.filter((page) => fixtureFacetKeys.has(page.facet));
   // Every in-situ photograph in the catalogue belongs to exactly one hang
   // scene, so give each distinct one a scene of its own. A sample catalogue
   // with no room photographs gets no scenes, which the build allows.
@@ -571,7 +579,7 @@ const worksForMediumPage = (page) => {
 test('the hub shows a photograph for every medium that has works, and promises none for the rest', () => {
   const dom = committedHub();
   try {
-    const cards = [...dom.window.document.querySelectorAll('.medium-card')];
+    const cards = [...dom.window.document.querySelectorAll('#explore-medium .medium-card')];
     assert.equal(cards.length, galleryConfig.mediumPages.length, 'one card per medium page');
     for (const [index, page] of galleryConfig.mediumPages.entries()) {
       const card = cards[index];
@@ -607,7 +615,7 @@ test('a hub medium card carries its photograph and its editable title together',
   // something a reviewer has to spot in generated HTML.
   const dom = committedHub();
   try {
-    const cards = [...dom.window.document.querySelectorAll('.medium-card')];
+    const cards = [...dom.window.document.querySelectorAll('#explore-medium .medium-card')];
     assert.equal(cards.length, galleryConfig.mediumPages.length, 'one card per medium page');
     for (const [index, page] of galleryConfig.mediumPages.entries()) {
       const card = cards[index];

@@ -6,13 +6,13 @@ https://qidumplingsinc.github.io/SpecialChiliSauce/
 
 Every `gallery*.html` page at the repo root is generated. Do not hand-edit them. Edit the data or the templates and rerun the build:
 
-- `content/gallery.json` -- nav tabs, the medium pages, the collections, the hang scenes behind Exhibitions, the filter facets
+- `content/gallery.json` -- nav tabs, the medium pages, the section pages, the browse pages, the collections, the hang scenes behind Exhibitions, the filter facets
 - `content/artworks.json` -- the artwork catalog (display only; no price, no purchase path)
 - `templates/page-*.html` -- one template per page shape
 - `templates/partials/` -- the header, nav tabs, footers and the edit-mode bootstrap, each defined once
 
 ```
-npm run build          # rewrite the 14 gallery pages
+npm run build          # rewrite the 16 gallery pages
 npm run build:check    # fail if the committed HTML has drifted from templates/content
 ```
 
@@ -89,7 +89,9 @@ The `pre-commit` lockfile guard has the same install requirement and the same `-
 
 `.github/PULL_REQUEST_TEMPLATE.md` is the body every pull request here uses. GitHub prefills it, so fill the sections in place and do not delete a heading: a section that does not apply gets `None`, and a missing heading shows up in the diff instead of surfacing in review.
 
-Three sections are the author's alone and carry refusal text until a human replaces them -- **Motivation**, **Design decisions**, and **Notes to reviewers**. The template also carries the `pre-pr-check` line and the requirement that manual testing is either provided with screenshots or declined with a written reason. A body still holding any of that refusal text is a draft, not a review request.
+Whoever opens the pull request fills every section, and that includes an agent. **Motivation**, **Design decisions**, and **Notes to reviewers** no longer wait for a different person: the author of the work knows why it was needed, what it traded away, and what the diff does not show, so the author writes them and records who wrote what under **Agent disclosure**. That section is a transparency record, not a gate.
+
+One gate remains, and it is a command rather than a judgement: the `pre-pr-check` line. A body still holding `pre-pr-check is not valid` is a draft, not a review request. Manual testing is still either provided with evidence or declined with a written reason -- an agent may write that reason, but only about a run it actually performed.
 
 ## Newsletter signups
 
