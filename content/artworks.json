@@ -1,5 +1,5 @@
 {
-    "comment": "Single source of truth for artwork shown in the gallery. Artwork is display only; there is no price, no wishlist and no purchase path. Add one object per work to the artworks array. Required: id, medium (must match a slug in gallery.json mediumPages), titleEn, titleZh, images. Optional: year (four-digit integer; omit it for an undated work and the card renders n.d.), sizeRange (small|medium|large|very-large), colors (array), style (abstract|figurative|realist), dimensionsEn, dimensionsZh. Each entry in images needs src, width, height, view, altEn and altZh, plus source for provenance. view is front (the work photographed face on, cropped to its edges), in-situ (the work where it hangs, never cropped) or detail (one part of the work at close range, never cropped). The first image is the one the grid shows; when a front photograph exists it must come first, and a work with no front photograph leads with its in-situ shot followed by details. width and height are the real pixel dimensions of the file and are rendered as width/height attributes so the browser reserves layout space before the image loads. An in-situ photograph showing several works at once is referenced by each of those works.",
+    "comment": "Single source of truth for artwork shown in the gallery. Artwork is display only; there is no price, no wishlist and no purchase path. Add one object per work to the artworks array. Required: id, medium (must match a slug in gallery.json mediumPages), titleEn, titleZh, images. Optional: year (four-digit integer; omit it for an undated work and the card renders n.d.), sizeRange (small|medium|large|very-large), assigned from the longest side of the physical work: small is under 12 in (30 cm), medium is 12 to 24 in (30-60 cm), large is 24 to 40 in (60-100 cm), very-large is over 40 in (100 cm); colors (array), style (abstract|figurative|realist), dimensionsEn, dimensionsZh. Each entry in images needs src, width, height, view, altEn and altZh, plus source for provenance. view is front (the work photographed face on, cropped to its edges), in-situ (the work where it hangs, never cropped) or detail (one part of the work at close range, never cropped). The first image is the one the grid shows; when a front photograph exists it must come first, and a work with no front photograph leads with its in-situ shot followed by details. width and height are the real pixel dimensions of the file and are rendered as width/height attributes so the browser reserves layout space before the image loads. An in-situ photograph showing several works at once is referenced by each of those works.",
     "artworks": [
         {
             "id": "painting-001",
@@ -35,6 +35,7 @@
                     "altZh": "同一拼板墙上的三幅画作，拍摄角度更为正面"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "greens"
             ],
@@ -79,6 +80,7 @@
                     "altZh": "同一拼板墙上的三幅画作，拍摄角度更为正面"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "reds"
             ],
@@ -122,6 +124,7 @@
                     "altZh": "同一拼板墙上的三幅画作，拍摄角度更为正面"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "reds",
                 "greens"
@@ -176,6 +179,7 @@
                     "altZh": "同一楼梯间墙面与两幅画作，从更低的台阶拍摄"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "greens",
                 "browns"
@@ -221,6 +225,7 @@
                     "altZh": "同一楼梯间墙面与两幅画作，从更低的台阶拍摄"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "reds"
             ],
@@ -256,6 +261,7 @@
                     "altZh": "从略低角度拍摄的无花果画作，可见画布边缘与身后墙面"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "greens"
             ],
@@ -281,6 +287,7 @@
                     "altZh": "画作：两朵盛开的粉色牡丹立于绿色花茎之上，背景为渐变绿色"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "reds",
                 "greens"
@@ -316,6 +323,7 @@
                     "altZh": "孔雀尾羽特写，蓝绿色眼状羽片上点缀金色"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "blues",
                 "greens"
@@ -342,6 +350,7 @@
                     "altZh": "画作：绿色鹦鹉头部侧面，喙呈浅色弯钩状，额前有红羽，背景近黑"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "greens",
                 "blacks-whites"
@@ -368,6 +377,7 @@
                     "altZh": "画作：带角公羊头部侧面，灰白卷毛与深色面部以灰白色调绘出"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "blacks-whites"
             ],
@@ -393,6 +403,7 @@
                     "altZh": "彩点狗画作高挂于墙面顶部装饰线下方，右侧是一幅向日葵画作"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "blacks-whites",
                 "reds"
@@ -419,6 +430,7 @@
                     "altZh": "画作：针尾鸭浮于暗色水面，棕色头部与带纹双翼映于水中，背景为深棕色"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "browns",
                 "blues"
@@ -454,6 +466,7 @@
                     "altZh": "红鼓鱼画作挂在门框旁的白墙上，上方与左侧还有两幅画布"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "greens",
                 "browns"
@@ -481,6 +494,7 @@
                     "altZh": "画作：橙色石斑鱼展开红色鳍条，背景为带绿色斑驳的深蓝"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "reds",
                 "blues"
@@ -516,6 +530,7 @@
                     "altZh": "金鱼画作挂在暖灰色墙面上，旁边是挂着黄色毛巾的黑色毛巾环"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "reds",
                 "blues"
@@ -551,6 +566,7 @@
                     "altZh": "木屋画作挂在洗手间墙上，并在洗手台上方的椭圆镜中再次映出"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "blues",
                 "reds"
@@ -586,6 +602,7 @@
                     "altZh": "素描局部特写：两只灵缇犬紧紧相依，下方是针织围领，前景横过粉色樱花"
                 }
             ],
+            "sizeRange": "large",
             "colors": [
                 "reds",
                 "browns"
