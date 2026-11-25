@@ -74,7 +74,9 @@ The `pre-commit` lockfile guard has the same install requirement and the same `-
 
 `.github/PULL_REQUEST_TEMPLATE.md` is the body every pull request here uses. GitHub prefills it, so fill the sections in place and do not delete a heading: a section that does not apply gets `None`, and a missing heading shows up in the diff instead of surfacing in review.
 
-Three sections are the author's alone and carry refusal text until a human replaces them -- **Motivation**, **Design decisions**, and **Notes to reviewers**. The template also carries the `pre-pr-check` line and the requirement that manual testing is either provided with screenshots or declined with a written reason. A body still holding any of that refusal text is a draft, not a review request.
+Whoever opens the pull request fills every section, and that includes an agent. **Motivation**, **Design decisions**, and **Notes to reviewers** no longer wait for a different person: the author of the work knows why it was needed, what it traded away, and what the diff does not show, so the author writes them and records who wrote what under **Agent disclosure**. That section is a transparency record, not a gate.
+
+One gate remains, and it is a command rather than a judgement: the `pre-pr-check` line. A body still holding `pre-pr-check is not valid` is a draft, not a review request. Manual testing is still either provided with evidence or declined with a written reason -- an agent may write that reason, but only about a run it actually performed.
 
 ## Newsletter signups
 
