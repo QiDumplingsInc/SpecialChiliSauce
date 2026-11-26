@@ -318,6 +318,37 @@ test('selecting a filter option hides the artwork that does not match', async ()
   }
 });
 
+test('selecting a size band hides every work outside that band', async () => {
+  // The Size Range facet is the one facet that needs a physical measurement, so
+  // it is the one most likely to regress silently once real sizes land. Assert
+  // it on its own rather than only in combination with another facet.
+  const fixtureRoot = renderWithArtworks(SAMPLE_ARTWORKS);
+  try {
+    const dom = await loadFixturePage(fixtureRoot, 'gallery-painting.html');
+    const { document } = dom.window;
+    const cards = [...document.querySelectorAll('.artwork-card')];
+    assert.equal(cards.filter((card) => !card.hidden).length, 2, 'both works visible before filtering');
+
+    document.querySelector('.filter-option[data-facet="size"][data-value="large"]').click();
+    const large = cards.filter((card) => !card.hidden);
+    assert.equal(large.length, 1, 'only the large work survives the large band');
+    assert.equal(large[0].dataset.size, 'large');
+    assert.equal(cards.find((card) => card.hidden).dataset.size, 'small');
+
+    document.querySelector('.filter-option[data-facet="size"][data-value="large"]').click();
+    document.querySelector('.filter-option[data-facet="size"][data-value="small"]').click();
+    const small = cards.filter((card) => !card.hidden);
+    assert.equal(small.length, 1, 'only the small work survives the small band');
+    assert.equal(small[0].dataset.size, 'small');
+
+    document.querySelector('.filter-clear').click();
+    assert.equal(cards.filter((card) => !card.hidden).length, 2, 'clearing the band restores every work');
+    dom.window.close();
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
 test('a filter combination that matches nothing shows the no-matches message', async () => {
   const fixtureRoot = renderWithArtworks(SAMPLE_ARTWORKS);
   try {

@@ -21,23 +21,23 @@
             "values": [
                 {
                     "value": "small",
-                    "en": "Small",
-                    "zh": "小"
+                    "en": "Small (under 16 in / 40 cm)",
+                    "zh": "小（16 英寸 / 40 厘米 以下）"
                 },
                 {
                     "value": "medium",
-                    "en": "Medium",
-                    "zh": "中"
+                    "en": "Medium (16 to 30 in / 40 to 75 cm)",
+                    "zh": "中（16 至 30 英寸 / 40 至 75 厘米）"
                 },
                 {
                     "value": "large",
-                    "en": "Large",
-                    "zh": "大"
+                    "en": "Large (30 to 48 in / 75 to 120 cm)",
+                    "zh": "大（30 至 48 英寸 / 75 至 120 厘米）"
                 },
                 {
                     "value": "very-large",
-                    "en": "Very large",
-                    "zh": "特大"
+                    "en": "Very large (48 in / 120 cm and up)",
+                    "zh": "特大（48 英寸 / 120 厘米 以上）"
                 }
             ]
         },
