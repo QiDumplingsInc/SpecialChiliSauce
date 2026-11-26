@@ -14,6 +14,19 @@
     ],
     "facets": [
         {
+            "key": "size",
+            "field": "sizeRange",
+            "labelEn": "Size Range",
+            "labelZh": "尺寸范围",
+            "values": [
+                {
+                    "value": "large",
+                    "en": "Large (30 to 48 in / 75 to 120 cm)",
+                    "zh": "大（30 至 48 英寸 / 75 至 120 厘米）"
+                }
+            ]
+        },
+        {
             "key": "colors",
             "field": "colors",
             "labelEn": "Color",
